@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { api, CartProvider, useLang } from '../components/store';
-import { Splash, Onboarding, HomeHeader, BottomNav, MenuItemTile } from '../components/customer';
+import { Splash, Onboarding, HomeHeader, BottomNav, MenuItemTile, TopNav } from '../components/customer';
 
 function Home() {
   const router = useRouter();
@@ -27,7 +27,8 @@ function Home() {
 
   return (
     <CartProvider>
-      <div dir="ltr" className="mx-auto max-w-md min-h-screen bg-cream pb-24 shadow-xl relative">
+      <div dir="ltr" className="mx-auto max-w-md md:max-w-6xl min-h-screen bg-cream pb-24 md:pb-10 shadow-xl relative">
+        <TopNav active="home" />
         <HomeHeader settings={settings} />
 
         {/* Promo banner */}
@@ -51,7 +52,7 @@ function Home() {
             <h3 className="text-sm font-bold">{t('Our Specialties', 'Our Specialties')}</h3>
             <Link href="/categories" className="text-[11px] font-semibold text-maroon">{t('View All', 'View All')}</Link>
           </div>
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 md:grid-cols-6 gap-2">
             {cats.slice(0, 4).map((c) => (
               <Link key={c.id} href={`/menu?cat=${c.id}`} className="card p-2 flex flex-col items-center gap-2 hover:border-maroon/40 transition">
                 <img src={c.image} alt={c.en} className="w-14 h-14 rounded-lg object-cover border border-[#E8DCC3]" />
@@ -82,7 +83,7 @@ function Home() {
             <h3 className="text-sm font-bold">{t('Popular Today', 'Popular Today')}</h3>
             <span className={`${isUr ? 'urdu' : ''} text-[11px] text-muted`}>{t('سب سے زیادہ آرڈر کیے جانے والے', 'Most ordered dishes')}</span>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {popular.map((m) => (
               <MenuItemTile key={m.id} item={m} onOpen={() => router.push('/product/' + m.id)} />
             ))}

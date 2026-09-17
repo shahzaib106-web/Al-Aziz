@@ -21,9 +21,10 @@ function OrdersInner() {
   }, []);
 
   return (
-    <div dir="ltr" className="mx-auto max-w-md min-h-screen bg-cream pb-24 shadow-xl">
+    <div dir="ltr" className="mx-auto max-w-md md:max-w-5xl min-h-screen bg-cream pb-24 md:pb-10 shadow-xl">
       <PageHeader title="My Orders" />
-      <div className="p-4 space-y-3">
+      <div className="p-4">
+      <div className="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
         {orders === null && <p className={`${isUr ? 'urdu' : ''} text-center text-sm text-muted py-10`}>{t('لوڈ ہو رہا ہے…', 'Loading…')}</p>}
         {orders && orders.length === 0 && (
           <div className="text-center py-16">
@@ -51,6 +52,7 @@ function OrdersInner() {
               </div>
             </div>
           ))}
+      </div>
       </div>
       <BottomNav active="orders" />
     </div>

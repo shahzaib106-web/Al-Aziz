@@ -23,7 +23,7 @@ export default function Track() {
   const cancelled = order?.status === 'cancelled';
 
   return (
-    <div dir="ltr" className="mx-auto max-w-md min-h-screen bg-cream pb-10 shadow-xl">
+    <div dir="ltr" className="mx-auto max-w-md md:max-w-5xl min-h-screen bg-cream pb-10 shadow-xl">
       <PageHeader title="Track Order" />
 
       {!order ? (
@@ -44,54 +44,60 @@ export default function Track() {
             </div>
           )}
 
-          <div className="mt-6 space-y-0 relative" dir="ltr">
-            {STATUS_FLOW.map((s, i) => {
-              const meta = STATUS_META[s];
-              const done = !cancelled && statusIdx > i;
-              const current = !cancelled && statusIdx === i;
-              const ts = order.timeline?.[s];
-              return (
-                <div key={s} className="flex gap-4">
-                  <div className="flex flex-col items-center">
-                    <div
-                      className={`w-9 h-9 rounded-full flex items-center justify-center border-2 ${
-                        done ? 'bg-leaf border-leaf text-white' : current ? 'bg-maroon border-maroon text-white' : 'bg-white border-[#D8CCB4] text-muted'
-                      }`}
-                    >
-                      <Icon name={done ? 'check' : meta.icon} className="w-4 h-4" strokeWidth={2.2} />
+          <div className="mt-6 md:grid md:grid-cols-2 md:gap-8 md:items-start">
+            {/* Timeline */}
+            <div className="space-y-0 relative" dir="ltr">
+              {STATUS_FLOW.map((s, i) => {
+                const meta = STATUS_META[s];
+                const done = !cancelled && statusIdx > i;
+                const current = !cancelled && statusIdx === i;
+                const ts = order.timeline?.[s];
+                return (
+                  <div key={s} className="flex gap-4">
+                    <div className="flex flex-col items-center">
+                      <div
+                        className={`w-9 h-9 rounded-full flex items-center justify-center border-2 ${
+                          done ? 'bg-leaf border-leaf text-white' : current ? 'bg-maroon border-maroon text-white' : 'bg-white border-[#D8CCB4] text-muted'
+                        }`}
+                      >
+                        <Icon name={done ? 'check' : meta.icon} className="w-4 h-4" strokeWidth={2.2} />
+                      </div>
+                      {i < STATUS_FLOW.length - 1 && <div className={`w-0.5 flex-1 min-h-[28px] ${done ? 'bg-leaf' : 'bg-[#E0D4BC]'}`} />}
                     </div>
-                    {i < STATUS_FLOW.length - 1 && <div className={`w-0.5 flex-1 min-h-[28px] ${done ? 'bg-leaf' : 'bg-[#E0D4BC]'}`} />}
-                  </div>
-                  <div className="pb-6 flex-1">
-                    <div className="flex items-center justify-between">
-                      <span className={`text-sm font-bold ${current ? 'text-maroon' : done ? 'text-ink' : 'text-muted'}`}>{meta.en}</span>
-                      <span className="text-[11px] text-muted">{timeOf(ts)}</span>
+                    <div className="pb-6 flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className={`text-sm font-bold ${current ? 'text-maroon' : done ? 'text-ink' : 'text-muted'}`}>{meta.en}</span>
+                        <span className="text-[11px] text-muted">{timeOf(ts)}</span>
+                      </div>
+                      <p className={`${isUr ? 'urdu' : ''} text-[11px] mt-1 ${isUr ? 'leading-loose' : ''} ${current ? 'text-maroon' : 'text-muted'}`}>
+                        {t(meta.ur, meta.enDesc)}
+                      </p>
                     </div>
-                    <p className={`${isUr ? 'urdu' : ''} text-[11px] mt-1 ${isUr ? 'leading-loose' : ''} ${current ? 'text-maroon' : 'text-muted'}`}>
-                      {t(meta.ur, meta.enDesc)}
-                    </p>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
 
-          <div className="card p-4 mt-2 text-sm space-y-1.5" dir="ltr">
-            {order.items.map((i, idx) => (
-              <div key={idx} className="flex justify-between text-muted">
-                <span>{isUr ? i.nameUr : i.nameEn} × {i.qty}</span>
-                <span className="text-ink font-semibold">{fmt(i.price * i.qty)}</span>
+            {/* Items + call */}
+            <div className="mt-2 md:mt-0 space-y-4">
+              <div className="card p-4 text-sm space-y-1.5" dir="ltr">
+                {order.items.map((i, idx) => (
+                  <div key={idx} className="flex justify-between text-muted">
+                    <span>{isUr ? i.nameUr : i.nameEn} × {i.qty}</span>
+                    <span className="text-ink font-semibold">{fmt(i.price * i.qty)}</span>
+                  </div>
+                ))}
+                <div className="flex justify-between border-t border-[#EFE5D0] pt-2 font-bold text-ink">
+                  <span>Total (incl. delivery)</span>
+                  <span>{fmt(order.total)}</span>
+                </div>
               </div>
-            ))}
-            <div className="flex justify-between border-t border-[#EFE5D0] pt-2 font-bold text-ink">
-              <span>Total (incl. delivery)</span>
-              <span>{fmt(order.total)}</span>
+
+              <a href={`tel:${(settings?.phone || '03196526413').replace(/\s/g, '')}`} className="btn-maroon w-full py-3.5 text-sm tracking-widest block text-center" dir="ltr">
+                CALL RESTAURANT
+              </a>
             </div>
           </div>
-
-          <a href={`tel:${(settings?.phone || '03196526413').replace(/\s/g, '')}`} className="btn-maroon w-full py-3.5 text-sm tracking-widest mt-5 block text-center" dir="ltr">
-            CALL RESTAURANT
-          </a>
         </div>
       )}
     </div>

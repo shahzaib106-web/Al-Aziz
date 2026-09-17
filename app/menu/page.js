@@ -33,7 +33,7 @@ function MenuInner() {
     : menu.filter((m) => m.catId === cat);
 
   return (
-    <div dir="ltr" className="mx-auto max-w-md min-h-screen bg-cream pb-24 shadow-xl">
+    <div dir="ltr" className="mx-auto max-w-md md:max-w-6xl min-h-screen bg-cream pb-24 md:pb-10 shadow-xl">
       <PageHeader
         title="Menu"
         right={
@@ -55,7 +55,7 @@ function MenuInner() {
           </button>
         ))}
       </div>
-      <div className="p-4 grid grid-cols-2 gap-3">
+      <div className="p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
         {list.map((m) => (
           <MenuItemTile key={m.id} item={m} onOpen={() => router.push('/product/' + m.id)} />
         ))}

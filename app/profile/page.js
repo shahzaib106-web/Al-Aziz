@@ -50,7 +50,7 @@ export default function Profile() {
 
   return (
     <CartProvider>
-      <div dir="ltr" className="mx-auto max-w-md min-h-screen bg-cream pb-24 shadow-xl">
+      <div dir="ltr" className="mx-auto max-w-md md:max-w-3xl min-h-screen bg-cream pb-24 md:pb-10 shadow-xl">
         <PageHeader
           title="My Profile"
           right={
@@ -112,7 +112,7 @@ export default function Profile() {
             <div className="mt-4 space-y-3">
               <h3 className={`${isUr ? 'urdu' : ''} text-sm font-bold text-ink`}>{t('میرے پسندیدہ', 'My Favorites')}</h3>
               {favItems.length === 0 && <p className={`${isUr ? 'urdu' : ''} text-xs text-muted`}>{t('کوئی پسندیدہ آئٹم نہیں', 'No favorite items yet')}</p>}
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {favItems.map((m) => (
                   <MenuItemTile key={m.id} item={m} onOpen={() => router.push('/product/' + m.id)} />
                 ))}

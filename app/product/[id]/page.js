@@ -37,9 +37,10 @@ function ProductInner() {
   };
 
   return (
-    <div dir="ltr" className="mx-auto max-w-md min-h-screen bg-cream pb-10 shadow-xl">
+    <div dir="ltr" className="mx-auto max-w-md md:max-w-5xl min-h-screen bg-cream pb-10 shadow-xl">
+      <div className="md:grid md:grid-cols-2 md:gap-8 md:p-6">
       <div className="relative">
-        <img src={item.image} alt={item.nameEn} className="w-full h-72 object-cover" />
+        <img src={item.image} alt={item.nameEn} className="w-full h-72 md:h-[480px] md:rounded-2xl object-cover" />
         <button onClick={() => router.back()} className="absolute top-4 left-4 bg-black/40 text-white rounded-full p-2 backdrop-blur" aria-label="back">
           <Icon name="back" className="w-5 h-5" />
         </button>
@@ -52,7 +53,7 @@ function ProductInner() {
         </button>
       </div>
 
-      <div className="bg-cream -mt-4 rounded-t-3xl relative p-5">
+      <div className="bg-cream -mt-4 rounded-t-3xl relative p-5 md:mt-0 md:rounded-2xl md:border md:border-[#E8DCC3] md:shadow-card md:self-center">
         <div className="flex items-start justify-between gap-3">
           <div>
             <h1 className={`${isUr ? 'urdu' : ''} text-xl font-bold text-ink ${isUr ? 'leading-loose' : 'leading-snug'}`}>{t(item.nameUr, item.nameEn)}</h1>
@@ -95,6 +96,7 @@ function ProductInner() {
             ADD TO CART
           </button>
         </div>
+      </div>
       </div>
     </div>
   );

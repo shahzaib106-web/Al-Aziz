@@ -75,7 +75,7 @@ export function Onboarding({ onDone }) {
 export function HomeHeader({ settings }) {
   const { isUr, t } = useLang();
   return (
-    <header className="bg-maroon text-white px-4 pt-4 pb-4">
+    <header className="bg-maroon text-white px-4 pt-4 pb-4 md:hidden">
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-1 text-[11px] leading-tight text-white/90 max-w-[100px]">
           <Icon name="pin" className="w-4 h-4 shrink-0" />
@@ -97,13 +97,59 @@ export function HomeHeader({ settings }) {
 export function PageHeader({ title, right }) {
   const router = useRouter();
   return (
-    <header className="bg-maroon text-white px-3 py-3.5 flex items-center gap-2 sticky top-0 z-30">
-      <button onClick={() => router.back()} className="p-1 hover:bg-white/10 rounded-lg" aria-label="back">
-        <Icon name="back" className="w-5 h-5" />
-      </button>
-      <h1 className="flex-1 text-center text-sm font-semibold tracking-wide">{title}</h1>
-      <div className="flex items-center gap-1.5">
-        {right}
+    <>
+      <TopNav />
+      <header className="md:hidden bg-maroon text-white px-3 py-3.5 flex items-center gap-2 sticky top-0 z-30">
+        <button onClick={() => router.back()} className="p-1 hover:bg-white/10 rounded-lg" aria-label="back">
+          <Icon name="back" className="w-5 h-5" />
+        </button>
+        <h1 className="flex-1 text-center text-sm font-semibold tracking-wide">{title}</h1>
+        <div className="flex items-center gap-1.5">
+          {right}
+          <LangToggle light />
+        </div>
+      </header>
+    </>
+  );
+}
+
+/* ---------- Desktop top nav ---------- */
+export function TopNav({ active }) {
+  const cart = useCart();
+  const count = cart ? cart.count : 0;
+  const { isUr, t } = useLang();
+  const links = [
+    { id: 'home', label: 'Home', href: '/' },
+    { id: 'menu', label: 'Menu', href: '/categories' },
+    { id: 'cart', label: 'Cart', href: '/cart', badge: count },
+    { id: 'orders', label: 'Orders', href: '/orders' },
+    { id: 'profile', label: 'Profile', href: '/profile' },
+  ];
+  return (
+    <header className="hidden md:block bg-maroon text-white sticky top-0 z-40 shadow-md">
+      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center gap-6">
+        <Link href="/" className="flex items-center gap-3 shrink-0">
+          <LogoMark className="w-9 h-9" />
+          <span className={`${isUr ? 'urdu text-lg leading-none' : 'font-extrabold tracking-wide'}`}>
+            {t('العزيز ریسٹورنٹ', 'Al Aziz Restaurant')}
+          </span>
+        </Link>
+        <nav className="flex items-center gap-1 ml-auto">
+          {links.map((l) => (
+            <Link
+              key={l.id}
+              href={l.href}
+              className={`relative px-4 py-2 rounded-lg text-sm font-semibold transition ${active === l.id ? 'bg-white text-maroon' : 'text-white/85 hover:bg-white/10'}`}
+            >
+              {l.label}
+              {l.badge > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 bg-leaf text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] px-1 flex items-center justify-center">
+                  {l.badge}
+                </span>
+              )}
+            </Link>
+          ))}
+        </nav>
         <LangToggle light />
       </div>
     </header>
@@ -121,7 +167,7 @@ export function BottomNav({ active }) {
     { id: 'profile', label: 'Profile', icon: 'user', href: '/profile' },
   ];
   return (
-    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md z-40 bg-white border-t border-[#E8DCC3]">
+    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md z-40 bg-white border-t border-[#E8DCC3] md:hidden">
       <div className="grid grid-cols-5">
         {tabs.map((t) => (
           <Link key={t.id} href={t.href} className={`relative flex flex-col items-center gap-1 py-2.5 text-[10px] font-medium ${active === t.id ? 'text-maroon' : 'text-muted hover:text-ink'}`}>

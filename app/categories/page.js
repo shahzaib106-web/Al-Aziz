@@ -14,7 +14,7 @@ function Categories() {
 
   return (
     <CartProvider>
-      <div dir="ltr" className="mx-auto max-w-md min-h-screen bg-cream pb-24 shadow-xl">
+      <div dir="ltr" className="mx-auto max-w-md md:max-w-6xl min-h-screen bg-cream pb-24 md:pb-10 shadow-xl">
         <PageHeader
           title="Categories"
           right={
@@ -23,7 +23,7 @@ function Categories() {
             </Link>
           }
         />
-        <div className="p-4 space-y-3">
+        <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {cats.map((c) => (
             <Link key={c.id} href={`/menu?cat=${c.id}`} className="card p-3 flex items-center gap-3 hover:border-maroon/40 transition">
               <img src={c.image} alt={c.en} className="w-14 h-14 rounded-lg object-cover border border-[#E8DCC3]" />

@@ -66,7 +66,23 @@ export default function AdminSettings() {
                   <input className="afield tnum" value={s.lat ?? ''} onChange={(e) => setS({ ...s, lat: e.target.value })} placeholder="Latitude" />
                   <input className="afield tnum" value={s.lng ?? ''} onChange={(e) => setS({ ...s, lng: e.target.value })} placeholder="Longitude" />
                 </div>
-                <p className="text-[11px] text-[#9B948A] mt-1.5">Used for delivery reference and the “See on map” link.</p>
+                {/* Live map preview of the saved coordinates */}
+                <div className="mt-3 rounded-xl overflow-hidden border border-[#E7E1D5] bg-[#F5F2EB]">
+                  <div className="flex items-center justify-between px-3 py-2 border-b border-[#E7E1D5] bg-white">
+                    <span className="text-[11px] font-bold text-ink flex items-center gap-1.5">
+                      <Icon name="pin" className="w-3.5 h-3.5 text-maroon" /> {s.address || s.location || 'Restaurant location'}
+                    </span>
+                    <span className="text-[10px] text-[#9B948A] tnum">{Number(s.lat || 30.64486081381286).toFixed(5)}, {Number(s.lng || 73.06623648139468).toFixed(5)}</span>
+                  </div>
+                  <iframe
+                    title="Restaurant location map"
+                    src={`https://maps.google.com/maps?q=${s.lat || 30.64486081381286},${s.lng || 73.06623648139468}&z=16&output=embed`}
+                    className="w-full h-48 block"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                </div>
+                <p className="text-[11px] text-[#9B948A] mt-1.5">Map shows the saved pin. Update the coordinates and press Save to move it.</p>
               </div>
             </div>
           </SectionCard>

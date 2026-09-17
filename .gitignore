@@ -1,0 +1,21 @@
+# dependencies
+node_modules/
+
+# next.js
+.next/
+out/
+
+# logs
+*.log
+npm-debug.log*
+
+# misc
+.DS_Store
+.env*.local
+
+# user uploads (not part of the app)
+uploads/
+
+# sandbox caches / configs
+.npm/
+.config/

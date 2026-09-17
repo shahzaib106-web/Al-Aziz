@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  background: #efe6d4;
+}
+
+.urdu {
+  font-family: 'Noto Nastaliq Urdu', serif;
+  line-height: 2.1;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.gold-banner {
+  background: linear-gradient(100deg, #f6e2a0 0%, #e3b94f 40%, #c9971c 75%, #e3b94f 100%);
+}
+
+.pattern-maroon {
+  background-color: #8f1418;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1.2px, transparent 1.3px);
+  background-size: 14px 14px;
+}
+
+@layer components {
+  .card {
+    @apply bg-cream-card border border-[#E8DCC3] rounded-xl shadow-card;
+  }
+  .field {
+    @apply w-full rounded-lg border border-[#D8CCB4] bg-white px-3 py-2.5 text-sm outline-none focus:border-maroon focus:ring-2 focus:ring-maroon/15;
+  }
+  .btn-maroon {
+    @apply bg-maroon text-white rounded-lg font-semibold tracking-wide hover:bg-maroon-dark transition active:scale-[.98];
+  }
+  .btn-leaf {
+    @apply bg-leaf text-white rounded-lg font-semibold hover:bg-leaf-dark transition active:scale-[.98];
+  }
+  .chip {
+    @apply px-4 py-2 rounded-lg text-sm border border-[#E0D4BC] bg-white text-ink whitespace-nowrap;
+  }
+  .label {
+    @apply block text-xs font-semibold text-muted mb-1;
+  }
+  .th {
+    @apply text-left text-[11px] font-semibold text-muted px-4 py-3 uppercase tracking-wider;
+  }
+  .td {
+    @apply px-4 py-3 text-sm border-t border-[#EFE5D0] align-middle;
+  }
+}

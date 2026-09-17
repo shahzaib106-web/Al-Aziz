@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Admin Dashboard Preview — Al Aziz Restaurant</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: Poppins, Segoe UI, system-ui, sans-serif; }
+  body { background: #F6EFE0; color: #26211C; }
+  .wrap { display: flex; min-height: 100vh; }
+  aside {
+    width: 230px; flex-shrink: 0; color: #fff; display: flex; flex-direction: column;
+    background-color: #8f1418;
+    background-image: radial-gradient(rgba(255,255,255,.07) 1.2px, transparent 1.3px);
+    background-size: 14px 14px;
+    position: sticky; top: 0; height: 100vh;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; padding: 20px; border-bottom: 1px solid rgba(255,255,255,.12); }
+  .brand svg { width: 36px; height: 36px; }
+  .brand b { font-size: 14px; display: block; }
+  .brand small { color: rgba(255,255,255,.6); font-size: 10px; }
+  nav { padding: 16px 12px; flex: 1; }
+  nav a { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; color: rgba(255,255,255,.8); text-decoration: none; margin-bottom: 4px; }
+  nav a.on { background: #fff; color: #9E1B1E; font-weight: 700; box-shadow: 0 2px 6px rgba(0,0,0,.25); }
+  nav a:hover:not(.on) { background: rgba(255,255,255,.1); color: #fff; }
+  main { flex: 1; padding: 30px; min-width: 0; }
+  h1 { font-size: 20px; font-weight: 800; margin-bottom: 22px; }
+  h1 span { color: #8B8272; font-weight: 500; font-size: 12px; margin-left: 10px; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .stat { background: #FFFBF2; border: 1px solid #E8DCC3; border-radius: 12px; padding: 16px; display: flex; gap: 14px; align-items: center; box-shadow: 0 1px 3px rgba(90,60,20,.1); }
+  .stat .ic { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .ic.m { background: rgba(158,27,30,.1); color: #9E1B1E; }
+  .ic.g { background: rgba(23,112,60,.1); color: #17703C; }
+  .ic.y { background: rgba(217,169,47,.2); color: #8A6A10; }
+  .ic.k { background: rgba(38,33,28,.1); color: #26211C; }
+  .stat b { font-size: 17px; display: block; }
+  .stat small { color: #8B8272; font-size: 11px; }
+  .stat .sub { color: #17703C; font-size: 10px; font-weight: 700; }
+  .cols { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; margin-top: 24px; }
+  .card { background: #FFFBF2; border: 1px solid #E8DCC3; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(90,60,20,.1); }
+  .card h3 { font-size: 13px; font-weight: 800; padding: 15px 20px; border-bottom: 1px solid #EFE5D0; display: flex; justify-content: space-between; }
+  .card h3 a { color: #9E1B1E; font-size: 11px; text-decoration: none; }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: #8B8272; padding: 12px 20px; }
+  td { padding: 12px 20px; font-size: 13px; border-top: 1px solid #EFE5D0; }
+  .pill { font-size: 10px; font-weight: 700; border-radius: 999px; padding: 3px 10px; border: 1px solid; }
+  .pill.prep { background: rgba(217,169,47,.15); color: #8A6A10; border-color: rgba(217,169,47,.4); }
+  .pill.del { background: rgba(23,112,60,.1); color: #17703C; border-color: rgba(23,112,60,.3); }
+  li.row { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-top: 1px solid #EFE5D0; font-size: 13px; list-style: none; }
+  .mini { font-size: 10px; font-weight: 700; border-radius: 999px; padding: 3px 10px; }
+  .mini.g { background: rgba(23,112,60,.1); color: #17703C; border: 1px solid rgba(23,112,60,.3); }
+  .note { margin-top: 22px; background: #9E1B1E; color: #fff; border-radius: 12px; padding: 14px 20px; font-size: 12px; display: flex; justify-content: space-between; align-items: center; }
+  .note code { background: rgba(255,255,255,.15); padding: 3px 8px; border-radius: 6px; font-size: 12px; }
+  .thumbs { display: flex; gap: 10px; }
+  .thumbs img { width: 34px; height: 34px; border-radius: 8px; object-fit: cover; border: 1px solid #E8DCC3; }
+  @media (max-width: 900px) { .stats { grid-template-columns: 1fr 1fr; } .cols { grid-template-columns: 1fr; } aside { display: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <aside>
+    <div class="brand">
+      <svg viewBox="0 0 48 48"><g fill="none" stroke="#E3B94F" stroke-width="1.6" stroke-linecap="round"><path d="M24 6c2 4 6 5 6 9a6 6 0 0 1-12 0c0-4 4-5 6-9z"/><path d="M12 16c1.4 2.6 4 3.2 4 6a4 4 0 0 1-8 0c0-2.8 2.6-3.4 4-6z"/><path d="M36 16c1.4 2.6 4 3.2 4 6a4 4 0 0 1-8 0c0-2.8 2.6-3.4 4-6z"/><path d="M10 34h28M14 39h20"/><path d="M16 30c1-2.5 4-4 8-4s7 1.5 8 4"/></g></svg>
+      <div><b>Al Aziz Restaurant</b><small>Admin Panel</small></div>
+    </div>
+    <nav>
+      <a class="on" href="#">📊 &nbsp;Dashboard</a>
+      <a href="#">🧾 &nbsp;Orders</a>
+      <a href="#">🍗 &nbsp;Menu &amp; Prices</a>
+      <a href="#">📦 &nbsp;Inventory</a>
+      <a href="#">👥 &nbsp;Staff</a>
+      <a href="#">⚙️ &nbsp;Settings</a>
+      <a href="#">👁 &nbsp;View Website</a>
+      <a href="#">🚪 &nbsp;Logout</a>
+    </nav>
+  </aside>
+
+  <main>
+    <h1>Dashboard <span>live preview of your management panel</span></h1>
+
+    <div class="stats">
+      <div class="stat"><div class="ic g">📈</div><div><b>Rs. 3,090</b><small>Total Revenue</small><div class="sub">Rs. 990 today</div></div></div>
+      <div class="stat"><div class="ic m">🧾</div><div><b>2</b><small>Total Orders</small><div class="sub">1 in progress</div></div></div>
+      <div class="stat"><div class="ic y">📦</div><div><b>0</b><small>Low Stock Alerts</small></div></div>
+      <div class="stat"><div class="ic k">👥</div><div><b>4/5</b><small>Staff On Duty</small></div></div>
+    </div>
+
+    <div class="cols">
+      <div class="card">
+        <h3>Recent Orders <a href="#">View All</a></h3>
+        <table>
+          <tr><th>Order</th><th>Customer</th><th>Total</th><th>Status</th></tr>
+          <tr><td><b>#AGH2356</b><br><small style="color:#8B8272">today</small></td><td>Ali Raza</td><td><b>Rs. 990</b></td><td><span class="pill prep">Preparing</span></td></tr>
+          <tr><td><b>#AGH2341</b><br><small style="color:#8B8272">yesterday</small></td><td>Sana Khan</td><td><b>Rs. 2,100</b></td><td><span class="pill del">Delivered</span></td></tr>
+        </table>
+        <h3 style="border-top:1px solid #EFE5D0">Top Selling Items</h3>
+        <ul style="padding:0">
+          <li class="row" style="border-top:none"><span><span style="color:#8B8272;margin-right:8px">#1</span>Garlic Naan</span><span class="mini g">2 sold</span></li>
+          <li class="row"><span><span style="color:#8B8272;margin-right:8px">#2</span>Special Roghni Naan</span><span class="mini g">2 sold</span></li>
+          <li class="row"><span><span style="color:#8B8272;margin-right:8px">#3</span>Chicken Biryani</span><span class="mini g">1 sold</span></li>
+          <li class="row"><span><span style="color:#8B8272;margin-right:8px">#4</span>Azizi Special Mint Margarita</span><span class="mini g">1 sold</span></li>
+        </ul>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="card">
+          <h3>Menu at a glance <a href="#">Manage</a></h3>
+          <ul style="padding:0">
+            <li class="row" style="border-top:none"><span>🍗 Chicken Special</span><span class="mini g">6 items</span></li>
+            <li class="row"><span>🍚 Rice</span><span class="mini g">5 items</span></li>
+            <li class="row"><span>🐔 Sp. Desi Murgha</span><span class="mini g">3 items</span></li>
+            <li class="row"><span>🥩 Special Mutton</span><span class="mini g">7 items</span></li>
+            <li class="row"><span>🫓 Tandoor</span><span class="mini g">4 items</span></li>
+            <li class="row"><span>🥤 Cold Drinks</span><span class="mini g">8 items</span></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Low Stock Alerts <a href="#">Manage</a></h3>
+          <p style="font-size:12px;color:#8B8272;padding:16px 20px">All ingredients sufficiently stocked. ✅<br>Stock auto-deducts when orders are placed.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      <span><b>This is a static design preview.</b> The live dashboard has full editing: add/edit dishes &amp; prices, advance order status, restock inventory, manage staff &amp; settings.</span>
+      <span>login: <code>admin / admin123</code></span>
+    </div>
+  </main>
+</div>
+</body>
+</html>

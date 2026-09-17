@@ -37,6 +37,7 @@ function MenuInner() {
     <div dir="ltr" className="mx-auto max-w-md md:max-w-6xl min-h-screen bg-cream pb-28 md:pb-10 shadow-xl">
       <PageHeader
         title="Menu"
+        titleUr="مینیو"
         right={
           <button onClick={() => setSearching((s) => !s)} className="p-1 hover:bg-white/10 rounded-lg" aria-label="search">
             <Icon name="search" className="w-5 h-5" />

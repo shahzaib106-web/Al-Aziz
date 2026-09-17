@@ -12,6 +12,7 @@ export default function Login() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [pass, setPass] = useState('');
+  const [showPass, setShowPass] = useState(false);
 
   const submit = () => {
     if (!phone.trim() || !pass.trim() || (tab === 'signup' && !name.trim())) return toast(t('براہ کرم تمام خانے پُر کریں', 'Please fill in all fields'));
@@ -36,10 +37,10 @@ export default function Login() {
 
       <div className="px-6">
         <div className="grid grid-cols-2 gap-2">
-          <button onClick={() => setTab('login')} className={`${u('text-sm py-2.5 rounded-lg font-semibold border')} ${tab === 'login' ? 'bg-maroon text-white border-maroon' : 'bg-white text-ink border-[#E0D4BC]'}`}>
+          <button onClick={() => setTab('login')} className={`${u('text-[13px] h-11 rounded-xl font-bold border transition active:scale-[.98]')} ${tab === 'login' ? 'bg-maroon text-white border-maroon' : 'bg-white text-ink border-[#E0D4BC] hover:border-maroon/40'}`}>
             {t('لاگ ان کریں', 'Login')}
           </button>
-          <button onClick={() => setTab('signup')} className={`${u('text-sm py-2.5 rounded-lg font-semibold border')} ${tab === 'signup' ? 'bg-maroon text-white border-maroon' : 'bg-white text-ink border-[#E0D4BC]'}`}>
+          <button onClick={() => setTab('signup')} className={`${u('text-[13px] h-11 rounded-xl font-bold border transition active:scale-[.98]')} ${tab === 'signup' ? 'bg-maroon text-white border-maroon' : 'bg-white text-ink border-[#E0D4BC] hover:border-maroon/40'}`}>
             {t('نیا اکاؤنٹ بنائیں', 'Create Account')}
           </button>
         </div>
@@ -49,18 +50,21 @@ export default function Login() {
             <input className={`field text-sm ${u('')}`} placeholder={t('نام درج کریں', 'Enter your name')} value={name} onChange={(e) => setName(e.target.value)} />
           )}
           <div className="relative">
-            <input className={`field text-sm pl-10 ${u('')}`} placeholder={t('موبائل نمبر درج کریں', 'Enter mobile number')} value={phone} onChange={(e) => setPhone(e.target.value)} />
-            <Icon name="phone" className="w-4 h-4 text-muted absolute left-3 top-3.5" />
+            <input className={`field text-sm pl-11 ${u('')}`} placeholder={t('موبائل نمبر درج کریں', 'Enter mobile number')} value={phone} onChange={(e) => setPhone(e.target.value)} />
+            <Icon name="phone" className="w-4 h-4 text-muted absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
           <div className="relative">
-            <input type="password" className={`field text-sm pl-10 ${u('')}`} placeholder={t('پاس ورڈ درج کریں', 'Enter password')} value={pass} onChange={(e) => setPass(e.target.value)} />
-            <Icon name="eye" className="w-4 h-4 text-muted absolute left-3 top-3.5" />
+            <input type={showPass ? 'text' : 'password'} className={`field text-sm pl-11 pr-11 ${u('')}`} placeholder={t('پاس ورڈ درج کریں', 'Enter password')} value={pass} onChange={(e) => setPass(e.target.value)} />
+            <Icon name="eye" className="w-4 h-4 text-muted absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <button type="button" onClick={() => setShowPass((v) => !v)} className={`absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-lg ${showPass ? 'text-maroon' : 'text-muted hover:text-ink'}`} aria-label="toggle password visibility">
+              <Icon name="eye" className="w-4 h-4" />
+            </button>
           </div>
           <button className={`${u('text-[11px] text-muted hover:text-ink')}`} onClick={() => toast(t('پاس ورڈ ری سیٹ لنک بھیج دیا گیا', 'Password reset link sent'))}>
             {t('پاس ورڈ بھول گئے؟', 'Forgot password?')}
           </button>
 
-          <button onClick={submit} className={`btn-maroon w-full py-3 text-sm ${u('')}`}>
+          <button onClick={submit} className={`btn btn-primary w-full text-sm ${u('')}`}>
             {tab === 'login' ? t('لاگ ان کریں', 'Login') : t('نیا اکاؤنٹ بنائیں', 'Create Account')}
           </button>
 
@@ -68,11 +72,11 @@ export default function Login() {
             <span className="flex-1 h-px bg-[#E0D4BC]" /> {t('یا', 'or')} <span className="flex-1 h-px bg-[#E0D4BC]" />
           </div>
 
-          <button onClick={() => toast(t('ڈیمو موڈ — دستی لاگ ان استعمال کریں', 'Demo mode — use manual login'))} className="w-full bg-white border border-[#E0D4BC] rounded-lg py-2.5 flex items-center justify-center gap-2 text-xs font-semibold">
+          <button onClick={() => toast(t('ڈیمو موڈ — دستی لاگ ان استعمال کریں', 'Demo mode — use manual login'))} className="w-full bg-white border border-[#E0D4BC] rounded-xl h-11 flex items-center justify-center gap-2 text-[12px] font-semibold hover:border-maroon/40 transition active:scale-[.98]">
             <svg viewBox="0 0 24 24" className="w-4 h-4"><path fill="#4285F4" d="M23 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.2a5.3 5.3 0 0 1-2.3 3.5v2.9h3.7c2.2-2 3.4-5 3.4-8.6z"/><path fill="#34A853" d="M12 24c3.1 0 5.7-1 7.6-2.8l-3.7-2.9c-1 .7-2.3 1.1-3.9 1.1-3 0-5.5-2-6.4-4.7H1.8v3A11.5 11.5 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.6 14.7a7 7 0 0 1 0-4.4v-3H1.8a11.5 11.5 0 0 0 0 10.4l3.8-3z"/><path fill="#EA4335" d="M12 4.6c1.7 0 3.2.6 4.4 1.7L19.7 3A11.5 11.5 0 0 0 1.8 7.3l3.8 3c.9-2.7 3.4-4.7 6.4-4.7z"/></svg>
             {t('Google کے ساتھ جاری رکھیں', 'Continue with Google')}
           </button>
-          <button onClick={() => toast(t('ڈیمو موڈ — دستی لاگ ان استعمال کریں', 'Demo mode — use manual login'))} className="w-full bg-white border border-[#E0D4BC] rounded-lg py-2.5 flex items-center justify-center gap-2 text-xs font-semibold">
+          <button onClick={() => toast(t('ڈیمو موڈ — دستی لاگ ان استعمال کریں', 'Demo mode — use manual login'))} className="w-full bg-white border border-[#E0D4BC] rounded-xl h-11 flex items-center justify-center gap-2 text-[12px] font-semibold hover:border-maroon/40 transition active:scale-[.98]">
             <svg viewBox="0 0 24 24" className="w-4 h-4" fill="#1877F2"><path d="M24 12a12 12 0 1 0-13.9 11.9v-8.4h-3V12h3V9.4c0-3 1.8-4.7 4.6-4.7 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9V12h3.4l-.5 3.5h-2.9v8.4A12 12 0 0 0 24 12z"/></svg>
             {t('Facebook کے ساتھ جاری رکھیں', 'Continue with Facebook')}
           </button>

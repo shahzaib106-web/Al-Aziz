@@ -54,6 +54,7 @@ export default function Profile() {
       <div dir="ltr" className="mx-auto max-w-md md:max-w-3xl min-h-screen bg-cream pb-28 md:pb-10 shadow-xl">
         <PageHeader
           title="My Profile"
+          titleUr="میری پروفائل"
           right={
             <button className="p-1 hover:bg-white/10 rounded-lg" onClick={() => setEditing((e) => !e)} aria-label="settings">
               <Icon name="gear" className="w-5 h-5" />
@@ -149,7 +150,7 @@ export default function Profile() {
 
           {showFavs && (
             <div className="mt-4 space-y-3">
-              <h3 className={`${isUr ? 'urdu' : ''} text-sm font-bold text-ink`}>{t('میرے پسندیدہ', 'My Favorites')}</h3>
+              <h3 className={`section-title ${isUr ? 'urdu !tracking-normal' : ''}`}>{t('میرے پسندیدہ', 'My Favorites')}</h3>
               {favItems.length === 0 && <p className={`${isUr ? 'urdu' : ''} text-xs text-muted`}>{t('کوئی پسندیدہ آئٹم نہیں', 'No favorite items yet')}</p>}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {favItems.map((m) => (

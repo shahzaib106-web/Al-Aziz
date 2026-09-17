@@ -24,18 +24,18 @@ export default function Track() {
 
   return (
     <div dir="ltr" className="mx-auto max-w-md md:max-w-5xl min-h-screen bg-cream pb-10 shadow-xl">
-      <PageHeader title="Track Order" />
+      <PageHeader title="Track Order" titleUr="آرڈر ٹریک کریں" />
 
       {!order ? (
         <p className={`${isUr ? 'urdu' : ''} text-center text-sm text-muted py-16`}>{t('لوڈ ہو رہا ہے…', 'Loading…')}</p>
       ) : (
         <div className="p-4">
-          <div className="card p-4 flex items-center justify-between" dir="ltr">
-            <div>
-              <div className="text-sm font-bold">Order #{order.id}</div>
-              <div className="text-[11px] text-muted mt-0.5">Estimated Delivery Time</div>
+          <div className="card p-4 flex items-center justify-between gap-3" dir="ltr">
+            <div className="min-w-0">
+              <div className="text-sm font-extrabold text-ink tabular-nums">Order #{order.id}</div>
+              <div className={`text-[11px] text-muted mt-0.5 ${isUr ? 'urdu leading-relaxed' : ''}`}>{t('تخمینی ڈیلیوری وقت', 'Estimated Delivery Time')}</div>
             </div>
-            <div className="text-maroon font-extrabold text-sm">{cancelled ? '—' : settings?.eta || '35 - 45 min'}</div>
+            <div className="text-maroon font-extrabold text-sm shrink-0">{cancelled ? '—' : settings?.eta || '35 - 45 min'}</div>
           </div>
 
           {cancelled && (
@@ -66,7 +66,7 @@ export default function Track() {
                     </div>
                     <div className="pb-6 flex-1">
                       <div className="flex items-center justify-between">
-                        <span className={`text-sm font-bold ${current ? 'text-maroon' : done ? 'text-ink' : 'text-muted'}`}>{meta.en}</span>
+                        <span className={`text-sm font-bold ${current ? 'text-maroon' : done ? 'text-ink' : 'text-muted'}`}>{t(meta.ur, meta.en)}</span>
                         <span className="text-[11px] text-muted">{timeOf(ts)}</span>
                       </div>
                       <p className={`${isUr ? 'urdu' : ''} text-[11px] mt-1 ${isUr ? 'leading-loose' : ''} ${current ? 'text-maroon' : 'text-muted'}`}>
@@ -87,14 +87,14 @@ export default function Track() {
                     <span className="text-ink font-semibold">{fmt(i.price * i.qty)}</span>
                   </div>
                 ))}
-                <div className="flex justify-between border-t border-[#EFE5D0] pt-2 font-bold text-ink">
-                  <span>Total (incl. delivery)</span>
-                  <span>{fmt(order.total)}</span>
+                <div className="flex justify-between border-t border-[#EFE5D0] pt-2.5 mt-0.5 font-extrabold text-ink">
+                  <span>{t('کل (ڈیلیوری سمیت)', 'Total (incl. delivery)')}</span>
+                  <span className="tabular-nums">{fmt(order.total)}</span>
                 </div>
               </div>
 
-              <a href={`tel:${(settings?.phone || '03196526413').replace(/\s/g, '')}`} className="btn-maroon w-full py-3.5 text-sm tracking-widest block text-center" dir="ltr">
-                CALL RESTAURANT
+              <a href={`tel:${(settings?.phone || '03196526413').replace(/\s/g, '')}`} className={`btn btn-primary w-full text-sm ${isUr ? 'urdu' : 'tracking-widest'}`} dir="ltr">
+                {t('ریسٹورنٹ کو کال کریں', 'CALL RESTAURANT')}
               </a>
             </div>
           </div>

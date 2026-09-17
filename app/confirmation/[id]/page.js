@@ -40,25 +40,25 @@ export default function Confirmation() {
         <div className="w-20 h-20 rounded-full bg-leaf flex items-center justify-center text-white shadow-lg relative">
           <Icon name="check" className="w-10 h-10" strokeWidth={2.6} />
         </div>
-        <h1 className={`${isUr ? 'urdu' : ''} text-lg font-bold text-ink mt-6 ${isUr ? 'leading-loose' : ''}`}>
+        <h1 className={`${isUr ? 'urdu' : ''} text-base font-bold text-ink mt-6 ${isUr ? 'leading-loose' : ''}`}>
           {t('آپ کا آرڈر کامیابی سے ثبت ہو گیا!', 'Your order has been placed successfully!')}
         </h1>
-        <div className="text-sm font-bold text-ink mt-3" dir="ltr">Order #{id}</div>
-        <p className={`${isUr ? 'urdu' : ''} text-xs text-muted mt-2`}>{t('ہم جلدی آپ کے آرڈر کی تصدیق کریں گے۔', 'We will confirm your order soon.')}</p>
+        <div className="text-sm font-extrabold text-ink mt-3 tabular-nums" dir="ltr">Order #{id}</div>
+        <p className={`${isUr ? 'urdu' : ''} text-xs text-muted mt-2 ${isUr ? 'leading-loose' : ''}`}>{t('ہم جلدی آپ کے آرڈر کی تصدیق کریں گے۔', 'We will confirm your order soon.')}</p>
 
-        <div className="w-full card p-4 mt-8 text-sm space-y-2" dir="ltr">
-          <div className="flex justify-between"><span className="text-muted">Delivery Time</span><span className="font-bold text-ink">{settings?.eta || '35 - 45 min'}</span></div>
-          <div className="flex justify-between"><span className="text-muted">Payment Method</span><span className="font-semibold text-ink capitalize">{order?.payment === 'cod' ? 'Cash on Delivery' : order?.payment === 'bank' ? 'Bank Transfer' : 'JazzCash / Easypaisa'}</span></div>
-          <div className="flex justify-between"><span className="text-muted">Total Amount</span><span className="font-bold text-maroon">{fmt(order?.total)}</span></div>
+        <div className="w-full card p-4 mt-8 text-sm space-y-2.5" dir="ltr">
+          <div className="flex justify-between gap-3"><span className="text-muted">{t('ڈیلیوری وقت', 'Delivery Time')}</span><span className="font-bold text-ink">{settings?.eta || '35 - 45 min'}</span></div>
+          <div className="flex justify-between gap-3"><span className="text-muted">{t('ادائیگی', 'Payment Method')}</span><span className="font-semibold text-ink capitalize text-right">{order?.payment === 'cod' ? t('کیش آن ڈیلیوری', 'Cash on Delivery') : order?.payment === 'bank' ? t('بینک ٹرانسفر', 'Bank Transfer') : 'JazzCash / Easypaisa'}</span></div>
+          <div className="flex justify-between gap-3"><span className="text-muted">{t('کل رقم', 'Total Amount')}</span><span className="font-extrabold text-maroon tabular-nums">{fmt(order?.total)}</span></div>
         </div>
       </div>
 
       <div className="px-6 pb-8 space-y-3">
-        <Link href={'/track/' + id} className="btn-maroon w-full py-3.5 text-sm tracking-widest block text-center" dir="ltr">
-          TRACK ORDER
+        <Link href={'/track/' + id} className={`btn btn-primary w-full text-sm ${isUr ? 'urdu' : 'tracking-widest'}`} dir="ltr">
+          {t('آرڈر ٹریک کریں', 'TRACK ORDER')}
         </Link>
-        <Link href="/" className="w-full py-2 text-xs tracking-widest text-ink font-semibold block text-center" dir="ltr">
-          BACK TO HOME
+        <Link href="/" className={`btn btn-outline w-full text-[12px] ${isUr ? 'urdu' : 'tracking-widest'}`} dir="ltr">
+          {t('واپس ہوم پر', 'BACK TO HOME')}
         </Link>
       </div>
     </div>

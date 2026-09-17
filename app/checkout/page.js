@@ -61,7 +61,7 @@ function CheckoutInner() {
 
   return (
     <div dir="ltr" className="mx-auto max-w-md md:max-w-5xl min-h-screen bg-cream pb-10 shadow-xl">
-      <PageHeader title="Checkout" />
+      <PageHeader title="Checkout" titleUr="چیک آؤٹ" />
 
       {items.length === 0 ? (
         <p className={`${isUr ? 'urdu' : ''} text-center text-sm text-muted py-16`}>
@@ -73,28 +73,28 @@ function CheckoutInner() {
             {/* Address */}
             <div className="card p-4">
               <div className="flex items-center justify-between mb-2" dir="ltr">
-                <h3 className="text-xs font-bold">Delivery Address</h3>
-                <span className="text-[10px] font-semibold bg-leaf/10 text-leaf border border-leaf/30 rounded px-2 py-0.5">Home</span>
+                <h3 className={`ctitle ${isUr ? 'urdu !text-[12px] leading-relaxed' : ''}`}>{t('ڈیلیوری ایڈریس', 'Delivery Address')}</h3>
+                <span className={`pill bg-leaf/10 text-leaf border-leaf/30 ${isUr ? 'urdu !text-[11px] leading-relaxed' : ''}`}>{t('گھر', 'Home')}</span>
               </div>
               {editAddr ? (
                 <div className="space-y-2 mt-2">
-                  <input className="field" dir="ltr" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
-                  <input className="field" dir="ltr" placeholder="Phone" value={phone} onChange={(e) => setPhone(e.target.value)} />
-                  <textarea className="field" dir="ltr" rows={2} placeholder="Address" value={address} onChange={(e) => setAddress(e.target.value)} />
-                  <button onClick={() => setEditAddr(false)} className="text-xs font-semibold text-leaf" dir="ltr">Save</button>
+                  <input className="field" dir="ltr" placeholder={t('نام', 'Name')} value={name} onChange={(e) => setName(e.target.value)} />
+                  <input className="field" dir="ltr" placeholder={t('فون', 'Phone')} value={phone} onChange={(e) => setPhone(e.target.value)} />
+                  <textarea className="field !h-auto py-2.5" dir="ltr" rows={2} placeholder={t('پتہ', 'Address')} value={address} onChange={(e) => setAddress(e.target.value)} />
+                  <button onClick={() => setEditAddr(false)} className={`btn btn-sm btn-leaf-c w-max ${isUr ? 'urdu' : ''}`} dir="ltr">{t('محفوظ کریں', 'Save')}</button>
                 </div>
               ) : (
                 <>
                   <p className="text-xs text-muted leading-relaxed" dir="ltr">{address}</p>
                   <p className="text-xs text-muted mt-1" dir="ltr">{phone}</p>
-                  <button onClick={() => setEditAddr(true)} className="text-xs font-semibold text-maroon mt-2" dir="ltr">Change</button>
+                  <button onClick={() => setEditAddr(true)} className={`text-xs font-bold text-maroon mt-2 hover:underline ${isUr ? 'urdu' : ''}`} dir="ltr">{t('تبدیل کریں', 'Change')}</button>
                 </>
               )}
             </div>
 
             {/* Payment */}
             <div className="card p-4">
-              <h3 className="text-xs font-bold mb-3" dir="ltr">Payment Method</h3>
+              <h3 className={`ctitle mb-3 ${isUr ? 'urdu !text-[12px] leading-relaxed' : ''}`} dir="ltr">{t('ادائیگی کا طریقہ', 'Payment Method')}</h3>
               <div className="space-y-2 md:grid md:grid-cols-3 md:gap-2 md:space-y-0">
                 {PAYMENTS.map((p) => (
                   <label key={p.id} className={`flex items-center gap-3 border rounded-lg px-4 py-3 cursor-pointer text-sm ${payment === p.id ? 'border-maroon ring-1 ring-maroon/25 bg-maroon/5' : 'border-[#E0D4BC] bg-white'}`}>
@@ -113,14 +113,14 @@ function CheckoutInner() {
           <div className="space-y-4 md:sticky md:top-20">
             {/* Summary */}
             <div className="card p-4 text-sm" dir="ltr">
-              <h3 className="text-xs font-bold mb-2">Order Summary</h3>
-              <div className="flex justify-between text-muted"><span>Subtotal</span><span className="text-ink font-semibold">{fmt(subtotal)}</span></div>
-              <div className="flex justify-between text-muted mt-1"><span>Delivery Fee</span><span className="text-ink font-semibold">{fee === 0 ? 'FREE' : fmt(fee)}</span></div>
-              <div className="flex justify-between font-bold text-ink border-t border-[#EFE5D0] pt-2 mt-2"><span>Total</span><span>{fmt(total)}</span></div>
+              <h3 className={`ctitle mb-2 ${isUr ? 'urdu !text-[12px] leading-relaxed' : ''}`}>{t('آرڈر کا خلاصہ', 'Order Summary')}</h3>
+              <div className="flex justify-between text-muted"><span>{t('ذیلی کل', 'Subtotal')}</span><span className="text-ink font-semibold tabular-nums">{fmt(subtotal)}</span></div>
+              <div className="flex justify-between text-muted mt-1.5"><span>{t('ڈیلیوری فیس', 'Delivery Fee')}</span><span className={`font-semibold tabular-nums ${fee === 0 ? 'text-leaf' : 'text-ink'}`}>{fee === 0 ? t('مفت', 'FREE') : fmt(fee)}</span></div>
+              <div className="flex justify-between font-extrabold text-ink border-t border-[#EFE5D0] pt-2.5 mt-2.5"><span>{t('کل رقم', 'Total')}</span><span className="tabular-nums">{fmt(total)}</span></div>
             </div>
 
-            <button onClick={place} disabled={placing} className="btn-maroon w-full py-3.5 text-sm tracking-widest disabled:opacity-60" dir="ltr">
-              {placing ? 'PLACING…' : 'PLACE ORDER'}
+            <button onClick={place} disabled={placing} className={`btn btn-primary w-full text-sm ${isUr ? 'urdu' : 'tracking-widest'}`} dir="ltr">
+              {placing ? t('آرڈر ہو رہا ہے…', 'PLACING…') : t('آرڈر کریں', 'PLACE ORDER')}
             </button>
           </div>
         </div>

@@ -105,7 +105,7 @@ export function InstallPrompt() {
   return (
     <>
       {visible && (
-        <div className="fixed bottom-20 md:bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-sm z-[70]">
+        <div className="fixed bottom-[112px] md:bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-sm z-[70] fade-in">
           <div className="bg-[#24090B] text-white rounded-2xl shadow-2xl p-4 flex items-center gap-3 border border-white/10">
             <LogoMark className="w-10 h-10 shrink-0" />
             <div className="flex-1 min-w-0">

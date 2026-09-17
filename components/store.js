@@ -32,7 +32,7 @@ export function Toaster() {
   }, []);
   if (!msg) return null;
   return (
-    <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] bg-ink/95 text-white text-sm px-5 py-2.5 rounded-full shadow-xl whitespace-nowrap">
+    <div className="fixed left-1/2 -translate-x-1/2 z-[100] bg-ink/95 text-white text-[13px] font-medium px-5 py-2.5 rounded-full shadow-xl max-w-[calc(100vw-2rem)] text-center toast-pop" style={{ top: 'max(1rem, env(safe-area-inset-top))' }}>
       {msg}
     </div>
   );

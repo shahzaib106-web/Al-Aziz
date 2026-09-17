@@ -83,9 +83,9 @@ export function ProductModal({ item, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-[2px] flex items-end md:items-center justify-center" onClick={onClose}>
+    <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-[2px] flex items-end md:items-center justify-center fade-in" onClick={onClose}>
       <div
-        className="bg-cream w-full max-w-md md:max-w-lg md:rounded-2xl rounded-t-3xl shadow-2xl flex flex-col max-h-[90dvh] md:max-h-[85vh]"
+        className="bg-cream w-full max-w-md md:max-w-lg md:rounded-2xl rounded-t-3xl shadow-2xl flex flex-col max-h-[90dvh] md:max-h-[85vh] sheet-in"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Drag handle (mobile) */}

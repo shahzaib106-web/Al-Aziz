@@ -32,6 +32,7 @@ const P = {
   eye: <><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" /><circle cx="12" cy="12" r="3" /></>,
   utensils: <><path d="M7 2.5v8M4.5 2.5V8a2.5 2.5 0 0 0 5 0V2.5" /><path d="M7 10.5v11" /><path d="M17 2.5c-2 2.5-2.5 6-2.5 8.5 0 1.5 1 2.5 2.5 2.5v8" /></>,
   sparkle: <path d="M12 3l1.9 5.6L20 10l-6.1 1.4L12 17l-1.9-5.6L4 10l6.1-1.4L12 3z" />,
+  download: <><path d="M12 3v11m0 0 4-4m-4 4-4-4" /><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" /></>,
 };
 
 export function Icon({ name, className = 'w-5 h-5', strokeWidth = 1.8, fill = 'none' }) {

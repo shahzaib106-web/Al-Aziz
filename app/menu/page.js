@@ -2,7 +2,7 @@
 import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { api, CartProvider, useLang } from '../../components/store';
-import { PageHeader, BottomNav, MenuItemTile } from '../../components/customer';
+import { PageHeader, BottomNav, MenuItemTile, ProductModal } from '../../components/customer';
 import { Icon } from '../../components/icons';
 
 function MenuInner() {
@@ -14,6 +14,7 @@ function MenuInner() {
   const [cat, setCat] = useState(params.get('cat') || '');
   const [q, setQ] = useState('');
   const [searching, setSearching] = useState(false);
+  const [selected, setSelected] = useState(null);
 
   useEffect(() => {
     api('categories').then((c) => {
@@ -47,21 +48,25 @@ function MenuInner() {
           <input autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('کھانا تلاش کریں…', 'Search dishes…')} className={`field text-sm ${isUr ? 'urdu' : ''}`} />
         </div>
       )}
-      {/* Category chips */}
-      <div className="px-4 pt-4 flex gap-2 overflow-x-auto no-scrollbar">
+
+      {/* Category chips — sticky */}
+      <div className="sticky top-[52px] md:top-16 z-20 bg-cream/95 backdrop-blur px-4 py-3 flex gap-2 overflow-x-auto no-scrollbar border-b border-[#EFE5D0]/60">
         {cats.map((c) => (
           <button key={c.id} onClick={() => selectCat(c.id)} className={`chip ${isUr ? 'urdu' : ''} text-xs ${cat === c.id && !q ? '!bg-maroon !text-white !border-maroon font-semibold' : ''}`}>
             {t(c.ur, c.en)}
           </button>
         ))}
       </div>
+
       <div className="p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
         {list.map((m) => (
-          <MenuItemTile key={m.id} item={m} onOpen={() => router.push('/product/' + m.id)} />
+          <MenuItemTile key={m.id} item={m} onOpen={() => setSelected(m)} />
         ))}
         {list.length === 0 && <p className={`${isUr ? 'urdu' : ''} text-center text-sm text-muted py-10 col-span-2`}>{t('کوئی ڈش نہیں ملی', 'No dishes found')}</p>}
       </div>
+
       <BottomNav active="menu" />
+      <ProductModal item={selected} onClose={() => setSelected(null)} />
     </div>
   );
 }

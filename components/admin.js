@@ -118,7 +118,13 @@ export function AdminLogin({ onDone }) {
 
 /* ---------- Shell ---------- */
 const NAV = [
-  { group: 'Overview', items: [{ href: '/admin', label: 'Dashboard', icon: 'chart' }] },
+  {
+    group: 'Overview',
+    items: [
+      { href: '/admin', label: 'Dashboard', icon: 'chart' },
+      { href: '/admin/revenue', label: 'Revenue & Reports', icon: 'cash' },
+    ],
+  },
   {
     group: 'Management',
     items: [
@@ -271,6 +277,7 @@ export function StatCard({ icon, label, value, sub, tone = 'maroon' }) {
     gold: 'bg-[#FBF3E1] text-[#8A6A10]',
     ink: 'bg-[#F3F1EC] text-[#6E675C]',
     blue: 'bg-[#EDF2FB] text-[#1D4ED8]',
+    danger: 'bg-[#FBEDED] text-[#B3261E]',
   };
   return (
     <div className="acard p-5">

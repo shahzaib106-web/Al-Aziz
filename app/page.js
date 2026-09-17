@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { api, CartProvider, useLang } from '../components/store';
-import { Splash, Onboarding, HomeHeader, BottomNav, MenuItemTile, TopNav } from '../components/customer';
+import { Splash, Onboarding, HomeHeader, BottomNav, MenuItemTile, TopNav, ProductModal } from '../components/customer';
 
 function Home() {
   const router = useRouter();
@@ -13,6 +13,7 @@ function Home() {
   const [menu, setMenu] = useState([]);
   const [splash, setSplash] = useState(true);
   const [onb, setOnb] = useState(false);
+  const [selected, setSelected] = useState(null);
 
   useEffect(() => {
     const tm = setTimeout(() => setSplash(false), 1600);
@@ -34,15 +35,15 @@ function Home() {
         {/* Promo banner */}
         <div className="px-4 mt-4">
           <div className="card overflow-hidden flex items-stretch">
-            <div className="flex-1 p-4 flex flex-col justify-center">
-              <h2 className={`${isUr ? 'urdu' : 'text-lg font-extrabold'} text-ink ${isUr ? 'leading-loose' : 'leading-snug'}`}>
+            <div className="flex-1 p-4 md:p-6 flex flex-col justify-center">
+              <h2 className={`${isUr ? 'urdu' : 'text-xl md:text-2xl font-extrabold'} text-ink ${isUr ? 'leading-loose' : 'leading-snug'}`}>
                 {t(settings?.promoTitle || 'اصل ذائقہ اب آپ کے قریب', settings?.promoTitleEn || 'Authentic taste, now near you')}
               </h2>
               <Link href="/menu?cat=c1" className={`btn-leaf text-xs px-4 py-2 mt-3 inline-block w-max ${isUr ? 'urdu' : 'font-semibold tracking-wide'}`}>
                 {t('ابھی آرڈر کریں', 'Order Now')}
               </Link>
             </div>
-            <img src="/img/biryani.jpg" alt="biryani" className="w-32 h-full object-cover" />
+            <img src="/img/biryani.jpg" alt="biryani" className="w-32 md:w-64 h-full object-cover" />
           </div>
         </div>
 
@@ -85,12 +86,13 @@ function Home() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {popular.map((m) => (
-              <MenuItemTile key={m.id} item={m} onOpen={() => router.push('/product/' + m.id)} />
+              <MenuItemTile key={m.id} item={m} onOpen={() => setSelected(m)} />
             ))}
           </div>
         </div>
 
         <BottomNav active="home" />
+        <ProductModal item={selected} onClose={() => setSelected(null)} />
 
         {splash && <Splash settings={settings} />}
         {onb && (

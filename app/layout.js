@@ -1,10 +1,18 @@
 import './globals.css';
 import { Toaster, LangProvider } from '../components/store';
 import { PWA } from '../components/pwa';
+import { InstallPrompt } from '../components/customer';
 
 export const metadata = {
   title: 'العزيز ریسٹورنٹ — Al Aziz Restaurant',
   description: 'اصلی ذائقہ، ہماری پہچان — Order biryani, karahi, BBQ and more online.',
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  themeColor: '#9E1B1E',
 };
 
 export default function RootLayout({ children }) {
@@ -28,9 +36,12 @@ export default function RootLayout({ children }) {
         <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png" />
       </head>
       <body className="bg-cream text-ink font-sans antialiased">
-        <LangProvider>{children}</LangProvider>
+        <LangProvider>
+          {children}
+          <InstallPrompt />
+          <Toaster />
+        </LangProvider>
         <PWA />
-        <Toaster />
       </body>
     </html>
   );

@@ -2,6 +2,7 @@ import './globals.css';
 import { Toaster, LangProvider } from '../components/store';
 import { PWA } from '../components/pwa';
 import { InstallPrompt } from '../components/customer';
+import { ChunkErrorRecovery } from '../components/error-recovery';
 
 export const metadata = {
   title: 'العزيز ریسٹورنٹ — Al Aziz Restaurant',
@@ -41,6 +42,7 @@ export default function RootLayout({ children }) {
           <InstallPrompt />
           <Toaster />
         </LangProvider>
+        <ChunkErrorRecovery />
         <PWA />
       </body>
     </html>

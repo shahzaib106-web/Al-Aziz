@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { api, CartProvider, useLang } from '../../components/store';
 import { PageHeader, BottomNav, MenuItemTile } from '../../components/customer';
@@ -69,7 +69,9 @@ function MenuInner() {
 export default function Menu() {
   return (
     <CartProvider>
-      <MenuInner />
+      <Suspense fallback={<div className="mx-auto max-w-md md:max-w-6xl min-h-screen bg-cream" />}>
+        <MenuInner />
+      </Suspense>
     </CartProvider>
   );
 }

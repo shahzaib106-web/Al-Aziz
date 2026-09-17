@@ -137,25 +137,10 @@ const NAV = [
   { group: 'System', items: [{ href: '/admin/settings', label: 'Settings', icon: 'gear' }] },
 ];
 
-export function AdminShell({ title, subtitle, actions, children }) {
-  const pathname = usePathname();
-  const [authed, setAuthed] = useState(null);
-
-  useEffect(() => {
-    setAuthed(localStorage.getItem('agh_admin') === '1');
-  }, []);
-
-  if (authed === null) return null;
-  if (!authed) return <AdminLogin onDone={() => setAuthed(true)} />;
-
-  const logout = () => {
-    localStorage.removeItem('agh_admin');
-    setAuthed(false);
-  };
-
-  const today = new Date().toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
-
-  const NavItems = ({ mobile = false }) => (
+/* Hoisted outside AdminShell so React doesn't remount the whole navigation
+   on every shell render (inline component definitions break identity). */
+function NavItems({ pathname, mobile = false }) {
+  return (
     <>
       {NAV.map((g) => (
         <div key={g.group} className={mobile ? 'flex items-center gap-1' : ''}>
@@ -180,6 +165,25 @@ export function AdminShell({ title, subtitle, actions, children }) {
       ))}
     </>
   );
+}
+
+export function AdminShell({ title, subtitle, actions, children }) {
+  const pathname = usePathname();
+  const [authed, setAuthed] = useState(null);
+
+  useEffect(() => {
+    setAuthed(localStorage.getItem('agh_admin') === '1');
+  }, []);
+
+  if (authed === null) return null;
+  if (!authed) return <AdminLogin onDone={() => setAuthed(true)} />;
+
+  const logout = () => {
+    localStorage.removeItem('agh_admin');
+    setAuthed(false);
+  };
+
+  const today = new Date().toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
 
   return (
     <div dir="ltr" className="admin min-h-screen bg-[#F5F2EB] text-ink flex">
@@ -193,7 +197,7 @@ export function AdminShell({ title, subtitle, actions, children }) {
           </div>
         </div>
         <nav className="flex-1 overflow-y-auto pb-4">
-          <NavItems />
+          <NavItems pathname={pathname} />
         </nav>
         <div className="p-3 border-t border-white/10">
           <div className="flex items-center gap-3 px-2 py-2">
@@ -225,7 +229,7 @@ export function AdminShell({ title, subtitle, actions, children }) {
           </div>
         </div>
         <div className="flex gap-1.5 overflow-x-auto no-scrollbar px-4 pb-3">
-          <NavItems mobile />
+          <NavItems pathname={pathname} mobile />
         </div>
       </div>
 

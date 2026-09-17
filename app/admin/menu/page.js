@@ -19,7 +19,7 @@ export default function AdminMenu() {
     api('menu').then(setMenu).catch(() => {});
     api('categories').then(setCats).catch(() => {});
   };
-  useEffect(load, []);
+  useEffect(() => { load(); }, []);
 
   const openEdit = (m) => {
     if (m) {

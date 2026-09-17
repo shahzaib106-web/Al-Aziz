@@ -11,7 +11,7 @@ export default function AdminInventory() {
   const [restockQty, setRestockQty] = useState(10);
 
   const load = () => api('inventory').then(setInv).catch(() => {});
-  useEffect(load, []);
+  useEffect(() => { load(); }, []);
 
   const totalValue = inv.reduce((s, i) => s + i.stock * i.cost, 0);
   const low = inv.filter((i) => i.stock <= i.low);

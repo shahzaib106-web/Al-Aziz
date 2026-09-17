@@ -12,7 +12,7 @@ export default function AdminStaff() {
   const [editing, setEditing] = useState(null);
 
   const load = () => api('staff').then(setStaff).catch(() => {});
-  useEffect(load, []);
+  useEffect(() => { load(); }, []);
 
   const onDuty = staff.filter((s) => s.status === 'On Duty').length;
   const payroll = staff.reduce((s, x) => s + (+x.salary || 0), 0);

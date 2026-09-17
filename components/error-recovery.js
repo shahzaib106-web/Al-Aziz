@@ -41,9 +41,15 @@ export function ChunkErrorRecovery() {
     const onRejection = (e) => {
       if (isChunkError(e) || /loading chunk|chunkload/i.test(String(e?.reason?.message || ''))) reloadOnce();
     };
+    // Final safety net: if Next's crash screen text ever renders, recover.
+    const poll = setInterval(() => {
+      const txt = document.body?.textContent || '';
+      if (/Application error|client-side exception has occurred/.test(txt)) reloadOnce();
+    }, 400);
     window.addEventListener('error', onError);
     window.addEventListener('unhandledrejection', onRejection);
     return () => {
+      clearInterval(poll);
       window.removeEventListener('error', onError);
       window.removeEventListener('unhandledrejection', onRejection);
     };

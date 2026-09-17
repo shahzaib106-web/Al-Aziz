@@ -17,7 +17,9 @@
     "admin": {
       "username": "admin",
       "password": "admin123"
-    }
+    },
+    "lat": 30.64486081381286,
+    "lng": 73.06623648139468
   },
   "categories": [
     {

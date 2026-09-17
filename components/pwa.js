@@ -5,7 +5,8 @@ export function PWA() {
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(() => {});
+        // ?v= forces the browser to re-download the worker on deploy
+        navigator.serviceWorker.register('/sw.js?v=2').catch(() => {});
       });
     }
   }, []);

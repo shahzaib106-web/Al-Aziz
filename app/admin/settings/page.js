@@ -20,6 +20,8 @@ export default function AdminSettings() {
       deliveryFee: +s.deliveryFee,
       freeDeliveryAbove: +s.freeDeliveryAbove,
       discountPercent: +s.discountPercent,
+      lat: parseFloat(s.lat) || 30.64486081381286,
+      lng: parseFloat(s.lng) || 73.06623648139468,
     };
     if (newPass.trim()) payload.admin = { ...s.admin, password: newPass.trim() };
     await api('settings', { method: 'PUT', body: payload });
@@ -48,6 +50,24 @@ export default function AdminSettings() {
                 <div><label className="alabel">Phone</label><input className="afield tnum" value={s.phone} onChange={(e) => setS({ ...s, phone: e.target.value })} /></div>
               </div>
               <div><label className="alabel">Full address</label><textarea className="afield-area" rows={2} value={s.address} onChange={(e) => setS({ ...s, address: e.target.value })} /></div>
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="alabel !mb-0">Restaurant location (GPS)</label>
+                  <a
+                    href={`https://www.google.com/maps?q=${s.lat || 30.64486081381286},${s.lng || 73.06623648139468}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="abtn abtn-ghost !py-1 !px-2.5 text-[11px]"
+                  >
+                    <Icon name="pin" className="w-3.5 h-3.5" /> See on map
+                  </a>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <input className="afield tnum" value={s.lat ?? ''} onChange={(e) => setS({ ...s, lat: e.target.value })} placeholder="Latitude" />
+                  <input className="afield tnum" value={s.lng ?? ''} onChange={(e) => setS({ ...s, lng: e.target.value })} placeholder="Longitude" />
+                </div>
+                <p className="text-[11px] text-[#9B948A] mt-1.5">Used for delivery reference and the “See on map” link.</p>
+              </div>
             </div>
           </SectionCard>
 

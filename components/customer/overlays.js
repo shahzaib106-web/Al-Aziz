@@ -58,13 +58,14 @@ export function InstallPrompt() {
   const { isUr, t } = useLang();
   const [deferred, setDeferred] = useState(null);
   const [visible, setVisible] = useState(false);
-  const [iosHelp, setIosHelp] = useState(false);
+  const [help, setHelp] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
 
   useEffect(() => {
     const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
     if (standalone || localStorage.getItem('agh_install_dismissed')) return;
     const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    const mobile = /android|iphone|ipad|ipod|mobile/i.test(navigator.userAgent);
     setIsIOS(ios);
     const bip = (e) => {
       e.preventDefault();
@@ -74,7 +75,9 @@ export function InstallPrompt() {
     const installed = () => setVisible(false);
     window.addEventListener('beforeinstallprompt', bip);
     window.addEventListener('appinstalled', installed);
-    const timer = setTimeout(() => setVisible((v) => v || ios), 2500);
+    // Always show our own banner on mobile after a short delay,
+    // even if the browser never fires beforeinstallprompt.
+    const timer = setTimeout(() => setVisible((v) => v || mobile), 3000);
     return () => {
       window.removeEventListener('beforeinstallprompt', bip);
       window.removeEventListener('appinstalled', installed);
@@ -94,8 +97,8 @@ export function InstallPrompt() {
       deferred.prompt();
       await deferred.userChoice.catch(() => {});
       setVisible(false);
-    } else if (isIOS) {
-      setIosHelp(true);
+    } else {
+      setHelp(true);
     }
   };
 
@@ -119,17 +122,30 @@ export function InstallPrompt() {
         </div>
       )}
 
-      {iosHelp && (
-        <div className="fixed inset-0 z-[95] bg-black/60 flex items-center justify-center p-6" onClick={() => setIosHelp(false)}>
+      {help && (
+        <div className="fixed inset-0 z-[95] bg-black/60 flex items-center justify-center p-6" onClick={() => setHelp(false)}>
           <div className="bg-cream-card rounded-2xl p-6 max-w-xs w-full text-center shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <LogoMark className="w-12 h-12 mx-auto" />
-            <h3 className="text-sm font-extrabold mt-3">Install on iPhone</h3>
-            <ol className="text-[12px] text-muted text-left space-y-2 mt-4 list-decimal list-inside">
-              <li>Tap the <b>Share</b> button in Safari</li>
-              <li>Scroll and tap <b>“Add to Home Screen”</b></li>
-              <li>Tap <b>Add</b> — done! The app icon appears on your home screen.</li>
-            </ol>
-            <button onClick={() => setIosHelp(false)} className="btn-maroon w-full py-2.5 text-xs mt-5 tracking-wide">GOT IT</button>
+            {isIOS ? (
+              <>
+                <h3 className="text-sm font-extrabold mt-3">Install on iPhone</h3>
+                <ol className="text-[12px] text-muted text-left space-y-2 mt-4 list-decimal list-inside">
+                  <li>Tap the <b>Share</b> button in Safari</li>
+                  <li>Scroll and tap <b>“Add to Home Screen”</b></li>
+                  <li>Tap <b>Add</b> — done! The app icon appears on your home screen.</li>
+                </ol>
+              </>
+            ) : (
+              <>
+                <h3 className="text-sm font-extrabold mt-3">Install on this phone</h3>
+                <ol className="text-[12px] text-muted text-left space-y-2 mt-4 list-decimal list-inside">
+                  <li>Tap the <b>⋮ menu</b> at the top-right of your browser</li>
+                  <li>Tap <b>“Install app”</b> or <b>“Add to Home screen”</b></li>
+                  <li>Confirm — the Al Aziz app icon appears on your home screen.</li>
+                </ol>
+              </>
+            )}
+            <button onClick={() => setHelp(false)} className="btn-maroon w-full py-2.5 text-xs mt-5 tracking-wide">GOT IT</button>
           </div>
         </div>
       )}

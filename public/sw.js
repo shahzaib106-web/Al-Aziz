@@ -1,5 +1,5 @@
-/* Al-Ghazi Biryani Hotel — service worker (PWA) */
-const CACHE = 'agh-cache-v1';
+/* Al Aziz Restaurant — service worker (PWA) — v2 */
+const CACHE = 'agh-cache-v2';
 const CORE = ['/', '/manifest.webmanifest', '/icons/icon-192.png', '/icons/icon-512.png'];
 
 self.addEventListener('install', (e) => {
@@ -20,7 +20,7 @@ self.addEventListener('fetch', (e) => {
   const url = new URL(e.request.url);
   if (e.request.method !== 'GET' || url.origin !== self.location.origin) return;
   // Never cache API/data or admin pages — always live
-  if (url.pathname.startsWith('/api/')) return;
+  if (url.pathname.startsWith('/api/') || url.pathname.startsWith('/admin')) return;
 
   // Static assets: cache-first
   if (/\.(png|jpg|jpeg|webp|svg|css|js|woff2?)$/.test(url.pathname)) {
@@ -38,7 +38,7 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
-  // Pages: network-first with offline fallback
+  // Pages: network-first with offline fallback (always fresh HTML)
   e.respondWith(
     fetch(e.request)
       .then((res) => {

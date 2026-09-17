@@ -5,23 +5,33 @@ import { useRouter } from 'next/navigation';
 import { api, CartProvider, useLang } from '../components/store';
 import { Splash, Onboarding, HomeHeader, BottomNav, MenuItemTile, TopNav, ProductModal } from '../components/customer';
 
+// Module-level flag: survives client-side navigation (Home button etc.),
+// resets only on a fresh page load / app open.
+let splashPlayed = false;
+
 function Home() {
   const router = useRouter();
   const { isUr, t } = useLang();
   const [settings, setSettings] = useState(null);
   const [cats, setCats] = useState([]);
   const [menu, setMenu] = useState([]);
-  const [splash, setSplash] = useState(true);
+  const [splash, setSplash] = useState(!splashPlayed);
   const [onb, setOnb] = useState(false);
   const [selected, setSelected] = useState(null);
 
+  // Splash plays once per app/site open; navigating back to Home never replays it.
   useEffect(() => {
+    if (splashPlayed) return;
+    splashPlayed = true;
     const tm = setTimeout(() => setSplash(false), 1600);
+    return () => clearTimeout(tm);
+  }, []);
+
+  useEffect(() => {
     if (!localStorage.getItem('agh_onboarded')) setOnb(true);
     api('settings').then(setSettings).catch(() => {});
     api('categories').then(setCats).catch(() => {});
     api('menu').then(setMenu).catch(() => {});
-    return () => clearTimeout(tm);
   }, []);
 
   const popular = [...menu].sort((a, b) => b.reviews - a.reviews).slice(0, 3);

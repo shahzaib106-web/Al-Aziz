@@ -25,15 +25,11 @@ export function HomeHeader({ settings }) {
   const { isUr, t } = useLang();
   return (
     <header className="bg-maroon text-white pt-safe md:hidden">
-      <div className="flex items-center justify-between gap-2 px-4 pt-3.5 pb-3.5">
-        <div className="flex items-center gap-1 text-[10px] leading-tight text-white/90 max-w-[100px]">
-          <Icon name="pin" className="w-4 h-4 shrink-0" />
-          <span>{settings?.location || 'Sahiwal, Pakistan'}</span>
-        </div>
-        <div className={`${isUr ? 'urdu text-lg leading-relaxed' : 'text-base font-extrabold tracking-wide'} text-center flex-1 drop-shadow-sm`}>
+      <div className="flex items-center gap-2 px-4 pt-3.5 pb-3.5">
+        <div className={`${isUr ? 'urdu text-lg leading-relaxed' : 'text-base font-extrabold tracking-wide'} flex-1 drop-shadow-sm`}>
           {t(settings?.nameUr || 'العزيز ریسٹورنٹ', settings?.nameEn || 'Al Aziz Restaurant')}
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <LangToggle light />
           <Icon name="bell" className="w-5 h-5 text-white/90" />
         </div>

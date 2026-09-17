@@ -8,7 +8,7 @@ function CartInner() {
   const { isUr, t } = useLang();
 
   return (
-    <div dir="ltr" className="mx-auto max-w-md md:max-w-5xl min-h-screen bg-cream pb-24 md:pb-10 shadow-xl flex flex-col">
+    <div dir="ltr" className="mx-auto max-w-md md:max-w-5xl min-h-screen bg-cream pb-28 md:pb-10 shadow-xl flex flex-col">
       <PageHeader title="Your Cart" right={items.length > 0 ? <button onClick={clear} className="text-[11px] font-semibold tracking-wide hover:underline px-1">Clear</button> : null} />
 
       {items.length === 0 ? (

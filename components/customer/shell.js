@@ -116,7 +116,7 @@ export function BottomNav({ active }) {
     { id: 'profile', label: 'Profile', icon: 'user', href: '/profile' },
   ];
   return (
-    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md z-40 bg-white border-t border-[#E8DCC3] md:hidden">
+    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md z-40 bg-white border-t border-[#E8DCC3] md:hidden pb-safe">
       <div className="grid grid-cols-5">
         {tabs.map((t) => (
           <Link key={t.id} href={t.href} className={`relative flex flex-col items-center gap-1 py-2.5 text-[10px] font-medium ${active === t.id ? 'text-maroon' : 'text-muted hover:text-ink'}`}>

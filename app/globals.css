@@ -27,6 +27,15 @@ body {
   background: linear-gradient(100deg, #f6e2a0 0%, #e3b94f 40%, #c9971c 75%, #e3b94f 100%);
 }
 
+/* Safe-area padding for phones with home indicators */
+.pb-safe {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
 .pattern-maroon {
   background-color: #8f1418;
   background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1.2px, transparent 1.3px);

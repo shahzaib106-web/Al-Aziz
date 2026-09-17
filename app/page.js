@@ -28,7 +28,7 @@ function Home() {
 
   return (
     <CartProvider>
-      <div dir="ltr" className="mx-auto max-w-md md:max-w-6xl min-h-screen bg-cream pb-24 md:pb-10 shadow-xl relative">
+      <div dir="ltr" className="mx-auto max-w-md md:max-w-6xl min-h-screen bg-cream pb-28 md:pb-10 shadow-xl relative">
         <TopNav active="home" />
         <HomeHeader settings={settings} />
 

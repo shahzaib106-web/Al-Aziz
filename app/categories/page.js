@@ -14,7 +14,7 @@ function Categories() {
 
   return (
     <CartProvider>
-      <div dir="ltr" className="mx-auto max-w-md md:max-w-6xl min-h-screen bg-cream pb-24 md:pb-10 shadow-xl">
+      <div dir="ltr" className="mx-auto max-w-md md:max-w-6xl min-h-screen bg-cream pb-28 md:pb-10 shadow-xl">
         <PageHeader
           title="Categories"
           right={

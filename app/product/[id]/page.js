@@ -90,10 +90,10 @@ function ProductInner() {
 
         {out && <p className={`${isUr ? 'urdu' : ''} text-xs text-maroon font-bold mt-4`}>{t('آج کے لیے اسٹاک ختم ہو گیا', 'Out of stock for today')}</p>}
 
-        <div className="flex items-center gap-3 mt-6" dir="ltr">
-          <Qty value={qty} onChange={(v) => setQty(Math.max(1, v))} max={Math.max(1, item.stock)} />
-          <button disabled={out} onClick={addToCart} className="btn-maroon flex-1 py-3 text-sm tracking-widest disabled:opacity-50">
-            ADD TO CART
+        <div className="flex items-center gap-3 mt-6 pb-safe" dir="ltr">
+          <Qty value={qty} onChange={setQty} max={Math.max(1, item.stock)} />
+          <button disabled={out} onClick={addToCart} className="btn-maroon flex-1 min-w-0 h-11 text-[13px] md:text-sm tracking-wide disabled:opacity-50">
+            ADD TO CART · {fmt(price * qty)}
           </button>
         </div>
       </div>

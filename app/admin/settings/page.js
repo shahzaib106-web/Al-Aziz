@@ -1,7 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { api, toast } from '../../../components/store';
-import { AdminShell } from '../../../components/admin';
+import { AdminShell, SectionCard } from '../../../components/admin';
+import { Icon } from '../../../components/icons';
 
 export default function AdminSettings() {
   const [s, setS] = useState(null);
@@ -11,10 +12,9 @@ export default function AdminSettings() {
     api('settings').then(setS).catch(() => {});
   }, []);
 
-  if (!s) return <AdminShell title="Settings"><p className="text-sm text-muted">Loading…</p></AdminShell>;
+  if (!s) return <AdminShell title="Settings"><p className="text-[13px] text-[#9B948A]">Loading…</p></AdminShell>;
 
-  const save = async (e) => {
-    e.preventDefault();
+  const save = async () => {
     const payload = {
       ...s,
       deliveryFee: +s.deliveryFee,
@@ -23,100 +23,70 @@ export default function AdminSettings() {
     };
     if (newPass.trim()) payload.admin = { ...s.admin, password: newPass.trim() };
     await api('settings', { method: 'PUT', body: payload });
-    toast('Settings saved');
+    toast('Settings saved — live on the website');
     setNewPass('');
     api('settings').then(setS);
   };
 
   return (
-    <AdminShell title="Restaurant Settings">
-      <form onSubmit={save} className="grid lg:grid-cols-2 gap-5 max-w-5xl">
-        <div className="card p-5 space-y-4">
-          <h3 className="text-sm font-extrabold border-b border-[#EFE5D0] pb-3">Restaurant Identity</h3>
-          <div>
-            <label className="label">Name (Urdu)</label>
-            <input className="field urdu" dir="rtl" value={s.nameUr} onChange={(e) => setS({ ...s, nameUr: e.target.value })} />
-          </div>
-          <div>
-            <label className="label">Name (English)</label>
-            <input className="field" value={s.nameEn} onChange={(e) => setS({ ...s, nameEn: e.target.value })} />
-          </div>
-          <div>
-            <label className="label">Tagline (Urdu)</label>
-            <input className="field urdu" dir="rtl" value={s.tagline} onChange={(e) => setS({ ...s, tagline: e.target.value })} />
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="label">Location</label>
-              <input className="field" value={s.location} onChange={(e) => setS({ ...s, location: e.target.value })} />
+    <AdminShell
+      title="Settings"
+      subtitle="Restaurant identity, commerce rules & security"
+      actions={<button onClick={save} className="abtn abtn-primary"><Icon name="check" className="w-4 h-4" /> Save changes</button>}
+    >
+      <div className="grid lg:grid-cols-2 gap-4 max-w-5xl">
+        <div className="space-y-4">
+          <SectionCard title="Restaurant identity" desc="Shown across the website, splash & PWA">
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div><label className="alabel">Name (Urdu)</label><input className="afield urdu" dir="rtl" value={s.nameUr} onChange={(e) => setS({ ...s, nameUr: e.target.value })} /></div>
+                <div><label className="alabel">Name (English)</label><input className="afield" value={s.nameEn} onChange={(e) => setS({ ...s, nameEn: e.target.value })} /></div>
+              </div>
+              <div><label className="alabel">Tagline (Urdu)</label><input className="afield urdu" dir="rtl" value={s.tagline} onChange={(e) => setS({ ...s, tagline: e.target.value })} /></div>
+              <div className="grid grid-cols-2 gap-3">
+                <div><label className="alabel">City / location</label><input className="afield" value={s.location} onChange={(e) => setS({ ...s, location: e.target.value })} /></div>
+                <div><label className="alabel">Phone</label><input className="afield tnum" value={s.phone} onChange={(e) => setS({ ...s, phone: e.target.value })} /></div>
+              </div>
+              <div><label className="alabel">Full address</label><textarea className="afield-area" rows={2} value={s.address} onChange={(e) => setS({ ...s, address: e.target.value })} /></div>
             </div>
-            <div>
-              <label className="label">Phone</label>
-              <input className="field" value={s.phone} onChange={(e) => setS({ ...s, phone: e.target.value })} />
-            </div>
-          </div>
-          <div>
-            <label className="label">Full Address</label>
-            <textarea className="field" rows={2} value={s.address} onChange={(e) => setS({ ...s, address: e.target.value })} />
-          </div>
-        </div>
+          </SectionCard>
 
-        <div className="space-y-5">
-          <div className="card p-5 space-y-4">
-            <h3 className="text-sm font-extrabold border-b border-[#EFE5D0] pb-3">Home Page & Deals</h3>
-            <div>
-              <label className="label">Promo Banner Title (Urdu)</label>
-              <input className="field urdu" dir="rtl" value={s.promoTitle} onChange={(e) => setS({ ...s, promoTitle: e.target.value })} />
-            </div>
-            <div>
-              <label className="label">Promo Banner Title (English)</label>
-              <input className="field" value={s.promoTitleEn} onChange={(e) => setS({ ...s, promoTitleEn: e.target.value })} />
-            </div>
-            <div className="grid grid-cols-3 gap-3">
-              <div>
-                <label className="label">Discount %</label>
-                <input type="number" min="0" max="90" className="field" value={s.discountPercent} onChange={(e) => setS({ ...s, discountPercent: e.target.value })} />
-              </div>
-              <div>
-                <label className="label">Delivery Fee (Rs.)</label>
-                <input type="number" min="0" className="field" value={s.deliveryFee} onChange={(e) => setS({ ...s, deliveryFee: e.target.value })} />
-              </div>
-              <div>
-                <label className="label">Free Above (Rs.)</label>
-                <input type="number" min="0" className="field" value={s.freeDeliveryAbove} onChange={(e) => setS({ ...s, freeDeliveryAbove: e.target.value })} />
-              </div>
-            </div>
+          <SectionCard title="Admin security" desc="Credentials for this console">
             <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="label">Est. Delivery Time</label>
-                <input className="field" value={s.eta} onChange={(e) => setS({ ...s, eta: e.target.value })} />
-              </div>
-              <div>
-                <label className="label">Deal Note (Urdu)</label>
-                <input className="field urdu" dir="rtl" value={s.discountNote} onChange={(e) => setS({ ...s, discountNote: e.target.value })} />
-              </div>
-              <div>
-                <label className="label">Deal Note (English)</label>
-                <input className="field" value={s.discountNoteEn} onChange={(e) => setS({ ...s, discountNoteEn: e.target.value })} />
-              </div>
+              <div><label className="alabel">Username</label><input className="afield" value={s.admin.username} onChange={(e) => setS({ ...s, admin: { ...s.admin, username: e.target.value } })} /></div>
+              <div><label className="alabel">New password</label><input type="password" className="afield" value={newPass} onChange={(e) => setNewPass(e.target.value)} placeholder="Leave blank to keep" /></div>
             </div>
-          </div>
-
-          <div className="card p-5 space-y-4">
-            <h3 className="text-sm font-extrabold border-b border-[#EFE5D0] pb-3">Admin Security</h3>
-            <div>
-              <label className="label">Admin Username</label>
-              <input className="field" value={s.admin.username} onChange={(e) => setS({ ...s, admin: { ...s.admin, username: e.target.value } })} />
-            </div>
-            <div>
-              <label className="label">New Password (leave blank to keep current)</label>
-              <input type="password" className="field" value={newPass} onChange={(e) => setNewPass(e.target.value)} placeholder="••••••••" />
-            </div>
-          </div>
-
-          <button type="submit" className="btn-maroon w-full py-3 text-sm tracking-wide">Save All Settings</button>
+          </SectionCard>
         </div>
-      </form>
+
+        <div className="space-y-4">
+          <SectionCard title="Home page & deals" desc="Marketing content on the customer home">
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div><label className="alabel">Promo title (Urdu)</label><input className="afield urdu" dir="rtl" value={s.promoTitle} onChange={(e) => setS({ ...s, promoTitle: e.target.value })} /></div>
+                <div><label className="alabel">Promo title (English)</label><input className="afield" value={s.promoTitleEn} onChange={(e) => setS({ ...s, promoTitleEn: e.target.value })} /></div>
+              </div>
+              <div className="grid grid-cols-3 gap-3">
+                <div><label className="alabel">Discount %</label><input type="number" min="0" max="90" className="afield tnum" value={s.discountPercent} onChange={(e) => setS({ ...s, discountPercent: e.target.value })} /></div>
+                <div><label className="alabel">Delivery fee</label><input type="number" min="0" className="afield tnum" value={s.deliveryFee} onChange={(e) => setS({ ...s, deliveryFee: e.target.value })} /></div>
+                <div><label className="alabel">Free above</label><input type="number" min="0" className="afield tnum" value={s.freeDeliveryAbove} onChange={(e) => setS({ ...s, freeDeliveryAbove: e.target.value })} /></div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div><label className="alabel">Delivery ETA</label><input className="afield" value={s.eta} onChange={(e) => setS({ ...s, eta: e.target.value })} /></div>
+                <div><label className="alabel">Deal note (Urdu)</label><input className="afield urdu" dir="rtl" value={s.discountNote} onChange={(e) => setS({ ...s, discountNote: e.target.value })} /></div>
+              </div>
+              <div><label className="alabel">Deal note (English)</label><input className="afield" value={s.discountNoteEn} onChange={(e) => setS({ ...s, discountNoteEn: e.target.value })} /></div>
+            </div>
+          </SectionCard>
+
+          <div className="acard p-5 flex items-start gap-3 bg-[#FBF3E1] !border-[#E7CD8A]">
+            <Icon name="sparkle" className="w-4 h-4 text-[#8A6A10] mt-0.5 shrink-0" />
+            <p className="text-[12px] text-[#8A6A10] leading-relaxed">
+              Changes publish to the customer website and installable app immediately — no redeploy needed. On Vercel, settings persist for the current session and reset to the seeded defaults on restart.
+            </p>
+          </div>
+        </div>
+      </div>
     </AdminShell>
   );
 }

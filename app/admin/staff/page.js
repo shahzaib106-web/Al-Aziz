@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { api, fmt, toast } from '../../../components/store';
-import { AdminShell, Modal } from '../../../components/admin';
+import { AdminShell, Modal, Toggle, StatCard } from '../../../components/admin';
 import { Icon } from '../../../components/icons';
 
 const ROLES = ['Head Chef', 'BBQ Chef', 'Cook', 'Kitchen Helper', 'Waiter', 'Cashier', 'Delivery Rider', 'Manager'];
@@ -14,13 +14,16 @@ export default function AdminStaff() {
   const load = () => api('staff').then(setStaff).catch(() => {});
   useEffect(load, []);
 
+  const onDuty = staff.filter((s) => s.status === 'On Duty').length;
+  const payroll = staff.reduce((s, x) => s + (+x.salary || 0), 0);
+
   const save = async (e) => {
     e.preventDefault();
     if (!editing.name.trim()) return toast('Name required');
     const payload = { ...editing, salary: +editing.salary };
     if (editing.id) await api('staff/' + editing.id, { method: 'PUT', body: payload });
     else await api('staff', { method: 'POST', body: payload });
-    toast('Staff saved');
+    toast('Staff member saved');
     setEditing(null);
     load();
   };
@@ -38,76 +41,86 @@ export default function AdminStaff() {
   };
 
   return (
-    <AdminShell title="Staff Management">
-      <button onClick={() => setEditing({ ...blank })} className="btn-maroon px-5 py-2.5 text-sm flex items-center gap-2 mb-5">
-        <Icon name="plus" className="w-4 h-4" /> Add Staff Member
-      </button>
-
-      <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
-        {staff.map((s) => (
-          <div key={s.id} className="card p-5">
-            <div className="flex items-start gap-3">
-              <div className="w-12 h-12 rounded-full bg-maroon/10 text-maroon flex items-center justify-center font-extrabold">
-                {s.name.split(' ').map((w) => w[0]).slice(0, 2).join('')}
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="text-sm font-extrabold truncate">{s.name}</div>
-                <div className="text-[11px] text-muted font-medium">{s.role}</div>
-              </div>
-              <span className={`text-[10px] font-bold border rounded-full px-2.5 py-1 ${s.status === 'On Duty' ? 'bg-leaf/10 text-leaf border-leaf/30' : 'bg-ink/5 text-muted border-[#D8CCB4]'}`}>
-                {s.status}
-              </span>
-            </div>
-            <div className="mt-4 space-y-1.5 text-xs text-muted">
-              <div className="flex justify-between"><span>Phone</span><span className="font-semibold text-ink">{s.phone}</span></div>
-              <div className="flex justify-between"><span>Salary</span><span className="font-semibold text-ink">{fmt(s.salary)}/mo</span></div>
-              <div className="flex justify-between"><span>Joined</span><span className="font-semibold text-ink">{s.joined}</span></div>
-            </div>
-            <div className="flex gap-2 mt-4 pt-3 border-t border-[#EFE5D0]">
-              <button onClick={() => toggle(s)} className="flex-1 text-[11px] font-bold border border-leaf/40 text-leaf bg-leaf/10 rounded-lg py-2 hover:bg-leaf hover:text-white">
-                {s.status === 'On Duty' ? 'Mark Off Duty' : 'Mark On Duty'}
-              </button>
-              <button onClick={() => setEditing({ ...s })} className="p-2 border border-[#D8CCB4] rounded-lg hover:border-maroon hover:text-maroon"><Icon name="edit" className="w-4 h-4" /></button>
-              <button onClick={() => del(s)} className="p-2 border border-[#D8CCB4] rounded-lg hover:border-maroon hover:text-maroon"><Icon name="trash" className="w-4 h-4" /></button>
-            </div>
-          </div>
-        ))}
+    <AdminShell
+      title="Staff"
+      subtitle="Team, roles, payroll & duty roster"
+      actions={<button onClick={() => setEditing({ ...blank })} className="abtn abtn-primary"><Icon name="plus" className="w-4 h-4" /> Add member</button>}
+    >
+      <div className="grid grid-cols-2 xl:grid-cols-3 gap-4">
+        <StatCard icon="users" label="Team size" value={staff.length} sub={`${onDuty} on duty right now`} tone="maroon" />
+        <StatCard icon="chart" label="Monthly payroll" value={fmt(payroll)} sub="All active & off-duty staff" tone="gold" />
+        <StatCard icon="check" label="On duty" value={`${onDuty}/${staff.length}`} sub="Toggle duty from the table" tone="leaf" />
       </div>
 
-      <Modal open={!!editing} onClose={() => setEditing(null)} title={editing?.id ? 'Edit Staff' : 'Add Staff Member'}>
+      <div className="acard overflow-hidden mt-4">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[820px]">
+            <thead>
+              <tr>
+                <th className="ath">Member</th>
+                <th className="ath">Role</th>
+                <th className="ath">Contact</th>
+                <th className="ath text-right">Salary / mo</th>
+                <th className="ath">Joined</th>
+                <th className="ath">On duty</th>
+                <th className="ath text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {staff.map((s) => (
+                <tr key={s.id} className="arow">
+                  <td className="atd">
+                    <div className="flex items-center gap-3">
+                      <span className="w-9 h-9 rounded-full bg-[#FBEDED] text-maroon text-[12px] font-extrabold flex items-center justify-center shrink-0">
+                        {s.name.split(' ').map((w) => w[0]).slice(0, 2).join('')}
+                      </span>
+                      <span className="font-bold">{s.name}</span>
+                    </div>
+                  </td>
+                  <td className="atd"><span className="apill bg-[#F3F1EC] text-[#6E675C] border-[#D8D2C6]">{s.role}</span></td>
+                  <td className="atd tnum text-[#6E675C]">{s.phone}</td>
+                  <td className="atd text-right font-semibold tnum">{fmt(s.salary)}</td>
+                  <td className="atd tnum text-[#6E675C]">{s.joined}</td>
+                  <td className="atd"><Toggle on={s.status === 'On Duty'} onChange={() => toggle(s)} /></td>
+                  <td className="atd text-right whitespace-nowrap">
+                    <button onClick={() => setEditing({ ...s })} className="p-2 rounded-lg text-[#6E675C] hover:text-maroon hover:bg-[#FBEDED]"><Icon name="edit" className="w-4 h-4" /></button>
+                    <button onClick={() => del(s)} className="p-2 rounded-lg text-[#6E675C] hover:text-[#B3261E] hover:bg-[#FBEDED]"><Icon name="trash" className="w-4 h-4" /></button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <Modal
+        open={!!editing}
+        onClose={() => setEditing(null)}
+        title={editing?.id ? `Edit ${editing.name}` : 'Add staff member'}
+        footer={
+          <>
+            <button onClick={() => setEditing(null)} className="abtn abtn-ghost">Cancel</button>
+            <button onClick={save} className="abtn abtn-primary">Save member</button>
+          </>
+        }
+      >
         {editing && (
           <form onSubmit={save} className="space-y-4">
-            <div>
-              <label className="label">Full Name</label>
-              <input className="field" value={editing.name} onChange={(e) => setEditing({ ...editing, name: e.target.value })} />
-            </div>
+            <div><label className="alabel">Full name</label><input className="afield" value={editing.name} onChange={(e) => setEditing({ ...editing, name: e.target.value })} /></div>
             <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="label">Role</label>
-                <select className="field" value={editing.role} onChange={(e) => setEditing({ ...editing, role: e.target.value })}>
+              <div><label className="alabel">Role</label>
+                <select className="afield" value={editing.role} onChange={(e) => setEditing({ ...editing, role: e.target.value })}>
                   {ROLES.map((r) => <option key={r}>{r}</option>)}
                 </select>
               </div>
-              <div>
-                <label className="label">Phone</label>
-                <input className="field" value={editing.phone} onChange={(e) => setEditing({ ...editing, phone: e.target.value })} />
-              </div>
-              <div>
-                <label className="label">Salary (Rs./month)</label>
-                <input type="number" min="0" className="field" value={editing.salary} onChange={(e) => setEditing({ ...editing, salary: e.target.value })} />
-              </div>
-              <div>
-                <label className="label">Joined</label>
-                <input type="date" className="field" value={editing.joined} onChange={(e) => setEditing({ ...editing, joined: e.target.value })} />
-              </div>
+              <div><label className="alabel">Phone</label><input className="afield tnum" value={editing.phone} onChange={(e) => setEditing({ ...editing, phone: e.target.value })} /></div>
+              <div><label className="alabel">Salary (Rs./month)</label><input type="number" min="0" className="afield tnum" value={editing.salary} onChange={(e) => setEditing({ ...editing, salary: e.target.value })} /></div>
+              <div><label className="alabel">Joined</label><input type="date" className="afield tnum" value={editing.joined} onChange={(e) => setEditing({ ...editing, joined: e.target.value })} /></div>
             </div>
             <div className="flex items-center gap-3">
-              <label className="label !mb-0">Status</label>
-              <select className="field !w-36" value={editing.status} onChange={(e) => setEditing({ ...editing, status: e.target.value })}>
-                <option>On Duty</option><option>Off Duty</option>
-              </select>
+              <Toggle on={editing.status === 'On Duty'} onChange={() => setEditing({ ...editing, status: editing.status === 'On Duty' ? 'Off Duty' : 'On Duty' })} />
+              <span className="text-[13px] font-medium">On duty</span>
             </div>
-            <button type="submit" className="btn-maroon w-full py-2.5 text-sm">Save</button>
           </form>
         )}
       </Modal>

@@ -22,6 +22,8 @@ export function Qty({ value, onChange, max = 99, light = false }) {
 export function MenuItemTile({ item, onOpen }) {
   const { isUr, t } = useLang();
   const out = !item.available || item.stock <= 0;
+  const half = item.options?.find((o) => o.label === 'Half')?.price;
+  const full = item.options?.find((o) => o.label === 'Full')?.price || item.price;
   return (
     <div
       onClick={onOpen}
@@ -43,7 +45,13 @@ export function MenuItemTile({ item, onOpen }) {
           {t(item.nameUr, item.nameEn)}
         </div>
         <div className="flex items-center justify-between gap-2 mt-auto pt-1">
-          <span className="text-maroon font-extrabold text-[13px] md:text-sm truncate" dir="ltr">{fmt(item.price)}</span>
+          {half ? (
+            <span className="text-maroon font-extrabold text-[10px] md:text-[11px] leading-tight" dir="ltr">
+              {t('ہاف', 'Half')} {half.toLocaleString('en-PK')} · {t('فل', 'Full')} {full.toLocaleString('en-PK')}
+            </span>
+          ) : (
+            <span className="text-maroon font-extrabold text-[13px] md:text-sm truncate tabular-nums" dir="ltr">{fmt(item.price)}</span>
+          )}
           {!out && (
             <span className="bg-leaf text-white rounded-full w-7 h-7 flex items-center justify-center shrink-0">
               <Icon name="plus" className="w-4 h-4" strokeWidth={2.4} />

@@ -20,8 +20,8 @@ export default function AdminSettings() {
       deliveryFee: +s.deliveryFee,
       freeDeliveryAbove: +s.freeDeliveryAbove,
       discountPercent: +s.discountPercent,
-      lat: parseFloat(s.lat) || 30.64486081381286,
-      lng: parseFloat(s.lng) || 73.06623648139468,
+      lat: parseFloat(s.lat) || 30.6431941,
+      lng: parseFloat(s.lng) || 73.0658838,
     };
     if (newPass.trim()) payload.admin = { ...s.admin, password: newPass.trim() };
     await api('settings', { method: 'PUT', body: payload });
@@ -54,7 +54,7 @@ export default function AdminSettings() {
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="alabel !mb-0">Restaurant location (GPS)</label>
                   <a
-                    href={`https://www.google.com/maps?q=${s.lat || 30.64486081381286},${s.lng || 73.06623648139468}`}
+                    href={`https://www.google.com/maps?q=${s.lat || 30.6431941},${s.lng || 73.0658838}`}
                     target="_blank"
                     rel="noreferrer"
                     className="abtn abtn-ghost !py-1 !px-2.5 text-[11px]"
@@ -72,11 +72,11 @@ export default function AdminSettings() {
                     <span className="text-[11px] font-bold text-ink flex items-center gap-1.5">
                       <Icon name="pin" className="w-3.5 h-3.5 text-maroon" /> {s.address || s.location || 'Restaurant location'}
                     </span>
-                    <span className="text-[10px] text-[#9B948A] tnum">{Number(s.lat || 30.64486081381286).toFixed(5)}, {Number(s.lng || 73.06623648139468).toFixed(5)}</span>
+                    <span className="text-[10px] text-[#9B948A] tnum">{Number(s.lat || 30.6431941).toFixed(5)}, {Number(s.lng || 73.0658838).toFixed(5)}</span>
                   </div>
                   <iframe
                     title="Restaurant location map"
-                    src={`https://maps.google.com/maps?q=${s.lat || 30.64486081381286},${s.lng || 73.06623648139468}&z=16&output=embed`}
+                    src={`https://maps.google.com/maps?q=${s.lat || 30.6431941},${s.lng || 73.0658838}&z=16&output=embed`}
                     className="w-full h-48 block"
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"

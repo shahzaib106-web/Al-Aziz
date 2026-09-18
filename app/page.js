@@ -82,12 +82,12 @@ function Home() {
 
   return (
     <CartProvider>
-      <div dir="ltr" className="mx-auto max-w-md md:max-w-6xl min-h-screen bg-cream pb-[calc(90px+env(safe-area-inset-bottom))] md:pb-10 shadow-xl relative flex flex-col">
+      <div dir="ltr" className="mx-auto max-w-md md:max-w-none min-h-screen bg-cream pb-[calc(90px+env(safe-area-inset-bottom))] md:pb-10 shadow-xl md:shadow-none relative flex flex-col">
         <TopNav active="home" />
         <HomeHeader settings={settings} />
 
         {/* ---------- Search ---------- */}
-        <div className="px-4 mt-3.5 flex items-center gap-2.5">
+        <div className="px-4 mt-3.5 md:mt-8 md:max-w-3xl md:mx-auto md:w-full flex items-center gap-2.5">
           <div className="relative flex-1">
             <Icon name="search" className="w-[18px] h-[18px] text-[#A79E8C] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
@@ -114,7 +114,7 @@ function Home() {
         </div>
 
         {/* ---------- Hero ---------- */}
-        <div className="px-4 mt-3.5">
+        <div className="px-4 mt-3.5 md:mt-6 md:px-6 md:max-w-7xl md:mx-auto md:w-full">
           <div className="relative overflow-hidden rounded-2xl shadow-card">
             <div key={slide} className="relative h-[196px] md:h-64 hero-in">
               <img src={s.img} alt="" className="absolute inset-0 w-full h-full object-cover" />
@@ -137,7 +137,7 @@ function Home() {
         </div>
 
         {/* ---------- Category carousel ---------- */}
-        <div className="mt-5 px-4">
+        <div className="mt-5 px-4 md:mt-8 md:px-6 md:max-w-7xl md:mx-auto md:w-full">
           <div className="flex items-center justify-between mb-2.5">
             <h3 className={`section-title ${isUr ? 'urdu !tracking-normal' : ''}`}>{t('اقسام', 'Categories')}</h3>
             <Link href="/categories" className={`flex items-center gap-0.5 text-[11px] font-bold text-maroon hover:underline ${isUr ? 'urdu' : ''}`}>
@@ -172,7 +172,7 @@ function Home() {
         </div>
 
         {/* ---------- Product grid ---------- */}
-        <div className="mt-5 px-4">
+        <div className="mt-5 px-4 md:mt-8 md:px-6 md:max-w-7xl md:mx-auto md:w-full">
           <div className="flex items-center justify-between mb-2.5">
             <h3 className={`section-title ${isUr ? 'urdu !tracking-normal' : ''}`}>
               {q.trim() ? t('نتائج', 'Results') : catName ? t(catName.ur, catName.en) : t('مقبول ترین', 'Popular Picks')}
@@ -203,7 +203,7 @@ function Home() {
         </div>
 
         {/* ---------- Compact deal banner ---------- */}
-        <div className="px-4 pt-6 mt-auto">
+        <div className="px-4 pt-6 mt-auto md:mt-10 md:px-6 md:max-w-7xl md:mx-auto md:w-full">
           <div className="gold-banner rounded-2xl p-3.5 flex items-center gap-3 shadow-card border border-[#C9971C]/40">
             <div className="flex-1 min-w-0">
               <div className="text-[9px] font-extrabold tracking-widest text-[#6B520F]">{t('ویکنڈ اسپیشل', 'WEEKEND SPECIAL')}</div>

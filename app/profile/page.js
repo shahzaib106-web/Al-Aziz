@@ -51,7 +51,7 @@ export default function Profile() {
 
   return (
     <CartProvider>
-      <div dir="ltr" className="mx-auto max-w-md md:max-w-3xl min-h-screen bg-cream pb-28 md:pb-10 shadow-xl">
+      <div dir="ltr" className="mx-auto max-w-md md:max-w-none min-h-screen bg-cream pb-28 md:pb-10 shadow-xl md:shadow-none">
         <PageHeader
           title="My Profile"
           titleUr="میری پروفائل"
@@ -62,7 +62,7 @@ export default function Profile() {
           }
         />
 
-        <div className="p-4">
+        <div className="p-4 md:p-6 md:max-w-2xl md:mx-auto md:w-full">
           <div className="card p-4 flex items-center gap-4">
             <div className="w-16 h-16 rounded-full bg-[#D8CCB4] flex items-center justify-center text-white">
               <Icon name="user" className="w-8 h-8" strokeWidth={1.5} />

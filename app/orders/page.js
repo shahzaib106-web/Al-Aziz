@@ -22,10 +22,10 @@ function OrdersInner() {
   }, []);
 
   return (
-    <div dir="ltr" className="mx-auto max-w-md md:max-w-5xl min-h-screen bg-cream pb-28 md:pb-10 shadow-xl">
+    <div dir="ltr" className="mx-auto max-w-md md:max-w-none min-h-screen bg-cream pb-28 md:pb-10 shadow-xl md:shadow-none">
       <PageHeader title="My Orders" titleUr="میرے آرڈرز" />
-      <div className="p-4">
-        <div className="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0 md:items-start">
+      <div className="p-4 md:p-6 md:max-w-6xl md:mx-auto md:w-full">
+        <div className="space-y-3 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-4 md:space-y-0 md:items-start">
           {orders === null && (
             <p className={`${isUr ? 'urdu' : ''} text-center text-sm text-muted py-10 md:col-span-2`}>{t('لوڈ ہو رہا ہے…', 'Loading…')}</p>
           )}

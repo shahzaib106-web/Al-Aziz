@@ -9,7 +9,7 @@ function CartInner() {
   const { isUr, t } = useLang();
 
   return (
-    <div dir="ltr" className="mx-auto max-w-md md:max-w-5xl min-h-screen bg-cream pb-28 md:pb-10 shadow-xl flex flex-col">
+    <div dir="ltr" className="mx-auto max-w-md md:max-w-none min-h-screen bg-cream pb-28 md:pb-10 shadow-xl md:shadow-none flex flex-col">
       <PageHeader title="Your Cart" titleUr="آپ کا کارٹ" right={items.length > 0 ? <button onClick={clear} className={`text-[11px] font-bold tracking-wide hover:underline px-2 ${isUr ? 'urdu' : ''}`}>{t('صاف کریں', 'Clear')}</button> : null} />
 
       {items.length === 0 ? (
@@ -21,7 +21,7 @@ function CartInner() {
           <Link href="/menu" className={`btn btn-primary ${isUr ? 'urdu' : ''}`}>{t('مینیو دیکھیں', 'View Menu')}</Link>
         </div>
       ) : (
-        <div className="p-4 md:grid md:grid-cols-3 md:gap-6 md:items-start flex-1">
+        <div className="p-4 md:p-6 md:max-w-6xl md:mx-auto md:w-full md:grid md:grid-cols-3 md:gap-6 md:items-start flex-1">
           <div className="space-y-3 md:col-span-2">
             {items.map((i) => (
               <div key={i.key} className="card p-3 flex items-center gap-3">

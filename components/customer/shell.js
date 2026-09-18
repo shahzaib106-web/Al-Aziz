@@ -59,7 +59,7 @@ export function TopNav({ active }) {
   ];
   return (
     <header className="hidden md:block bg-maroon text-white sticky top-0 z-40 shadow-md">
-      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center gap-6">
+      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center gap-6">
         <Link href="/" className="flex items-center gap-3 shrink-0">
           <LogoMark className="w-9 h-9" />
           <span className={`${isUr ? 'urdu text-base leading-relaxed' : 'font-extrabold tracking-wide text-sm'}`}>

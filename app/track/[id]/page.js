@@ -23,13 +23,13 @@ export default function Track() {
   const cancelled = order?.status === 'cancelled';
 
   return (
-    <div dir="ltr" className="mx-auto max-w-md md:max-w-5xl min-h-screen bg-cream pb-10 shadow-xl">
+    <div dir="ltr" className="mx-auto max-w-md md:max-w-none min-h-screen bg-cream pb-10 shadow-xl md:shadow-none">
       <PageHeader title="Track Order" titleUr="آرڈر ٹریک کریں" />
 
       {!order ? (
         <p className={`${isUr ? 'urdu' : ''} text-center text-sm text-muted py-16`}>{t('لوڈ ہو رہا ہے…', 'Loading…')}</p>
       ) : (
-        <div className="p-4">
+        <div className="p-4 md:p-6 md:max-w-5xl md:mx-auto md:w-full">
           <div className="card p-4 flex items-center justify-between gap-3" dir="ltr">
             <div className="min-w-0">
               <div className="text-sm font-extrabold text-ink tabular-nums">Order #{order.id}</div>

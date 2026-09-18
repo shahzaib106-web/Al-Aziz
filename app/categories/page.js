@@ -15,7 +15,7 @@ export default function Categories() {
 
   return (
     <CartProvider>
-      <div dir="ltr" className="mx-auto max-w-md md:max-w-6xl min-h-screen bg-cream pb-28 md:pb-10 shadow-xl">
+      <div dir="ltr" className="mx-auto max-w-md md:max-w-none min-h-screen bg-cream pb-28 md:pb-10 shadow-xl md:shadow-none">
         <PageHeader
           title="Categories"
           titleUr="اقسام"
@@ -26,7 +26,7 @@ export default function Categories() {
           }
         />
         {/* Card-style category grid (never rows) */}
-        <div className="p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+        <div className="p-4 md:p-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4 md:max-w-7xl md:mx-auto md:w-full">
           {!loaded ? (
             <TileSkeleton count={6} />
           ) : (

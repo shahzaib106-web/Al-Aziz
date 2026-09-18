@@ -37,8 +37,8 @@ function ProductInner() {
   };
 
   return (
-    <div dir="ltr" className="mx-auto max-w-md md:max-w-5xl min-h-screen bg-cream pb-10 shadow-xl">
-      <div className="md:grid md:grid-cols-2 md:gap-8 md:p-6">
+    <div dir="ltr" className="mx-auto max-w-md md:max-w-none min-h-screen bg-cream pb-10 shadow-xl md:shadow-none">
+      <div className="md:grid md:grid-cols-2 md:gap-8 md:p-6 md:max-w-6xl md:mx-auto md:w-full">
       <div className="relative">
         <img src={item.image} alt={item.nameEn} className="w-full h-72 md:h-[480px] md:rounded-2xl object-cover" />
         <button onClick={() => router.back()} className="absolute top-4 left-4 bg-black/40 text-white rounded-full p-2 backdrop-blur" aria-label="back">

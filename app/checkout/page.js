@@ -60,7 +60,7 @@ function CheckoutInner() {
   };
 
   return (
-    <div dir="ltr" className="mx-auto max-w-md md:max-w-5xl min-h-screen bg-cream pb-10 shadow-xl">
+    <div dir="ltr" className="mx-auto max-w-md md:max-w-none min-h-screen bg-cream pb-10 shadow-xl md:shadow-none">
       <PageHeader title="Checkout" titleUr="چیک آؤٹ" />
 
       {items.length === 0 ? (
@@ -68,7 +68,7 @@ function CheckoutInner() {
           {t('کوئی آئٹم نہیں — پہلے کارٹ میں کچھ شامل کریں', 'No items — add something to your cart first')}
         </p>
       ) : (
-        <div className="p-4 space-y-4 md:space-y-0 md:grid md:grid-cols-3 md:gap-6 md:items-start">
+        <div className="p-4 md:p-6 space-y-4 md:space-y-0 md:max-w-6xl md:mx-auto md:w-full md:grid md:grid-cols-3 md:gap-6 md:items-start">
           <div className="space-y-4 md:col-span-2">
             {/* Address */}
             <div className="card p-4">

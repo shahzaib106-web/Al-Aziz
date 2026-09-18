@@ -37,7 +37,7 @@ function MenuInner() {
     : menu.filter((m) => m.catId === cat);
 
   return (
-    <div dir="ltr" className="mx-auto max-w-md md:max-w-6xl min-h-screen bg-cream pb-28 md:pb-10 shadow-xl">
+    <div dir="ltr" className="mx-auto max-w-md md:max-w-none min-h-screen bg-cream pb-28 md:pb-10 shadow-xl md:shadow-none">
       <PageHeader
         title="Menu"
         titleUr="مینیو"
@@ -48,13 +48,13 @@ function MenuInner() {
         }
       />
       {searching && (
-        <div className="px-4 pt-3">
+        <div className="px-4 pt-3 md:max-w-7xl md:mx-auto md:w-full">
           <input autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('کھانا تلاش کریں…', 'Search dishes…')} className={`field text-sm ${isUr ? 'urdu' : ''}`} />
         </div>
       )}
 
       {/* Category chips — sticky */}
-      <div className="sticky top-[52px] md:top-16 z-20 bg-cream/95 backdrop-blur px-4 py-3 flex gap-2 overflow-x-auto no-scrollbar border-b border-[#EFE5D0]/60">
+      <div className="sticky top-[52px] md:top-16 z-20 bg-cream/95 backdrop-blur px-4 md:px-6 py-3 flex gap-2 overflow-x-auto no-scrollbar border-b border-[#EFE5D0]/60 md:max-w-7xl md:mx-auto md:w-full">
         {cats.map((c) => (
           <button key={c.id} onClick={() => selectCat(c.id)} className={`chip ${isUr ? 'urdu' : ''} text-xs ${cat === c.id && !q ? '!bg-maroon !text-white !border-maroon font-semibold' : ''}`}>
             {t(c.ur, c.en)}
@@ -62,7 +62,7 @@ function MenuInner() {
         ))}
       </div>
 
-      <div className="p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+      <div className="p-4 md:p-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4 md:max-w-7xl md:mx-auto md:w-full">
         {!loaded ? (
           <TileSkeleton count={8} />
         ) : (
@@ -82,7 +82,7 @@ function MenuInner() {
 export default function Menu() {
   return (
     <CartProvider>
-      <Suspense fallback={<div className="mx-auto max-w-md md:max-w-6xl min-h-screen bg-cream" />}>
+      <Suspense fallback={<div className="mx-auto max-w-md md:max-w-none min-h-screen bg-cream" />}>
         <MenuInner />
       </Suspense>
     </CartProvider>

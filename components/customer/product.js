@@ -3,22 +3,19 @@ import { useEffect, useState } from 'react';
 import { Icon, Star } from '../icons';
 import { useCart, useLang, fmt, toast } from '../store';
 
-/* ---------- Loading skeleton tile ---------- */
-export function TileSkeleton({ count = 6 }) {
-  return (
-    <>
-      {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="card overflow-hidden animate-pulse" aria-hidden="true">
-          <div className="w-full h-28 md:h-36 bg-[#EFE5D0]" />
-          <div className="p-3 space-y-2">
-            <div className="h-3 bg-[#EFE5D0] rounded w-4/5" />
-            <div className="h-3 bg-[#EFE5D0] rounded w-2/5" />
-          </div>
-        </div>
-      ))}
-    </>
-  );
-}
+const ING_LABELS = {
+  chicken: 'Chicken', rice: 'Basmati Rice', mutton: 'Mutton', flour: 'Wheat Flour',
+  yogurt: 'Yogurt', tomato: 'Tomatoes', spices: 'Special Masala', milk: 'Fresh Milk', oil: 'Cooking Oil',
+};
+
+const ADDONS = [
+  { id: 'raita', label: 'Raita', ur: 'رائتہ', price: 50 },
+  { id: 'salad', label: 'Fresh Salad', ur: 'تازہ سلاد', price: 80 },
+  { id: 'extra', label: 'Extra Chicken', ur: 'اضافی چکن', price: 250 },
+];
+const ADDON_CATS = ['c1', 'c2', 'c3', 'c4'];
+const SPICES = ['Mild', 'Medium', 'Hot'];
+const SPICE_UR = { Mild: 'ہلکی', Medium: 'درمیان', Hot: 'تیز' };
 
 /* ---------- Qty stepper (44px-class tap targets) ---------- */
 export function Qty({ value, onChange, max = 99, light = false }) {
@@ -35,19 +32,54 @@ export function Qty({ value, onChange, max = 99, light = false }) {
   );
 }
 
-/* ---------- Menu item tile card ---------- */
+/* ---------- Inline add-to-cart: [+ Add] → [− n +] ---------- */
+function TileAdd({ item, disabled }) {
+  const cart = useCart();
+  const { isUr, t } = useLang();
+  if (!cart) return null;
+  const key = item.id + '|';
+  const line = cart.items.find((i) => i.key === key);
+  if (!line) {
+    return (
+      <button
+        disabled={disabled}
+        onClick={(e) => {
+          e.stopPropagation();
+          cart.add(item, null, 1);
+          toast(t('کارٹ میں شامل ہو گیا', 'Added to cart'));
+        }}
+        className="h-8 px-3 rounded-lg bg-maroon text-white text-[11px] font-bold flex items-center gap-1 active:scale-95 transition disabled:opacity-40"
+      >
+        <Icon name="plus" className="w-3.5 h-3.5" strokeWidth={2.6} /> {t('اضافہ', 'Add')}
+      </button>
+    );
+  }
+  return (
+    <div key={line.qty} className="pop flex items-center rounded-lg bg-maroon text-white h-8 overflow-hidden" onClick={(e) => e.stopPropagation()}>
+      <button onClick={() => cart.setQty(key, line.qty - 1)} className="w-8 h-full flex items-center justify-center active:bg-black/10" aria-label="decrease">
+        <Icon name="minus" className="w-3.5 h-3.5" strokeWidth={2.4} />
+      </button>
+      <span className="w-5 text-center text-[12px] font-extrabold tabular-nums" dir="ltr">{line.qty}</span>
+      <button onClick={() => cart.setQty(key, line.qty + 1)} className="w-8 h-full flex items-center justify-center active:bg-black/10" aria-label="increase">
+        <Icon name="plus" className="w-3.5 h-3.5" strokeWidth={2.4} />
+      </button>
+    </div>
+  );
+}
+
+/* ---------- Menu item tile card (compact, scannable) ---------- */
 export function MenuItemTile({ item, onOpen, badge, className = '' }) {
   const { isUr, t } = useLang();
   const out = !item.available || item.stock <= 0;
   const half = item.options?.find((o) => o.label === 'Half')?.price;
-  const full = item.options?.find((o) => o.label === 'Full')?.price || item.price;
+  const base = half || item.price;
   return (
     <div
       onClick={onOpen}
-      className={`card overflow-hidden cursor-pointer select-none transition duration-200 hover:border-maroon/40 hover:shadow-md hover:-translate-y-0.5 active:scale-[.98] flex flex-col ${className}`}
+      className={`card overflow-hidden cursor-pointer select-none transition duration-200 hover:border-maroon/40 hover:shadow-md hover:-translate-y-0.5 active:scale-[.98] flex flex-col rounded-xl ${className}`}
     >
       <div className="relative">
-        <img src={item.image} alt={item.nameEn} className={`w-full h-28 md:h-36 object-cover ${out ? 'grayscale opacity-70' : ''}`} />
+        <img src={item.image} alt={item.nameEn} className={`w-full h-28 md:h-32 object-cover ${out ? 'grayscale opacity-70' : ''}`} />
         {out && (
           <span className="absolute inset-0 bg-black/45 flex items-center justify-center">
             <span className="bg-white text-maroon text-[10px] font-bold px-3 py-1 rounded-full">{t('ختم ہو گیا', 'SOLD OUT')}</span>
@@ -62,42 +94,57 @@ export function MenuItemTile({ item, onOpen, badge, className = '' }) {
           <Star className="w-3 h-3 text-gold" /> {item.rating}
         </span>
       </div>
-      <div className="p-3 flex flex-col gap-1.5 flex-1">
-        <div className={`${isUr ? 'urdu' : ''} text-[13px] font-semibold text-ink ${isUr ? 'leading-relaxed' : 'leading-snug'} line-clamp-2 min-h-[2.2em]`}>
+      <div className="p-3 pt-2.5 flex flex-col gap-1 flex-1">
+        <div className={`${isUr ? 'urdu' : ''} text-[13px] font-bold text-ink ${isUr ? 'leading-relaxed' : 'leading-snug'} line-clamp-1`}>
           {t(item.nameUr, item.nameEn)}
         </div>
         <div className={`${isUr ? 'urdu leading-relaxed' : 'leading-snug'} text-[10px] text-muted line-clamp-2`}>{t(item.desc, item.descEn || item.desc)}</div>
-        <div className="flex items-center justify-between gap-2 mt-auto pt-1">
-          {half ? (
-            <span className="text-maroon font-extrabold text-[10px] md:text-[11px] leading-tight tabular-nums" dir="ltr">
-              {t('ہاف', 'Half')} {half.toLocaleString('en-PK')} · {t('فل', 'Full')} {full.toLocaleString('en-PK')}
-            </span>
-          ) : (
-            <span className="text-maroon font-extrabold text-[13px] md:text-sm truncate tabular-nums" dir="ltr">{fmt(item.price)}</span>
-          )}
-          {!out && (
-            <span className="bg-ink text-white rounded-full w-7 h-7 border border-[#E8DCC3] flex items-center justify-center shrink-0">
-              <Icon name="plus" className="w-4 h-4" strokeWidth={2.4} />
-            </span>
-          )}
+        <div className="flex items-center justify-between gap-2 mt-auto pt-1.5">
+          <span className="text-maroon font-extrabold text-sm tabular-nums truncate" dir="ltr">
+            {fmt(base)}
+            {half && <span className="text-[9px] font-bold text-muted ml-0.5">+</span>}
+          </span>
+          {!out ? <TileAdd item={item} /> : null}
         </div>
       </div>
     </div>
   );
 }
 
-/* ---------- Product detail card modal ----------
-   Mobile: bottom sheet with pinned action bar. Desktop: centered dialog. */
+/* ---------- Loading skeleton tile ---------- */
+export function TileSkeleton({ count = 6 }) {
+  return (
+    <>
+      {Array.from({ length: count }).map((_, i) => (
+        <div key={i} className="card overflow-hidden animate-pulse" aria-hidden="true">
+          <div className="w-full h-28 md:h-32 bg-[#EFE5D0]" />
+          <div className="p-3 space-y-2">
+            <div className="h-3 bg-[#EFE5D0] rounded w-4/5" />
+            <div className="h-3 bg-[#EFE5D0] rounded w-2/5" />
+          </div>
+        </div>
+      ))}
+    </>
+  );
+}
+
+/* ---------- Premium product detail sheet ---------- */
 export function ProductModal({ item, onClose }) {
   const { add } = useCart();
   const { isUr, t } = useLang();
   const [option, setOption] = useState(null);
   const [qty, setQty] = useState(1);
+  const [spice, setSpice] = useState('Medium');
+  const [addons, setAddons] = useState([]);
+  const [note, setNote] = useState('');
 
   useEffect(() => {
     if (item) {
       setOption(item.options?.find((o) => o.price === item.price) || item.options?.[item.options.length - 1] || null);
       setQty(1);
+      setSpice('Medium');
+      setAddons([]);
+      setNote('');
       document.body.style.overflow = 'hidden';
       return () => (document.body.style.overflow = '');
     }
@@ -105,82 +152,125 @@ export function ProductModal({ item, onClose }) {
 
   if (!item) return null;
   const out = !item.available || item.stock <= 0;
-  const price = option ? option.price : item.price;
+  const sizePrice = option ? option.price : item.price;
+  const addonSum = addons.reduce((s, id) => s + (ADDONS.find((a) => a.id === id)?.price || 0), 0);
+  const unit = sizePrice + addonSum;
+  const showAddons = ADDON_CATS.includes(item.catId);
+  const ingredients = Object.keys(item.recipe || {}).map((k) => ING_LABELS[k]).filter(Boolean);
+
+  const toggleAddon = (id) => setAddons((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
 
   const addToCart = () => {
-    add(item, option, qty);
+    const parts = [];
+    if (option) parts.push(option.label);
+    parts.push(isUr ? SPICE_UR[spice] : spice);
+    addons.forEach((id) => parts.push('+' + (ADDONS.find((a) => a.id === id)?.label || '')));
+    if (note.trim()) parts.push(note.trim());
+    add(item, { label: parts.join(' · '), price: unit }, qty);
     toast(t('کارٹ میں شامل ہو گیا', 'Added to cart'));
     onClose();
   };
 
   return (
     <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-[2px] flex items-end md:items-center justify-center fade-in" onClick={onClose}>
-      <div
-        className="bg-cream w-full max-w-md md:max-w-lg md:rounded-2xl rounded-t-3xl shadow-2xl flex flex-col max-h-[90dvh] md:max-h-[85vh] sheet-in"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Drag handle (mobile) */}
+      <div className="bg-cream w-full max-w-md md:max-w-lg md:rounded-2xl rounded-t-3xl shadow-2xl flex flex-col max-h-[92dvh] md:max-h-[85vh] sheet-in" onClick={(e) => e.stopPropagation()}>
+        {/* Drag handle */}
         <div className="md:hidden flex justify-center pt-2.5 pb-1 shrink-0">
           <span className="w-10 h-1 rounded-full bg-[#D8CCB4]" />
         </div>
 
-        {/* Image */}
-        <div className="relative shrink-0">
-          <img src={item.image} alt={item.nameEn} className="w-full h-44 sm:h-52 md:h-60 object-cover" />
-          <button
-            onClick={onClose}
-            className="absolute top-3 right-3 w-10 h-10 bg-black/45 text-white rounded-full flex items-center justify-center backdrop-blur active:scale-95"
-            aria-label="close"
-          >
-            <Icon name="x" className="w-5 h-5" />
-          </button>
-          <span className="absolute top-3 left-3 bg-white/95 backdrop-blur rounded-lg px-2 py-1 flex items-center gap-1 text-[11px] font-bold text-ink shadow-sm">
-            <Star className="w-3.5 h-3.5 text-gold" /> {item.rating} <span className="text-muted font-medium">({item.reviews})</span>
-          </span>
-        </div>
-
-        {/* Scrollable middle */}
-        <div className="flex-1 overflow-y-auto no-scrollbar px-5 py-4">
-          <div className="flex items-start justify-between gap-3">
-            <h2 className={`${isUr ? 'urdu' : ''} text-lg font-bold text-ink ${isUr ? 'leading-loose' : 'leading-snug'}`}>{t(item.nameUr, item.nameEn)}</h2>
-            <div className="text-maroon font-extrabold text-lg shrink-0 tabular-nums" dir="ltr">{fmt(price)}</div>
+        {/* Scrollable content */}
+        <div className="flex-1 overflow-y-auto no-scrollbar">
+          <div className="relative shrink-0">
+            <img src={item.image} alt={item.nameEn} className="w-full h-44 sm:h-52 md:h-60 object-cover" />
+            <button onClick={onClose} className="absolute top-3 right-3 w-10 h-10 bg-black/45 text-white rounded-full flex items-center justify-center backdrop-blur active:scale-95" aria-label="close">
+              <Icon name="x" className="w-5 h-5" />
+            </button>
+            <span className="absolute top-3 left-3 bg-white/95 backdrop-blur rounded-lg px-2 py-1 flex items-center gap-1 text-[11px] font-bold text-ink shadow-sm">
+              <Star className="w-3.5 h-3.5 text-gold" /> {item.rating} <span className="text-muted font-medium">({item.reviews})</span>
+            </span>
           </div>
 
-          <p className={`${isUr ? 'urdu' : ''} text-xs text-muted mt-2 ${isUr ? 'leading-loose' : 'leading-relaxed'}`}>{t(item.desc, item.descEn || item.desc)}</p>
+          <div className="px-5 pt-4 pb-2">
+            <div className="flex items-start justify-between gap-3">
+              <h2 className={`${isUr ? 'urdu' : ''} text-lg font-extrabold text-ink ${isUr ? 'leading-loose' : 'leading-snug'}`}>{t(item.nameUr, item.nameEn)}</h2>
+              <div className="text-maroon font-extrabold text-lg shrink-0 tabular-nums" dir="ltr">{fmt(sizePrice)}</div>
+            </div>
+            <p className={`${isUr ? 'urdu' : ''} text-xs text-muted mt-2 ${isUr ? 'leading-loose' : 'leading-relaxed'}`}>{t(item.desc, item.descEn || item.desc)}</p>
 
-          {item.options?.length > 0 && (
-            <div className="mt-4">
-              <h3 className="text-[11px] font-bold text-muted uppercase tracking-wider mb-2">{t('سائز منتخب کریں', 'Choose size')}</h3>
-              <div className="grid grid-cols-2 gap-2.5">
-                {item.options.map((o) => (
-                  <button
-                    key={o.label}
-                    onClick={() => setOption(o)}
-                    className={`rounded-xl border-2 px-3 py-3 text-left transition active:scale-[.98] ${
-                      option?.label === o.label ? 'border-maroon bg-maroon/[.06] text-maroon' : 'border-[#E0D4BC] bg-white text-ink'
-                    }`}
-                  >
-                    <span className="block text-[12px] font-bold" dir="ltr">{o.label}</span>
-                    <span className="block text-[12px] font-semibold mt-0.5 tabular-nums" dir="ltr">{fmt(o.price)}</span>
+            {ingredients.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 mt-3">
+                {ingredients.map((ing) => (
+                  <span key={ing} className="text-[10px] font-semibold text-[#6E675C] bg-[#EFE5D0] rounded-full px-2.5 py-1">{ing}</span>
+                ))}
+              </div>
+            )}
+
+            {item.options?.length > 0 && (
+              <div className="mt-5">
+                <h3 className="text-[11px] font-bold text-muted uppercase tracking-wider mb-2">{t('سائز منتخب کریں', 'Portion size')}</h3>
+                <div className="grid grid-cols-2 gap-2.5">
+                  {item.options.map((o) => (
+                    <button key={o.label} onClick={() => setOption(o)} className={`rounded-xl border-2 px-3 py-2.5 text-left transition active:scale-[.98] ${option?.label === o.label ? 'border-maroon bg-maroon/[.06] text-maroon' : 'border-[#E0D4BC] bg-white text-ink'}`}>
+                      <span className="block text-[12px] font-bold" dir="ltr">{o.label}</span>
+                      <span className="block text-[12px] font-semibold mt-0.5 tabular-nums" dir="ltr">{fmt(o.price)}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="mt-5">
+              <h3 className="text-[11px] font-bold text-muted uppercase tracking-wider mb-2">{t('مرچ مصالحو کی سطح', 'Spice level')}</h3>
+              <div className="grid grid-cols-3 gap-2.5">
+                {SPICES.map((sp) => (
+                  <button key={sp} onClick={() => setSpice(sp)} className={`h-10 rounded-xl border-2 text-[12px] font-bold transition active:scale-[.98] ${spice === sp ? 'border-maroon bg-maroon/[.06] text-maroon' : 'border-[#E0D4BC] bg-white text-ink'}`}>
+                    {t(SPICE_UR[sp], sp)}
                   </button>
                 ))}
               </div>
             </div>
-          )}
 
-          {out && <p className={`${isUr ? 'urdu' : ''} text-xs text-maroon font-bold mt-4`}>{t('آج کے لیے اسٹاک ختم ہو گیا', 'Out of stock for today')}</p>}
+            {showAddons && (
+              <div className="mt-5">
+                <h3 className="text-[11px] font-bold text-muted uppercase tracking-wider mb-2">{t('اضافہ کریں', 'Add-ons')}</h3>
+                <div className="space-y-2">
+                  {ADDONS.map((a) => {
+                    const on = addons.includes(a.id);
+                    return (
+                      <button key={a.id} onClick={() => toggleAddon(a.id)} className={`w-full flex items-center gap-3 rounded-xl border-2 px-3.5 py-2.5 transition active:scale-[.99] ${on ? 'border-maroon bg-maroon/[.06]' : 'border-[#E0D4BC] bg-white'}`}>
+                        <span className={`w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 ${on ? 'bg-maroon border-maroon text-white' : 'border-[#C8BCA4] text-transparent'}`}>
+                          <Icon name="check" className="w-3 h-3" strokeWidth={3} />
+                        </span>
+                        <span className="flex-1 text-left text-[12px] font-bold text-ink">{t(a.ur, a.label)}</span>
+                        <span className="text-[12px] font-semibold text-muted tabular-nums" dir="ltr">+ {fmt(a.price)}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            <div className="mt-5">
+              <h3 className="text-[11px] font-bold text-muted uppercase tracking-wider mb-2">{t('خصوصی ہدایات', 'Special instructions')}</h3>
+              <textarea
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                rows={2}
+                placeholder={t('مثلاً: تیل کم رکھیں', 'e.g. less oil, no green chillies')}
+                className={`field !h-auto py-2.5 text-[12px] resize-none ${isUr ? 'urdu' : ''}`}
+              />
+            </div>
+          </div>
         </div>
 
-        {/* Pinned action bar */}
+        {/* Sticky action bar */}
         <div className="shrink-0 border-t border-[#E8DCC3] bg-cream px-4 pt-3 pb-3 pb-safe md:rounded-b-2xl" dir="ltr">
+          {out && <p className={`${isUr ? 'urdu' : ''} text-xs text-maroon font-bold pb-2`}>{t('آج کے لیے اسٹاک ختم ہو گیا', 'Out of stock for today')}</p>}
           <div className="flex items-center gap-3">
             <Qty value={qty} onChange={setQty} max={Math.max(1, item.stock)} />
-            <button
-              disabled={out}
-              onClick={addToCart}
-              className="btn-maroon flex-1 min-w-0 h-11 text-[13px] md:text-sm tracking-wide truncate disabled:opacity-50"
-            >
-              ADD TO CART · {fmt(price * qty)}
+            <button disabled={out} onClick={addToCart} className="btn-maroon flex-1 min-w-0 h-11 rounded-xl text-[13px] font-extrabold tracking-wide truncate disabled:opacity-50">
+              ADD TO CART · {fmt(unit * qty)}
             </button>
           </div>
         </div>

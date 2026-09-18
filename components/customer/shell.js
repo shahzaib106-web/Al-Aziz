@@ -189,43 +189,38 @@ export function PageHeader({ title, titleUr, right }) {
   );
 }
 
-/* ---------- Bottom nav (mobile) with raised Order Now ---------- */
+/* ---------- Bottom nav (mobile): 5 refined tabs ---------- */
 export function BottomNav({ active }) {
+  const cart = useCart();
+  const count = cart ? cart.count : 0;
   const { isUr, t } = useLang();
-  const left = [
+  const tabs = [
     { id: 'home', en: 'Home', ur: 'ہوم', icon: 'home', href: '/' },
     { id: 'menu', en: 'Menu', ur: 'مینیو', icon: 'grid', href: '/categories' },
-  ];
-  const right = [
+    { id: 'cart', en: 'Cart', ur: 'کارٹ', icon: 'cart', href: '/cart', badge: count },
     { id: 'orders', en: 'Orders', ur: 'آرڈرز', icon: 'receipt', href: '/orders' },
     { id: 'profile', en: 'Profile', ur: 'پروفائل', icon: 'user', href: '/profile' },
   ];
-  const Tab = ({ tab }) => {
-    const on = active === tab.id;
-    return (
-      <Link href={tab.href} className={`relative flex flex-col items-center justify-center gap-0.5 h-full text-[10px] font-semibold transition ${on ? 'text-maroon' : 'text-muted hover:text-ink'}`}>
-        {on && <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-maroon rounded-full" />}
-        <Icon name={tab.icon} className="w-5 h-5" strokeWidth={on ? 2.2 : 1.8} />
-        <span className={isUr ? 'urdu text-[11px] leading-none' : ''}>{t(tab.ur, tab.en)}</span>
-      </Link>
-    );
-  };
   return (
     <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md z-40 bg-white border-t border-[#E8DCC3] md:hidden pb-safe">
-      <div className="relative grid grid-cols-5 h-[62px]">
-        <Tab tab={left[0]} />
-        <Tab tab={left[1]} />
-        <div />
-        <Tab tab={right[0]} />
-        <Tab tab={right[1]} />
-        <Link
-          href="/menu"
-          aria-label="Order Now"
-          className="absolute left-1/2 -translate-x-1/2 -top-6 w-14 h-14 rounded-full bg-maroon text-white border-4 border-cream shadow-[0_6px_16px_rgba(158,27,30,0.4)] flex flex-col items-center justify-center active:scale-95 transition"
-        >
-          <Icon name="utensils" className="w-5 h-5" strokeWidth={2} />
-          <span className="text-[7px] font-extrabold tracking-wider -mt-0.5">{t('آرڈر', 'ORDER')}</span>
-        </Link>
+      <div className="grid grid-cols-5 h-16">
+        {tabs.map((tab) => {
+          const on = active === tab.id;
+          return (
+            <Link key={tab.id} href={tab.href} className={`relative flex flex-col items-center justify-center gap-0.5 text-[10px] font-semibold transition-colors ${on ? 'text-maroon' : 'text-muted hover:text-ink'}`}>
+              {on && <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-maroon rounded-full" />}
+              <span className="relative h-5">
+                <Icon name={tab.icon} className="w-5 h-5" strokeWidth={on ? 2.2 : 1.8} />
+                {tab.badge > 0 && (
+                  <span key={tab.badge} className="pop absolute -top-1.5 -right-2 bg-maroon text-white text-[9px] font-bold rounded-full min-w-[15px] h-[15px] px-0.5 flex items-center justify-center tabular-nums">
+                    {tab.badge}
+                  </span>
+                )}
+              </span>
+              <span className={isUr ? 'urdu text-[11px] leading-none' : ''}>{t(tab.ur, tab.en)}</span>
+            </Link>
+          );
+        })}
       </div>
     </nav>
   );

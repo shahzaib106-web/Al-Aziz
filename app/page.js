@@ -78,7 +78,7 @@ function Home() {
 
   return (
     <CartProvider>
-      <div dir="ltr" className="mx-auto max-w-md md:max-w-6xl min-h-screen bg-cream pb-28 md:pb-10 shadow-xl relative">
+      <div dir="ltr" className="mx-auto max-w-md md:max-w-6xl min-h-screen bg-cream pb-[calc(86px+env(safe-area-inset-bottom))] md:pb-10 shadow-xl relative">
         <TopNav active="home" />
         <HomeHeader settings={settings} onMenu={() => setDrawer(true)} />
         <MobileDrawer open={drawer} onClose={() => setDrawer(false)} settings={settings} />

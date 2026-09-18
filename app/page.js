@@ -114,24 +114,26 @@ function Home() {
           </div>
         ) : (
           <>
-            {/* ---- Hero carousel ---- */}
+            {/* ---- Hero carousel: half red text / half image ---- */}
             <div className="px-4 mt-4">
-              <div className="relative overflow-hidden rounded-2xl pattern-maroon text-white shadow-md">
-                <div key={slide} className="flex items-stretch hero-in">
-                  <div className="flex-1 p-4 pr-2 flex flex-col justify-center min-w-0">
+              <div className="relative overflow-hidden rounded-2xl shadow-md">
+                <div key={slide} className="grid grid-cols-2 md:grid-cols-[1.1fr_1fr] h-52 md:h-64 hero-in">
+                  {/* Red text half */}
+                  <div className="pattern-maroon bg-maroon text-white p-4 flex flex-col justify-center min-w-0">
                     <span className="text-gold text-[11px] font-bold italic tracking-wide">{s.accent}</span>
-                    <h2 className={`${isUr ? 'urdu text-lg' : 'text-[22px] font-extrabold leading-tight'} mt-1 drop-shadow-sm`}>{s.title}</h2>
+                    <h2 className={`${isUr ? 'urdu text-base leading-loose' : 'text-[20px] font-extrabold leading-tight'} mt-1 drop-shadow-sm`}>{s.title}</h2>
                     <p className={`text-[10px] text-white/75 mt-1.5 ${isUr ? 'urdu leading-relaxed' : 'leading-snug'}`}>{s.sub}</p>
                     <Link href={s.href} className={`btn btn-sm w-max mt-3 bg-gold text-[#3E2C05] hover:brightness-110 rounded-full px-4 ${isUr ? 'urdu' : '!tracking-wide'}`}>
                       {t('ابھی آرڈر کریں', 'ORDER NOW')} <Icon name="chevR" className="w-3.5 h-3.5" strokeWidth={2.6} />
                     </Link>
                   </div>
-                  <img src={s.img} alt="" className="w-32 sm:w-40 md:w-64 h-full object-cover [mask-image:linear-gradient(to_left,black_75%,transparent)]" />
+                  {/* Image half */}
+                  <img src={s.img} alt="" className="w-full h-full object-cover" />
                 </div>
                 {/* dots */}
                 <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex gap-1.5">
                   {slides.map((_, i) => (
-                    <button key={i} onClick={() => setSlide(i)} aria-label={'slide ' + (i + 1)} className={`h-1.5 rounded-full transition-all ${i === slide ? 'w-5 bg-gold' : 'w-1.5 bg-white/40'}`} />
+                    <button key={i} onClick={() => setSlide(i)} aria-label={'slide ' + (i + 1)} className={`h-1.5 rounded-full transition-all ${i === slide ? 'w-5 bg-gold' : 'w-1.5 bg-white/60'}`} />
                   ))}
                 </div>
               </div>

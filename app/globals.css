@@ -10,6 +10,14 @@ body {
   background: #efe6d4;
 }
 
+/* Block browser pull-to-refresh / overscroll navigation while scrolling the app */
+html {
+  overscroll-behavior-y: contain;
+}
+body {
+  overscroll-behavior-y: none;
+}
+
 .urdu {
   font-family: 'Noto Nastaliq Urdu', serif;
   line-height: 2.1;

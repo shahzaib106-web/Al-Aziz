@@ -114,21 +114,27 @@ function Home() {
           </div>
         ) : (
           <>
-            {/* ---- Hero carousel: half red text / half image ---- */}
+            {/* ---- Hero carousel: full red banner with photo on top ---- */}
             <div className="px-4 mt-4">
               <div className="relative overflow-hidden rounded-2xl shadow-md">
-                <div key={slide} className="grid grid-cols-2 md:grid-cols-[1.1fr_1fr] h-52 md:h-64 hero-in">
-                  {/* Red text half */}
-                  <div className="pattern-maroon bg-maroon text-white p-4 flex flex-col justify-center min-w-0">
-                    <span className="text-gold text-[11px] font-bold italic tracking-wide">{s.accent}</span>
-                    <h2 className={`${isUr ? 'urdu text-base leading-loose' : 'text-[20px] font-extrabold leading-tight'} mt-1 drop-shadow-sm`}>{s.title}</h2>
-                    <p className={`text-[10px] text-white/75 mt-1.5 ${isUr ? 'urdu leading-relaxed' : 'leading-snug'}`}>{s.sub}</p>
-                    <Link href={s.href} className={`btn btn-sm w-max mt-3 bg-gold text-[#3E2C05] hover:brightness-110 rounded-full px-4 ${isUr ? 'urdu' : '!tracking-wide'}`}>
-                      {t('ابھی آرڈر کریں', 'ORDER NOW')} <Icon name="chevR" className="w-3.5 h-3.5" strokeWidth={2.6} />
-                    </Link>
+                <div key={slide} className="pattern-maroon bg-maroon text-white hero-in">
+                  <div className="flex items-center gap-3 p-4 min-h-[196px] md:min-h-[240px]">
+                    {/* Text on red */}
+                    <div className="flex-1 min-w-0 flex flex-col justify-center">
+                      <span className="text-gold text-[11px] font-bold italic tracking-wide">{s.accent}</span>
+                      <h2 className={`${isUr ? 'urdu text-base leading-loose' : 'text-[20px] font-extrabold leading-tight'} mt-1 drop-shadow-sm`}>{s.title}</h2>
+                      <p className={`text-[10px] text-white/75 mt-1.5 ${isUr ? 'urdu leading-relaxed' : 'leading-snug'}`}>{s.sub}</p>
+                      <Link href={s.href} className={`btn btn-sm w-max mt-3 bg-gold text-[#3E2C05] hover:brightness-110 rounded-full px-4 ${isUr ? 'urdu' : '!tracking-wide'}`}>
+                        {t('ابھی آرڈر کریں', 'ORDER NOW')} <Icon name="chevR" className="w-3.5 h-3.5" strokeWidth={2.6} />
+                      </Link>
+                    </div>
+                    {/* Photo floating on the red */}
+                    <img
+                      src={s.img}
+                      alt=""
+                      className="w-[42%] max-w-[170px] h-36 md:h-48 object-cover rounded-xl border-2 border-white/25 shadow-[0_8px_20px_rgba(0,0,0,0.35)] shrink-0"
+                    />
                   </div>
-                  {/* Image half */}
-                  <img src={s.img} alt="" className="w-full h-full object-cover" />
                 </div>
                 {/* dots */}
                 <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex gap-1.5">

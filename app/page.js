@@ -119,7 +119,7 @@ function Home() {
               <div className="relative overflow-hidden rounded-2xl shadow-md">
                 <div key={slide} className="relative h-48 md:h-64 hero-in">
                   <img src={s.img} alt="" className="absolute inset-0 w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-maroon via-maroon/90 to-maroon/20" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-black/10" />
                   <div className="relative h-full flex flex-col justify-center p-4 md:pr-[46%] pr-[42%]">
                     <span className="text-gold text-[11px] font-bold italic tracking-wide drop-shadow">{s.accent}</span>
                     <h2 className={`${isUr ? 'urdu text-base leading-loose' : 'text-[20px] font-extrabold leading-tight'} mt-1 text-white drop-shadow-md`}>{s.title}</h2>

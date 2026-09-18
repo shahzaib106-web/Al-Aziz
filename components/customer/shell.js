@@ -5,14 +5,19 @@ import { Icon, LogoMark } from '../icons';
 import { useCart, useLang } from '../store';
 
 /* ---------- Language toggle button ---------- */
-export function LangToggle({ light = false }) {
+export function LangToggle({ light = false, dark = false }) {
   const { lang, setLang } = useLang();
   return (
     <button
       onClick={() => setLang(lang === 'ur' ? 'en' : 'ur')}
       title="Switch language"
-      className={`text-[10px] font-bold rounded-md border px-2 py-1 leading-none transition ${
-        light ? 'border-white/40 text-white hover:bg-white/10' : 'border-[#D8CCB4] bg-white text-ink hover:border-maroon'
+      aria-label="Switch language"
+      className={`h-9 min-w-[44px] px-3 rounded-full border text-[11px] font-bold leading-none transition active:scale-95 ${
+        light
+          ? 'border-white/40 text-white hover:bg-white/10'
+          : dark
+          ? 'border-[#E4D9C2] bg-white text-ink hover:border-maroon hover:text-maroon'
+          : 'border-[#D8CCB4] bg-white text-ink hover:border-maroon'
       }`}
     >
       {lang === 'ur' ? 'EN' : 'اردو'}
@@ -20,19 +25,21 @@ export function LangToggle({ light = false }) {
   );
 }
 
-/* ---------- Home header (mobile) — brand + language only; nav lives in BottomNav ---------- */
+/* ---------- Home header (mobile) — clean white: brand + language only ---------- */
 export function HomeHeader({ settings }) {
   const { isUr, t } = useLang();
   return (
-    <header className="bg-maroon text-white pt-safe md:hidden sticky top-0 z-40">
-      <div className="flex items-center gap-2 px-4 pt-3 pb-3">
+    <header className="bg-white/95 backdrop-blur text-ink pt-safe md:hidden sticky top-0 z-40 border-b border-[#EFE5D0] shadow-[0_1px_10px_rgba(38,33,28,0.04)]">
+      <div className="flex items-center gap-2.5 px-4 py-2.5">
         <Link href="/" className="flex-1 flex items-center gap-2.5 min-w-0" aria-label={t('العزيز ریسٹورنٹ', 'Al Aziz Restaurant')}>
-          <LogoMark className="w-8 h-8 shrink-0" />
-          <span className={`min-w-0 truncate ${isUr ? 'urdu text-lg leading-relaxed' : 'text-[15px] font-extrabold tracking-wide'} drop-shadow-sm`}>
+          <span className="w-9 h-9 rounded-xl bg-maroon flex items-center justify-center shrink-0 shadow-sm">
+            <LogoMark className="w-6 h-6" />
+          </span>
+          <span className={`min-w-0 truncate ${isUr ? 'urdu text-lg leading-relaxed' : 'text-[16px] font-extrabold tracking-tight'} text-ink`}>
             {t(settings?.nameUr || 'العزيز ریسٹورنٹ', settings?.nameEn || 'Al Aziz Restaurant')}
           </span>
         </Link>
-        <LangToggle light />
+        <LangToggle dark />
       </div>
     </header>
   );
@@ -119,22 +126,28 @@ export function BottomNav({ active }) {
     { id: 'profile', en: 'Profile', ur: 'پروفائل', icon: 'user', href: '/profile' },
   ];
   return (
-    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md z-40 bg-white border-t border-[#E8DCC3] md:hidden pb-safe">
-      <div className="grid grid-cols-5 h-16">
+    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md z-40 bg-white border-t border-[#EDE3CF] md:hidden pb-safe shadow-[0_-6px_20px_rgba(38,33,28,0.06)]">
+      <div className="grid grid-cols-5 h-[68px]">
         {tabs.map((tab) => {
           const on = active === tab.id;
           return (
-            <Link key={tab.id} href={tab.href} className={`relative flex flex-col items-center justify-center gap-0.5 text-[10px] font-semibold transition-colors ${on ? 'text-maroon' : 'text-muted hover:text-ink'}`}>
-              {on && <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-maroon rounded-full" />}
-              <span className="relative h-5">
-                <Icon name={tab.icon} className="w-5 h-5" strokeWidth={on ? 2.2 : 1.8} />
+            <Link
+              key={tab.id}
+              href={tab.href}
+              aria-current={on ? 'page' : undefined}
+              className={`flex flex-col items-center justify-center gap-1 transition-colors ${on ? 'text-maroon' : 'text-[#9B948A] active:text-ink'}`}
+            >
+              <span className={`relative flex items-center justify-center h-7 px-4 rounded-full transition-all duration-200 ${on ? 'bg-maroon/[.09]' : ''}`}>
+                <Icon name={tab.icon} className="w-[21px] h-[21px]" strokeWidth={on ? 2.2 : 1.8} />
                 {tab.badge > 0 && (
-                  <span key={tab.badge} className="pop absolute -top-1.5 -right-2 bg-maroon text-white text-[9px] font-bold rounded-full min-w-[15px] h-[15px] px-0.5 flex items-center justify-center tabular-nums">
+                  <span key={tab.badge} className="pop absolute -top-1 -right-1 bg-maroon text-white text-[9px] font-bold rounded-full min-w-[15px] h-[15px] px-0.5 flex items-center justify-center tabular-nums">
                     {tab.badge}
                   </span>
                 )}
               </span>
-              <span className={isUr ? 'urdu text-[11px] leading-none' : ''}>{t(tab.ur, tab.en)}</span>
+              <span className={`text-[10px] leading-none ${on ? 'font-extrabold' : 'font-semibold'} ${isUr ? 'urdu !text-[11px]' : ''}`}>
+                {t(tab.ur, tab.en)}
+              </span>
             </Link>
           );
         })}

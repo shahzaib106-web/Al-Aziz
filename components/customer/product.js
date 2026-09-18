@@ -48,19 +48,19 @@ function TileAdd({ item, disabled }) {
           cart.add(item, null, 1);
           toast(t('کارٹ میں شامل ہو گیا', 'Added to cart'));
         }}
-        className="h-8 px-3 rounded-lg bg-maroon text-white text-[11px] font-bold flex items-center gap-1 active:scale-95 transition disabled:opacity-40"
+        className="h-8 px-3.5 rounded-full bg-maroon text-white text-[11px] font-extrabold flex items-center gap-1 shadow-[0_3px_8px_rgba(158,27,30,0.28)] hover:bg-maroon-dark active:scale-95 transition disabled:opacity-40"
       >
-        <Icon name="plus" className="w-3.5 h-3.5" strokeWidth={2.6} /> {t('اضافہ', 'Add')}
+        <Icon name="plus" className="w-3.5 h-3.5" strokeWidth={2.8} /> {t('اضافہ', 'Add')}
       </button>
     );
   }
   return (
-    <div key={line.qty} className="pop flex items-center rounded-lg bg-maroon text-white h-8 overflow-hidden" onClick={(e) => e.stopPropagation()}>
-      <button onClick={() => cart.setQty(key, line.qty - 1)} className="w-8 h-full flex items-center justify-center active:bg-black/10" aria-label="decrease">
+    <div key={line.qty} className="pop flex items-center rounded-full bg-maroon text-white h-8 overflow-hidden shadow-[0_3px_8px_rgba(158,27,30,0.28)]" onClick={(e) => e.stopPropagation()}>
+      <button onClick={() => cart.setQty(key, line.qty - 1)} className="w-8 h-full flex items-center justify-center active:bg-black/15" aria-label="decrease">
         <Icon name="minus" className="w-3.5 h-3.5" strokeWidth={2.4} />
       </button>
       <span className="w-5 text-center text-[12px] font-extrabold tabular-nums" dir="ltr">{line.qty}</span>
-      <button onClick={() => cart.setQty(key, line.qty + 1)} className="w-8 h-full flex items-center justify-center active:bg-black/10" aria-label="increase">
+      <button onClick={() => cart.setQty(key, line.qty + 1)} className="w-8 h-full flex items-center justify-center active:bg-black/15" aria-label="increase">
         <Icon name="plus" className="w-3.5 h-3.5" strokeWidth={2.4} />
       </button>
     </div>
@@ -79,7 +79,7 @@ export function MenuItemTile({ item, onOpen, badge, className = '' }) {
       className={`card overflow-hidden cursor-pointer select-none transition duration-200 hover:border-maroon/40 hover:shadow-md hover:-translate-y-0.5 active:scale-[.98] flex flex-col rounded-xl ${className}`}
     >
       <div className="relative">
-        <img src={item.image} alt={item.nameEn} className={`w-full h-28 md:h-32 object-cover ${out ? 'grayscale opacity-70' : ''}`} />
+        <img src={item.image} alt={item.nameEn} className={`w-full h-32 md:h-36 object-cover ${out ? 'grayscale opacity-70' : ''}`} />
         {out && (
           <span className="absolute inset-0 bg-black/45 flex items-center justify-center">
             <span className="bg-white text-maroon text-[10px] font-bold px-3 py-1 rounded-full">{t('ختم ہو گیا', 'SOLD OUT')}</span>
@@ -94,15 +94,15 @@ export function MenuItemTile({ item, onOpen, badge, className = '' }) {
           <Star className="w-3 h-3 text-gold" /> {item.rating}
         </span>
       </div>
-      <div className="p-3 pt-2.5 flex flex-col gap-1 flex-1">
-        <div className={`${isUr ? 'urdu' : ''} text-[13px] font-bold text-ink ${isUr ? 'leading-relaxed' : 'leading-snug'} line-clamp-1`}>
+      <div className="p-3.5 pt-3 flex flex-col gap-1 flex-1">
+        <div className={`${isUr ? 'urdu' : ''} text-[13px] font-extrabold text-ink ${isUr ? 'leading-relaxed' : 'leading-snug'} line-clamp-1`}>
           {t(item.nameUr, item.nameEn)}
         </div>
-        <div className={`${isUr ? 'urdu leading-relaxed' : 'leading-snug'} text-[10px] text-muted line-clamp-2`}>{t(item.desc, item.descEn || item.desc)}</div>
-        <div className="flex items-center justify-between gap-2 mt-auto pt-1.5">
-          <span className="text-maroon font-extrabold text-sm tabular-nums truncate" dir="ltr">
+        <div className={`${isUr ? 'urdu leading-relaxed' : 'leading-snug'} text-[11px] text-muted line-clamp-2`}>{t(item.desc, item.descEn || item.desc)}</div>
+        <div className="flex items-center justify-between gap-2 mt-auto pt-2">
+          <span className="text-maroon font-extrabold text-[15px] tabular-nums truncate" dir="ltr">
             {fmt(base)}
-            {half && <span className="text-[9px] font-bold text-muted ml-0.5">+</span>}
+            {half && <span className="text-[10px] font-bold text-muted ml-0.5">+</span>}
           </span>
           {!out ? <TileAdd item={item} /> : null}
         </div>
@@ -117,7 +117,7 @@ export function TileSkeleton({ count = 6 }) {
     <>
       {Array.from({ length: count }).map((_, i) => (
         <div key={i} className="card overflow-hidden animate-pulse" aria-hidden="true">
-          <div className="w-full h-28 md:h-32 bg-[#EFE5D0]" />
+          <div className="w-full h-32 md:h-36 bg-[#EFE5D0]" />
           <div className="p-3 space-y-2">
             <div className="h-3 bg-[#EFE5D0] rounded w-4/5" />
             <div className="h-3 bg-[#EFE5D0] rounded w-2/5" />

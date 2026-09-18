@@ -55,7 +55,7 @@ body {
 
 @layer components {
   .card {
-    @apply bg-cream-card border border-[#E8DCC3] rounded-xl shadow-card;
+    @apply bg-cream-card border border-[#EDE3CF] rounded-xl shadow-card;
   }
   .field {
     @apply w-full h-11 rounded-xl border border-[#D8CCB4] bg-white px-3.5 text-sm outline-none focus:border-maroon focus:ring-[3px] focus:ring-maroon/10 transition-shadow;
@@ -91,7 +91,7 @@ body {
   }
   /* ---- Typography helpers ---- */
   .section-title {
-    @apply text-[12px] font-extrabold uppercase tracking-[0.08em] text-ink;
+    @apply text-[13px] font-extrabold uppercase tracking-[0.08em] text-ink;
   }
   .ctitle {
     @apply text-[13px] font-extrabold text-ink;

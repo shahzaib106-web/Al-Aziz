@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { api, CartProvider, useLang } from '../components/store';
-import { Splash, Onboarding, HomeHeader, BottomNav, MenuItemTile, TopNav, ProductModal, TileSkeleton, MobileDrawer } from '../components/customer';
+import { Splash, Onboarding, HomeHeader, BottomNav, MenuItemTile, TopNav, ProductModal, TileSkeleton } from '../components/customer';
 import { Icon } from '../components/icons';
 
 // Module-level flag: survives client-side navigation, resets on fresh load.
@@ -17,7 +17,6 @@ function Home() {
   const [onb, setOnb] = useState(false);
   const [selected, setSelected] = useState(null);
   const [loaded, setLoaded] = useState(false);
-  const [drawer, setDrawer] = useState(false);
   const [q, setQ] = useState('');
   const [slide, setSlide] = useState(0);
   const [cat, setCat] = useState('');
@@ -85,8 +84,7 @@ function Home() {
     <CartProvider>
       <div dir="ltr" className="mx-auto max-w-md md:max-w-6xl min-h-screen bg-cream pb-[calc(90px+env(safe-area-inset-bottom))] md:pb-10 shadow-xl relative flex flex-col">
         <TopNav active="home" />
-        <HomeHeader settings={settings} onMenu={() => setDrawer(true)} />
-        <MobileDrawer open={drawer} onClose={() => setDrawer(false)} settings={settings} />
+        <HomeHeader settings={settings} />
 
         {/* ---------- Search ---------- */}
         <div className="px-4 mt-3 flex items-center gap-2.5">

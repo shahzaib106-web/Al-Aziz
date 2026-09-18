@@ -20,102 +20,19 @@ export function LangToggle({ light = false }) {
   );
 }
 
-/* ---------- Mobile side drawer ---------- */
-export function MobileDrawer({ open, onClose, settings }) {
-  const { isUr, t } = useLang();
-  const router = useRouter();
-  const links = [
-    { icon: 'home', en: 'Home', ur: 'ہوم', href: '/' },
-    { icon: 'grid', en: 'Menu', ur: 'مینیو', href: '/categories' },
-    { icon: 'cart', en: 'Cart', ur: 'کارٹ', href: '/cart' },
-    { icon: 'receipt', en: 'My Orders', ur: 'میرے آرڈرز', href: '/orders' },
-    { icon: 'user', en: 'Profile', ur: 'پروفائل', href: '/profile' },
-  ];
-  return (
-    <div className={`fixed inset-0 z-[75] md:hidden ${open ? '' : 'pointer-events-none'}`} aria-hidden={!open}>
-      <div className={`absolute inset-0 bg-black/50 transition-opacity duration-200 ${open ? 'opacity-100' : 'opacity-0'}`} onClick={onClose} />
-      <div className={`absolute left-0 top-0 h-full w-72 max-w-[85%] bg-cream shadow-2xl flex flex-col transition-transform duration-250 ${open ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="bg-maroon text-white px-5 pt-safe">
-          <div className="flex items-center gap-3 py-5">
-            <LogoMark className="w-10 h-10" />
-            <div className="flex-1 min-w-0">
-              <div className={`${isUr ? 'urdu leading-relaxed' : 'font-extrabold text-sm'} truncate`}>
-                {t(settings?.nameUr || 'العزيز ریسٹورنٹ', settings?.nameEn || 'Al Aziz Restaurant')}
-              </div>
-              <div className="text-[10px] text-white/70 truncate">{settings?.location || 'Sahiwal, Pakistan'}</div>
-            </div>
-            <LangToggle light />
-          </div>
-        </div>
-        <nav className="flex-1 overflow-y-auto p-3 space-y-1">
-          {links.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              onClick={onClose}
-              className="flex items-center gap-3 rounded-xl px-4 py-3 text-[13px] font-semibold text-ink hover:bg-maroon/5 active:bg-maroon/10"
-            >
-              <span className="w-9 h-9 rounded-full bg-maroon/10 text-maroon flex items-center justify-center shrink-0">
-                <Icon name={l.icon} className="w-4 h-4" />
-              </span>
-              <span className={isUr ? 'urdu leading-relaxed' : ''}>{t(l.ur, l.en)}</span>
-              <Icon name="chevR" className="w-4 h-4 text-muted ml-auto" />
-            </Link>
-          ))}
-          <a
-            href={'tel:' + (settings?.phone || '').replace(/\s/g, '')}
-            className="flex items-center gap-3 rounded-xl px-4 py-3 text-[13px] font-semibold text-ink hover:bg-maroon/5"
-          >
-            <span className="w-9 h-9 rounded-full bg-leaf/10 text-leaf flex items-center justify-center shrink-0">
-              <Icon name="phone" className="w-4 h-4" />
-            </span>
-            <span className={isUr ? 'urdu leading-relaxed' : ''}>{t('کال کریں', 'Call Us')}</span>
-            <span className="ml-auto text-[11px] text-muted tabular-nums" dir="ltr">{settings?.phone}</span>
-          </a>
-        </nav>
-        <div className="p-4 border-t border-[#E8DCC3] space-y-2.5">
-          <Link href="/admin" onClick={onClose} className="flex items-center gap-2 text-[11px] font-bold text-muted hover:text-maroon">
-            <Icon name="gear" className="w-4 h-4" /> {t('ایڈمن پینل', 'Admin Panel')}
-          </Link>
-          <button onClick={() => { onClose(); router.push('/'); }} className="w-full btn btn-primary btn-sm">
-            {t('ابھی آرڈر کریں', 'Order Now')}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ---------- Home header (mobile) — hamburger / brand / profile+cart ---------- */
-export function HomeHeader({ settings, onMenu }) {
-  const cart = useCart();
-  const count = cart ? cart.count : 0;
+/* ---------- Home header (mobile) — brand + language only; nav lives in BottomNav ---------- */
+export function HomeHeader({ settings }) {
   const { isUr, t } = useLang();
   return (
     <header className="bg-maroon text-white pt-safe md:hidden sticky top-0 z-40">
-      <div className="flex items-center gap-2 px-3 pt-3 pb-3">
-        <button onClick={onMenu} className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-white/10 active:bg-white/15" aria-label="open menu">
-          <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-            <path d="M4 7h16M4 12h16M4 17h10" />
-          </svg>
-        </button>
-        <Link href="/" className="flex-1 flex items-center justify-center gap-2 min-w-0">
-          <LogoMark className="w-7 h-7" />
-          <span className={`${isUr ? 'urdu text-lg leading-relaxed' : 'text-[15px] font-extrabold tracking-wide'} truncate drop-shadow-sm`}>
+      <div className="flex items-center gap-2 px-4 pt-3 pb-3">
+        <Link href="/" className="flex-1 flex items-center gap-2.5 min-w-0" aria-label={t('العزيز ریسٹورنٹ', 'Al Aziz Restaurant')}>
+          <LogoMark className="w-8 h-8 shrink-0" />
+          <span className={`min-w-0 truncate ${isUr ? 'urdu text-lg leading-relaxed' : 'text-[15px] font-extrabold tracking-wide'} drop-shadow-sm`}>
             {t(settings?.nameUr || 'العزيز ریسٹورنٹ', settings?.nameEn || 'Al Aziz Restaurant')}
           </span>
         </Link>
-        <Link href="/profile" className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-white/10" aria-label="profile">
-          <Icon name="user" className="w-5 h-5" />
-        </Link>
-        <Link href="/cart" className="relative w-10 h-10 flex items-center justify-center rounded-xl hover:bg-white/10" aria-label="cart">
-          <Icon name="cart" className="w-5 h-5" />
-          {count > 0 && (
-            <span className="absolute top-1 right-1 bg-gold text-[#3E2C05] text-[9px] font-extrabold rounded-full min-w-[16px] h-[16px] px-1 flex items-center justify-center tabular-nums">
-              {count}
-            </span>
-          )}
-        </Link>
+        <LangToggle light />
       </div>
     </header>
   );

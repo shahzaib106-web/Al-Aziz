@@ -78,7 +78,7 @@ function Home() {
 
   return (
     <CartProvider>
-      <div dir="ltr" className="mx-auto max-w-md md:max-w-6xl min-h-screen bg-cream pb-[calc(86px+env(safe-area-inset-bottom))] md:pb-10 shadow-xl relative">
+      <div dir="ltr" className="mx-auto max-w-md md:max-w-6xl min-h-screen bg-cream pb-[calc(74px+env(safe-area-inset-bottom))] md:pb-10 shadow-xl relative flex flex-col">
         <TopNav active="home" />
         <HomeHeader settings={settings} onMenu={() => setDrawer(true)} />
         <MobileDrawer open={drawer} onClose={() => setDrawer(false)} settings={settings} />
@@ -186,8 +186,8 @@ function Home() {
               </div>
             </div>
 
-            {/* ---- Deal banner ---- */}
-            <div className="px-4 mt-6">
+            {/* ---- Deal banner (pinned near the bottom nav on tall screens) ---- */}
+            <div className="px-4 pt-6 mt-auto">
               <div className="gold-banner rounded-2xl p-4 flex items-center gap-3 shadow-card border border-[#C9971C]/40 overflow-hidden">
                 <div className="flex-1 min-w-0 text-left">
                   <div className="text-[10px] font-extrabold tracking-widest text-[#6B520F]">{t('ویکنڈ ڈیل', 'WEEKEND DEAL')}</div>

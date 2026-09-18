@@ -138,6 +138,15 @@ select:focus-visible {
   animation: fade-in 0.18s ease-out;
 }
 
+/* Hero slide cross-fade */
+@keyframes hero-in {
+  from { opacity: 0; transform: translateX(14px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.hero-in {
+  animation: hero-in 0.4s ease-out;
+}
+
 /* ===== Admin design system ===== */
 .admin { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; }
 .admin .tnum { font-variant-numeric: tabular-nums; }

@@ -36,7 +36,7 @@ export function Qty({ value, onChange, max = 99, light = false }) {
 }
 
 /* ---------- Menu item tile card ---------- */
-export function MenuItemTile({ item, onOpen }) {
+export function MenuItemTile({ item, onOpen, badge, className = '' }) {
   const { isUr, t } = useLang();
   const out = !item.available || item.stock <= 0;
   const half = item.options?.find((o) => o.label === 'Half')?.price;
@@ -44,7 +44,7 @@ export function MenuItemTile({ item, onOpen }) {
   return (
     <div
       onClick={onOpen}
-      className="card overflow-hidden cursor-pointer select-none transition duration-200 hover:border-maroon/40 hover:shadow-md hover:-translate-y-0.5 active:scale-[.98] flex flex-col"
+      className={`card overflow-hidden cursor-pointer select-none transition duration-200 hover:border-maroon/40 hover:shadow-md hover:-translate-y-0.5 active:scale-[.98] flex flex-col ${className}`}
     >
       <div className="relative">
         <img src={item.image} alt={item.nameEn} className={`w-full h-28 md:h-36 object-cover ${out ? 'grayscale opacity-70' : ''}`} />
@@ -53,7 +53,12 @@ export function MenuItemTile({ item, onOpen }) {
             <span className="bg-white text-maroon text-[10px] font-bold px-3 py-1 rounded-full">{t('ختم ہو گیا', 'SOLD OUT')}</span>
           </span>
         )}
-        <span className="absolute top-2 left-2 bg-white/90 backdrop-blur rounded-md px-1.5 py-0.5 flex items-center gap-1 text-[10px] font-bold text-ink">
+        {badge && (
+          <span className={`absolute top-2 left-2 text-white text-[8px] font-extrabold tracking-wider px-2 py-1 rounded-md ${badge.tone === 'red' ? 'bg-maroon' : badge.tone === 'gold' ? 'bg-gold text-[#3E2C05]' : 'bg-leaf'}`}>
+            {badge.label}
+          </span>
+        )}
+        <span className="absolute top-2 right-2 bg-white/90 backdrop-blur rounded-md px-1.5 py-0.5 flex items-center gap-1 text-[10px] font-bold text-ink">
           <Star className="w-3 h-3 text-gold" /> {item.rating}
         </span>
       </div>
@@ -61,16 +66,17 @@ export function MenuItemTile({ item, onOpen }) {
         <div className={`${isUr ? 'urdu' : ''} text-[13px] font-semibold text-ink ${isUr ? 'leading-relaxed' : 'leading-snug'} line-clamp-2 min-h-[2.2em]`}>
           {t(item.nameUr, item.nameEn)}
         </div>
+        <div className={`${isUr ? 'urdu leading-relaxed' : 'leading-snug'} text-[10px] text-muted line-clamp-2`}>{t(item.desc, item.descEn || item.desc)}</div>
         <div className="flex items-center justify-between gap-2 mt-auto pt-1">
           {half ? (
-            <span className="text-maroon font-extrabold text-[10px] md:text-[11px] leading-tight" dir="ltr">
+            <span className="text-maroon font-extrabold text-[10px] md:text-[11px] leading-tight tabular-nums" dir="ltr">
               {t('ہاف', 'Half')} {half.toLocaleString('en-PK')} · {t('فل', 'Full')} {full.toLocaleString('en-PK')}
             </span>
           ) : (
             <span className="text-maroon font-extrabold text-[13px] md:text-sm truncate tabular-nums" dir="ltr">{fmt(item.price)}</span>
           )}
           {!out && (
-            <span className="bg-leaf text-white rounded-full w-7 h-7 flex items-center justify-center shrink-0">
+            <span className="bg-ink text-white rounded-full w-7 h-7 border border-[#E8DCC3] flex items-center justify-center shrink-0">
               <Icon name="plus" className="w-4 h-4" strokeWidth={2.4} />
             </span>
           )}

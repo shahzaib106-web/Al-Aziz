@@ -114,32 +114,25 @@ function Home() {
           </div>
         ) : (
           <>
-            {/* ---- Hero carousel: full red banner with photo on top ---- */}
+            {/* ---- Hero carousel: photo fits full-bleed, red painted over the text side ---- */}
             <div className="px-4 mt-4">
               <div className="relative overflow-hidden rounded-2xl shadow-md">
-                <div key={slide} className="pattern-maroon bg-maroon text-white hero-in">
-                  <div className="flex items-center gap-3 p-4 min-h-[196px] md:min-h-[240px]">
-                    {/* Text on red */}
-                    <div className="flex-1 min-w-0 flex flex-col justify-center">
-                      <span className="text-gold text-[11px] font-bold italic tracking-wide">{s.accent}</span>
-                      <h2 className={`${isUr ? 'urdu text-base leading-loose' : 'text-[20px] font-extrabold leading-tight'} mt-1 drop-shadow-sm`}>{s.title}</h2>
-                      <p className={`text-[10px] text-white/75 mt-1.5 ${isUr ? 'urdu leading-relaxed' : 'leading-snug'}`}>{s.sub}</p>
-                      <Link href={s.href} className={`btn btn-sm w-max mt-3 bg-gold text-[#3E2C05] hover:brightness-110 rounded-full px-4 ${isUr ? 'urdu' : '!tracking-wide'}`}>
-                        {t('ابھی آرڈر کریں', 'ORDER NOW')} <Icon name="chevR" className="w-3.5 h-3.5" strokeWidth={2.6} />
-                      </Link>
-                    </div>
-                    {/* Photo melting into the red like paint */}
-                    <img
-                      src={s.img}
-                      alt=""
-                      className="w-[46%] max-w-[190px] h-40 md:h-52 object-cover shrink-0 [-webkit-mask-image:linear-gradient(to_right,transparent,black_28%,black_86%,transparent)] [mask-image:linear-gradient(to_right,transparent,black_28%,black_86%,transparent)]"
-                    />
+                <div key={slide} className="relative h-48 md:h-64 hero-in">
+                  <img src={s.img} alt="" className="absolute inset-0 w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-maroon via-maroon/90 to-maroon/20" />
+                  <div className="relative h-full flex flex-col justify-center p-4 md:pr-[46%] pr-[42%]">
+                    <span className="text-gold text-[11px] font-bold italic tracking-wide drop-shadow">{s.accent}</span>
+                    <h2 className={`${isUr ? 'urdu text-base leading-loose' : 'text-[20px] font-extrabold leading-tight'} mt-1 text-white drop-shadow-md`}>{s.title}</h2>
+                    <p className={`text-[10px] text-white/85 mt-1.5 drop-shadow ${isUr ? 'urdu leading-relaxed' : 'leading-snug'}`}>{s.sub}</p>
+                    <Link href={s.href} className={`btn btn-sm w-max mt-3 bg-gold text-[#3E2C05] hover:brightness-110 rounded-full px-4 ${isUr ? 'urdu' : '!tracking-wide'}`}>
+                      {t('ابھی آرڈر کریں', 'ORDER NOW')} <Icon name="chevR" className="w-3.5 h-3.5" strokeWidth={2.6} />
+                    </Link>
                   </div>
                 </div>
                 {/* dots */}
                 <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex gap-1.5">
                   {slides.map((_, i) => (
-                    <button key={i} onClick={() => setSlide(i)} aria-label={'slide ' + (i + 1)} className={`h-1.5 rounded-full transition-all ${i === slide ? 'w-5 bg-gold' : 'w-1.5 bg-white/60'}`} />
+                    <button key={i} onClick={() => setSlide(i)} aria-label={'slide ' + (i + 1)} className={`h-1.5 rounded-full transition-all ${i === slide ? 'w-5 bg-gold' : 'w-1.5 bg-white/70'}`} />
                   ))}
                 </div>
               </div>

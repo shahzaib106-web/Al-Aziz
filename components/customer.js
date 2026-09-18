@@ -2,4 +2,4 @@
    Pages import from here so public API stays stable. */
 export { LangToggle, HomeHeader, TopNav, PageHeader, BottomNav } from './customer/shell';
 export { Splash, Onboarding, InstallPrompt } from './customer/overlays';
-export { Qty, MenuItemTile, ProductModal } from './customer/product';
+export { Qty, MenuItemTile, ProductModal, TileSkeleton } from './customer/product';

@@ -3,6 +3,23 @@ import { useEffect, useState } from 'react';
 import { Icon, Star } from '../icons';
 import { useCart, useLang, fmt, toast } from '../store';
 
+/* ---------- Loading skeleton tile ---------- */
+export function TileSkeleton({ count = 6 }) {
+  return (
+    <>
+      {Array.from({ length: count }).map((_, i) => (
+        <div key={i} className="card overflow-hidden animate-pulse" aria-hidden="true">
+          <div className="w-full h-28 md:h-36 bg-[#EFE5D0]" />
+          <div className="p-3 space-y-2">
+            <div className="h-3 bg-[#EFE5D0] rounded w-4/5" />
+            <div className="h-3 bg-[#EFE5D0] rounded w-2/5" />
+          </div>
+        </div>
+      ))}
+    </>
+  );
+}
+
 /* ---------- Qty stepper (44px-class tap targets) ---------- */
 export function Qty({ value, onChange, max = 99, light = false }) {
   return (

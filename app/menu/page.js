@@ -2,7 +2,7 @@
 import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { api, CartProvider, useLang } from '../../components/store';
-import { PageHeader, BottomNav, MenuItemTile, ProductModal } from '../../components/customer';
+import { PageHeader, BottomNav, MenuItemTile, ProductModal, TileSkeleton } from '../../components/customer';
 import { Icon } from '../../components/icons';
 
 function MenuInner() {
@@ -15,13 +15,16 @@ function MenuInner() {
   const [q, setQ] = useState('');
   const [searching, setSearching] = useState(false);
   const [selected, setSelected] = useState(null);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    api('categories').then((c) => {
-      setCats(c);
-      setCat((cur) => cur || params.get('cat') || c[0]?.id || '');
-    });
-    api('menu').then(setMenu);
+    Promise.all([api('categories'), api('menu')])
+      .then(([c, m]) => {
+        setCats(c);
+        setMenu(m);
+        setCat((cur) => cur || params.get('cat') || c[0]?.id || '');
+      })
+      .finally(() => setLoaded(true));
   }, []);
 
   const selectCat = (id) => {
@@ -60,10 +63,14 @@ function MenuInner() {
       </div>
 
       <div className="p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-        {list.map((m) => (
-          <MenuItemTile key={m.id} item={m} onOpen={() => setSelected(m)} />
-        ))}
-        {list.length === 0 && <p className={`${isUr ? 'urdu' : ''} text-center text-sm text-muted py-10 col-span-2`}>{t('کوئی ڈش نہیں ملی', 'No dishes found')}</p>}
+        {!loaded ? (
+          <TileSkeleton count={8} />
+        ) : (
+          list.map((m) => <MenuItemTile key={m.id} item={m} onOpen={() => setSelected(m)} />)
+        )}
+        {loaded && list.length === 0 && (
+          <p className={`${isUr ? 'urdu' : ''} text-center text-sm text-muted py-10 col-span-2`}>{t('کوئی ڈش نہیں ملی', 'No dishes found')}</p>
+        )}
       </div>
 
       <BottomNav active="menu" />

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { api, CartProvider, useLang } from '../components/store';
-import { Splash, Onboarding, HomeHeader, BottomNav, MenuItemTile, TopNav, ProductModal } from '../components/customer';
+import { Splash, Onboarding, HomeHeader, BottomNav, MenuItemTile, TopNav, ProductModal, TileSkeleton } from '../components/customer';
 import { Icon } from '../components/icons';
 
 // Module-level flag: survives client-side navigation (Home button etc.),
@@ -19,6 +19,7 @@ function Home() {
   const [splash, setSplash] = useState(!splashPlayed);
   const [onb, setOnb] = useState(false);
   const [selected, setSelected] = useState(null);
+  const [loaded, setLoaded] = useState(false);
 
   // Splash plays once per app/site open; navigating back to Home never replays it.
   useEffect(() => {
@@ -30,9 +31,13 @@ function Home() {
 
   useEffect(() => {
     if (!localStorage.getItem('agh_onboarded')) setOnb(true);
-    api('settings').then(setSettings).catch(() => {});
-    api('categories').then(setCats).catch(() => {});
-    api('menu').then(setMenu).catch(() => {});
+    Promise.all([api('settings').catch(() => null), api('categories').catch(() => []), api('menu').catch(() => [])])
+      .then(([s, c, m]) => {
+        setSettings(s);
+        setCats(c);
+        setMenu(m);
+      })
+      .finally(() => setLoaded(true));
   }, []);
 
   const popular = [...menu].sort((a, b) => b.reviews - a.reviews).slice(0, 3);
@@ -67,7 +72,13 @@ function Home() {
             </Link>
           </div>
           <div className="grid grid-cols-4 md:grid-cols-6 gap-2.5">
-            {cats.slice(0, 4).map((c) => (
+            {!loaded && Array.from({ length: 4 }).map((_, i) => (
+              <div key={'sk' + i} className="card p-2 flex flex-col items-center gap-1.5 animate-pulse" aria-hidden="true">
+                <div className="w-full aspect-square rounded-lg bg-[#EFE5D0]" />
+                <div className="h-3 w-3/4 bg-[#EFE5D0] rounded" />
+              </div>
+            ))}
+            {loaded && cats.slice(0, 4).map((c) => (
               <Link key={c.id} href={`/menu?cat=${c.id}`} className="card p-2 flex flex-col items-center gap-1.5 hover:border-maroon/40 hover:-translate-y-0.5 transition">
                 <img src={c.image} alt={c.en} className="w-full aspect-square rounded-lg object-cover border border-[#E8DCC3]" />
                 <span className={`${isUr ? 'urdu text-[12px] leading-relaxed' : 'text-[11px] text-center leading-tight'} font-semibold text-ink line-clamp-1 w-full`}>{t(c.ur, c.en)}</span>
@@ -96,9 +107,11 @@ function Home() {
             <span className={`${isUr ? 'urdu leading-relaxed' : ''} text-[10px] text-muted text-right max-w-[45%]`}>{t('سب سے زیادہ آرڈر کیے جانے والے', 'Most ordered dishes')}</span>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {popular.map((m) => (
-              <MenuItemTile key={m.id} item={m} onOpen={() => setSelected(m)} />
-            ))}
+            {!loaded ? (
+              <TileSkeleton count={4} />
+            ) : (
+              popular.map((m) => <MenuItemTile key={m.id} item={m} onOpen={() => setSelected(m)} />)
+            )}
           </div>
         </div>
 

@@ -128,11 +128,11 @@ function Home() {
                         {t('ابھی آرڈر کریں', 'ORDER NOW')} <Icon name="chevR" className="w-3.5 h-3.5" strokeWidth={2.6} />
                       </Link>
                     </div>
-                    {/* Photo floating on the red */}
+                    {/* Photo melting into the red like paint */}
                     <img
                       src={s.img}
                       alt=""
-                      className="w-[42%] max-w-[170px] h-36 md:h-48 object-cover rounded-xl border-2 border-white/25 shadow-[0_8px_20px_rgba(0,0,0,0.35)] shrink-0"
+                      className="w-[46%] max-w-[190px] h-40 md:h-52 object-cover shrink-0 [-webkit-mask-image:linear-gradient(to_right,transparent,black_28%,black_86%,transparent)] [mask-image:linear-gradient(to_right,transparent,black_28%,black_86%,transparent)]"
                     />
                   </div>
                 </div>

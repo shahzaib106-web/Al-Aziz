@@ -118,30 +118,30 @@ export default function Profile() {
                 <h3 className={`${isUr ? 'urdu' : ''} text-sm font-bold text-ink`}>{t('ہمارا لوکیشن', 'Our Location')}</h3>
               </div>
               <span className="text-[10px] text-muted tabular-nums" dir="ltr">
-                {Number(settings?.lat || 30.6431941).toFixed(4)}, {Number(settings?.lng || 73.0658838).toFixed(4)}
+                {Number(settings?.lat || 30.6558).toFixed(4)}, {Number(settings?.lng || 73.1025).toFixed(4)}
               </span>
             </div>
             <div className="p-4 pt-3">
               <div className="rounded-xl overflow-hidden border border-[#E8DCC3]">
                 <iframe
                   title="Restaurant location"
-                  src={`https://maps.google.com/maps?q=${settings?.lat || 30.6431941},${settings?.lng || 73.0658838}&z=16&output=embed`}
+                  src={`https://maps.google.com/maps?q=${settings?.lat || 30.6558},${settings?.lng || 73.1025}&z=16&output=embed`}
                   className="w-full h-44 md:h-56 block"
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                 />
               </div>
-              <p className={`${isUr ? 'urdu' : ''} text-[11px] text-muted mt-2.5 ${isUr ? 'leading-loose' : 'leading-relaxed'}`}>{settings?.address}</p>
+              <p className={`${isUr ? 'urdu' : ''} text-[11px] text-muted mt-2.5 ${isUr ? 'leading-loose' : 'leading-relaxed'}`}>{settings?.address || 'Near Royal Crystal Marquee, Multan Road Bypass, Sahiwal'}</p>
               <div className="grid grid-cols-2 gap-2.5 mt-3" dir="ltr">
                 <a
-                  href={`https://www.google.com/maps/dir/?api=1&destination=${settings?.lat || 30.6431941},${settings?.lng || 73.0658838}`}
+                  href={`https://www.google.com/maps/dir/?api=1&destination=${settings?.lat || 30.6558},${settings?.lng || 73.1025}`}
                   target="_blank"
                   rel="noreferrer"
                   className="btn-maroon h-10 text-[12px] tracking-wide flex items-center justify-center gap-1.5"
                 >
                   <Icon name="pin" className="w-4 h-4" /> {t('راستہ دیکھیں', 'Get Directions')}
                 </a>
-                <a href={'tel:' + (settings?.phone || '').replace(/\s/g, '')} className="border border-leaf text-leaf bg-white rounded-lg h-10 text-[12px] font-semibold flex items-center justify-center gap-1.5 hover:bg-leaf/5 transition">
+                <a href={'tel:' + (settings?.phone || '0300 0310991').replace(/\s/g, '')} className="border border-leaf text-leaf bg-white rounded-lg h-10 text-[12px] font-semibold flex items-center justify-center gap-1.5 hover:bg-leaf/5 transition">
                   <Icon name="phone" className="w-4 h-4" /> {t('کال کریں', 'Call Us')}
                 </a>
               </div>

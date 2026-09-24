@@ -100,11 +100,20 @@ export function PWA() {
     window.addEventListener('resize', normalizeMobilePWAViewport);
     window.addEventListener('orientationchange', normalizeMobilePWAViewport);
 
-    // 3. Register service worker
+    // 3. Register service worker and clear legacy JS chunk caches
+    if (typeof window !== 'undefined' && 'caches' in window) {
+      caches.keys().then((keys) => {
+        keys.forEach((k) => {
+          if (k !== 'agh-cache-v4') caches.delete(k);
+        });
+      }).catch(() => {});
+    }
+
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        // ?v= forces the browser to re-download the worker on deploy
-        navigator.serviceWorker.register('/sw.js?v=3').catch(() => {});
+        navigator.serviceWorker.register('/sw.js?v=4').then((reg) => {
+          if (reg && reg.update) reg.update();
+        }).catch(() => {});
       });
     }
 

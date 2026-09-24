@@ -45,150 +45,26 @@ export function Qty({ value, onChange, max = 99, light = false, size = 'default'
   );
 }
 
-/* ---------- Inline add-to-cart: [+ Add] → opens next screen with Half/Full / [− n +] ---------- */
+/* ---------- Inline add-to-cart: only "Add to Cart" button -> opens modal with Half/Full options ---------- */
 export function TileAdd({ item, disabled, onOpen }) {
-  const cart = useCart();
   const { isUr, t } = useLang();
-  if (!cart) return null;
-  const hasOptions = Array.isArray(item.options) && item.options.length > 0;
-
-  // Lines in cart for this dish
-  const cartLines = cart.items.filter((i) => i.menuId === item.id);
-  const totalQty = cartLines.reduce((s, i) => s + i.qty, 0);
-
-  // If item has Half/Full options
-  if (hasOptions) {
-    if (totalQty === 0) {
-      // Single clean + Add button. Clicking opens the next screen where Half and Full show!
-      return (
-        <button
-          type="button"
-          suppressHydrationWarning
-          disabled={disabled}
-          onClick={(e) => {
-            e.stopPropagation();
-            if (onOpen) onOpen();
-          }}
-          className="h-8 px-3.5 rounded-full bg-maroon text-white text-[11px] font-extrabold flex items-center gap-1.5 shadow-[0_2px_8px_rgba(158,27,30,0.25)] hover:bg-maroon-dark active:scale-95 transition disabled:opacity-40"
-        >
-          <Icon name="plus" className="w-3.5 h-3.5" strokeWidth={2.8} />
-          <span>{t('اضافہ', 'Add')}</span>
-        </button>
-      );
-    }
-
-    // If options are already in cart:
-    if (cartLines.length === 1) {
-      const line = cartLines[0];
-      return (
-        <div
-          className="pop flex items-center rounded-full bg-maroon text-white h-8 overflow-hidden shadow-[0_2px_8px_rgba(158,27,30,0.25)]"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <button
-            type="button"
-            suppressHydrationWarning
-            onClick={() => cart.setQty(line.key, line.qty - 1)}
-            className="w-7 h-full flex items-center justify-center active:bg-black/15"
-            aria-label="decrease"
-          >
-            <Icon name="minus" className="w-3 h-3" strokeWidth={2.4} />
-          </button>
-          <button
-            type="button"
-            suppressHydrationWarning
-            onClick={(e) => {
-              e.stopPropagation();
-              if (onOpen) onOpen();
-            }}
-            className="px-2 text-center text-[11px] font-extrabold tabular-nums flex items-center gap-1 hover:underline"
-            title={t('سائز تبدیل کریں', 'Change portion')}
-          >
-            <span>{line.qty}</span>
-          </button>
-          <button
-            type="button"
-            suppressHydrationWarning
-            onClick={() => cart.setQty(line.key, line.qty + 1)}
-            className="w-7 h-full flex items-center justify-center active:bg-black/15"
-            aria-label="increase"
-          >
-            <Icon name="plus" className="w-3 h-3" strokeWidth={2.4} />
-          </button>
-        </div>
-      );
-    }
-
-    // Multiple different options (e.g. 1 Half AND 1 Full) in cart:
-    return (
-      <button
-        type="button"
-        suppressHydrationWarning
-        onClick={(e) => {
-          e.stopPropagation();
-          if (onOpen) onOpen();
-        }}
-        className="h-8 px-3 rounded-full bg-maroon text-white text-[11px] font-extrabold flex items-center gap-1.5 shadow-[0_2px_8px_rgba(158,27,30,0.25)] hover:bg-maroon-dark active:scale-95 transition"
-      >
-        <span className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px]">
-          {totalQty}
-        </span>
-        <span>{t('کارٹ میں', 'In Cart')}</span>
-      </button>
-    );
-  }
-
-  // Dishes WITHOUT options (single size, like naan, cold drink, etc.)
-  const key = item.id + '|';
-  const line = cartLines[0] || cart.items.find((i) => i.key === key);
-
-  if (!line) {
-    return (
-      <button
-        type="button"
-        suppressHydrationWarning
-        disabled={disabled}
-        onClick={(e) => {
-          e.stopPropagation();
-          cart.add(item, null, 1);
-          toast(t('کارٹ میں شامل ہو گیا', 'Added to cart'));
-        }}
-        className="h-8 px-3.5 rounded-full bg-maroon text-white text-[11px] font-extrabold flex items-center gap-1.5 shadow-[0_2px_8px_rgba(158,27,30,0.25)] hover:bg-maroon-dark active:scale-95 transition disabled:opacity-40"
-      >
-        <Icon name="plus" className="w-3.5 h-3.5" strokeWidth={2.8} />
-        <span>{t('اضافہ', 'Add')}</span>
-      </button>
-    );
-  }
 
   return (
-    <div
-      key={line.key}
-      className="pop flex items-center rounded-full bg-maroon text-white h-8 overflow-hidden shadow-[0_2px_8px_rgba(158,27,30,0.25)]"
-      onClick={(e) => e.stopPropagation()}
+    <button
+      type="button"
+      suppressHydrationWarning
+      disabled={disabled}
+      onClick={(e) => {
+        e.stopPropagation();
+        if (onOpen) onOpen();
+      }}
+      className="h-8 px-2.5 sm:px-3 rounded-full bg-maroon hover:bg-maroon-dark text-white text-[10.5px] sm:text-[11px] font-extrabold flex items-center gap-1 sm:gap-1.5 shadow-[0_2px_8px_rgba(158,27,30,0.25)] active:scale-95 transition disabled:opacity-40 shrink-0 select-none"
+      aria-label={t('کارٹ میں شامل کریں', 'Add to Cart')}
+      title={t('کارٹ میں شامل کریں', 'Add to Cart')}
     >
-      <button
-        type="button"
-        suppressHydrationWarning
-        onClick={() => cart.setQty(line.key, line.qty - 1)}
-        className="w-7 sm:w-8 h-full flex items-center justify-center active:bg-black/15"
-        aria-label="decrease"
-      >
-        <Icon name="minus" className="w-3.5 h-3.5" strokeWidth={2.4} />
-      </button>
-      <span className="w-5 text-center text-[12px] font-extrabold tabular-nums" dir="ltr">
-        {line.qty}
-      </span>
-      <button
-        type="button"
-        suppressHydrationWarning
-        onClick={() => cart.setQty(line.key, line.qty + 1)}
-        className="w-7 sm:w-8 h-full flex items-center justify-center active:bg-black/15"
-        aria-label="increase"
-      >
-        <Icon name="plus" className="w-3.5 h-3.5" strokeWidth={2.4} />
-      </button>
-    </div>
+      <Icon name="cart" className="w-3.5 h-3.5 shrink-0" strokeWidth={2.4} />
+      <span className="whitespace-nowrap">{t('کارٹ میں شامل کریں', 'Add to Cart')}</span>
+    </button>
   );
 }
 
@@ -427,20 +303,20 @@ export function ProductModal({ item, onClose }) {
                         suppressHydrationWarning
                         key={o.label}
                         onClick={() => setOption(o)}
-                        className={`rounded-xl border-2 p-3 text-left transition active:scale-[.98] relative flex flex-col justify-between ${
+                        className={`rounded-2xl border-2 p-3 text-start transition active:scale-[.98] relative flex flex-col justify-between shadow-xs ${
                           isSelected
-                            ? 'border-maroon bg-maroon/[.06] text-maroon shadow-xs ring-1 ring-maroon'
+                            ? 'border-maroon bg-maroon/[.07] text-maroon ring-2 ring-maroon/25'
                             : 'border-[#E0D4BC] bg-white text-ink hover:border-maroon/40'
                         }`}
                       >
-                        <div className="flex items-center justify-between">
-                          <span className="text-[13px] font-extrabold flex items-center gap-1.5" dir="ltr">
-                            {o.label}
-                            {isHalf && <span className="text-[11px] font-normal urdu text-muted">(نصف)</span>}
-                            {isFull && <span className="text-[11px] font-normal urdu text-muted">(فل)</span>}
+                        <div className="flex items-center justify-between w-full">
+                          <span className="text-[13.5px] font-extrabold flex items-center gap-1.5">
+                            <span>{o.label}</span>
+                            {isHalf && <span className="text-[11px] font-bold urdu text-muted px-1.5 py-0.5 rounded-full bg-[#EFE5D0]">نصف</span>}
+                            {isFull && <span className="text-[11px] font-bold urdu text-muted px-1.5 py-0.5 rounded-full bg-[#EFE5D0]">فل</span>}
                           </span>
                           <span
-                            className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                            className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${
                               isSelected ? 'border-maroon bg-maroon text-white' : 'border-[#C8BCA4]'
                             }`}
                           >
@@ -450,7 +326,7 @@ export function ProductModal({ item, onClose }) {
                         <span className="text-[10px] text-muted font-medium mt-1">
                           {isHalf ? t('1 شخص کے لیے مناسب', '1 Person serving') : t('2-3 افراد کے لیے', '2-3 Persons')}
                         </span>
-                        <span className="text-[13px] font-extrabold mt-1.5 tabular-nums text-maroon" dir="ltr">
+                        <span className="text-[14px] font-black mt-1.5 tabular-nums text-maroon" dir="ltr">
                           {fmt(o.price)}
                         </span>
                       </button>

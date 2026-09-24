@@ -29,7 +29,7 @@ function CheckoutInner() {
     const u = getUser();
     setName(u?.name || 'Ali Raza');
     setPhone(u?.phone || '0304 6721962');
-    setAddress(u?.address || 'Street # 2, Near Al Aziz Restaurant, Sahiwal, Punjab, Pakistan');
+    setAddress(u?.address || 'Near Royal Crystal Marquee, Multan Road Bypass, Sahiwal');
   }, []);
 
   const fee = settings ? (subtotal >= (settings.freeDeliveryAbove || 1500) ? 0 : settings.deliveryFee || 50) : 50;

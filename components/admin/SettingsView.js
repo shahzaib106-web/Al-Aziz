@@ -26,10 +26,10 @@ export default function SettingsView() {
   const [profile, setProfile] = useState({
     name: 'Al Aziz Restaurant',
     tagline: 'Authentic Biryani, Desi Karahi & Charcoal BBQ',
-    phone: '+92 51 2287461',
-    whatsapp: '+92 300 1234567',
+    phone: '0300 0310991',
+    whatsapp: '0300 0310991',
     email: 'admin@alazizrestaurant.com',
-    address: 'Plot 14-B, Main Jinnah Avenue, Blue Area, Islamabad',
+    address: 'Near Royal Crystal Marquee, Multan Road Bypass, Sahiwal',
     ntn: '7482910-4',
     openingTime: '11:30',
     closingTime: '01:00',

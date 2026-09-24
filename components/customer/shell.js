@@ -34,7 +34,7 @@ export function HomeHeader({ settings }) {
   const { isUr, t } = useLang();
   const isPWA = useIsPWA();
   return (
-    <header className={`bg-white/95 backdrop-blur text-ink pt-safe ${isPWA ? 'block' : 'md:hidden'} mobile-home-header sticky top-0 z-40 border-b border-[#EFE5D0] shadow-[0_1px_10px_rgba(38,33,28,0.04)]`}>
+    <header suppressHydrationWarning className={`bg-white/95 backdrop-blur text-ink pt-safe ${isPWA ? 'block' : 'md:hidden'} mobile-home-header sticky top-0 z-40 border-b border-[#EFE5D0] shadow-[0_1px_10px_rgba(38,33,28,0.04)]`}>
       <div className="flex items-center gap-2.5 px-4 py-2.5">
         <Link href="/" className="flex-1 flex items-center gap-2.5 min-w-0" aria-label={t('العزيز ریسٹورنٹ', 'Al Aziz Restaurant')}>
           <span className="w-9 h-9 rounded-xl bg-maroon flex items-center justify-center shrink-0 shadow-sm">
@@ -53,23 +53,12 @@ export function HomeHeader({ settings }) {
 /* ---------- Desktop top nav ---------- */
 export function TopNav({ active }) {
   const isPWA = useIsPWA();
-  const router = useRouter();
   const cart = useCart();
   const count = cart ? cart.count : 0;
   const { isUr, t } = useLang();
-  const [deskQ, setDeskQ] = useState('');
 
   // If in PWA standalone / mobile enforcement, never render desktop top navigation
   if (isPWA) return null;
-
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    if (deskQ.trim()) {
-      router.push('/menu?q=' + encodeURIComponent(deskQ.trim()));
-    } else {
-      router.push('/menu');
-    }
-  };
 
   const links = [
     { id: 'home', en: 'Home', ur: 'ہوم', href: '/' },
@@ -79,8 +68,8 @@ export function TopNav({ active }) {
     { id: 'profile', en: 'Profile', ur: 'پروفائل', href: '/profile' },
   ];
   return (
-    <header className="hidden md:block bg-maroon text-white sticky top-0 z-40 shadow-md desktop-top-nav">
-      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center gap-6">
+    <header suppressHydrationWarning className="hidden md:block bg-maroon text-white sticky top-0 z-40 shadow-md desktop-top-nav">
+      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-6">
         <Link href="/" className="flex items-center gap-3 shrink-0 focus-visible:ring-2 focus-visible:ring-white/80 rounded-lg">
           <LogoMark className="w-9 h-9" />
           <span className={`${isUr ? 'urdu text-base leading-relaxed' : 'font-extrabold tracking-wide text-sm'}`}>
@@ -88,47 +77,26 @@ export function TopNav({ active }) {
           </span>
         </Link>
 
-        {/* Desktop search bar */}
-        <form onSubmit={handleSearchSubmit} className="relative flex-1 max-w-md ml-4" role="search">
-          <Icon name="search" className="w-4 h-4 text-white/60 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-          <input
-            type="text"
-            suppressHydrationWarning
-            value={deskQ}
-            onChange={(e) => setDeskQ(e.target.value)}
-            placeholder={t('کھانے تلاش کریں (جیسے بریانی، کڑاہی)…', 'Search dishes (e.g. biryani, karahi)…')}
-            className={`w-full h-10 rounded-full bg-white/15 border border-white/20 pl-10 pr-9 text-xs text-white placeholder:text-white/60 outline-none focus:bg-white focus:text-ink focus:border-white focus:ring-2 focus:ring-white/30 transition-all ${isUr ? 'urdu' : ''}`}
-          />
-          {deskQ && (
-            <button
-              type="button"
-              suppressHydrationWarning
-              onClick={() => setDeskQ('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-white/70 hover:text-white p-0.5"
-              aria-label="Clear search"
-            >
-              <Icon name="x" className="w-3.5 h-3.5" />
-            </button>
-          )}
-        </form>
-
-        <nav className="flex items-center gap-1 ml-auto">
-          {links.map((l) => (
-            <Link
-              key={l.id}
-              href={l.href}
-              className={`relative px-4 py-2 rounded-lg text-[13px] font-semibold transition ${active === l.id ? 'bg-white text-maroon shadow-sm' : 'text-white/85 hover:bg-white/10'} ${isUr ? 'urdu' : ''}`}
-            >
-              {t(l.ur, l.en)}
-              {l.badge > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 bg-leaf text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] px-1 flex items-center justify-center shadow-sm">
-                  {l.badge}
-                </span>
-              )}
-            </Link>
-          ))}
-        </nav>
-        <LangToggle light />
+        <div className="flex items-center gap-3">
+          <nav className="flex items-center gap-1">
+            {links.map((l) => (
+              <Link
+                key={l.id}
+                href={l.href}
+                className={`relative px-4 py-2 rounded-lg text-[13px] font-semibold transition ${active === l.id ? 'bg-white text-maroon shadow-sm' : 'text-white/85 hover:bg-white/10'} ${isUr ? 'urdu' : ''}`}
+              >
+                {t(l.ur, l.en)}
+                {l.badge > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 bg-leaf text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] px-1 flex items-center justify-center shadow-sm">
+                    {l.badge}
+                  </span>
+                )}
+              </Link>
+            ))}
+          </nav>
+          <div className="w-px h-6 bg-white/20 mx-1" />
+          <LangToggle light />
+        </div>
       </div>
     </header>
   );
@@ -142,7 +110,7 @@ export function PageHeader({ title, titleUr, right }) {
   return (
     <>
       {!isPWA && <TopNav />}
-      <header className={`${isPWA ? 'block' : 'md:hidden'} mobile-page-header bg-maroon text-white pt-safe sticky top-0 z-30 shadow-[0_2px_8px_rgba(38,33,28,0.12)]`}>
+      <header suppressHydrationWarning className={`${isPWA ? 'block' : 'md:hidden'} mobile-page-header bg-maroon text-white pt-safe sticky top-0 z-30 shadow-[0_2px_8px_rgba(38,33,28,0.12)]`}>
         <div className="flex items-center gap-1 px-3 py-2.5 min-h-[50px]">
           <button
             type="button"
@@ -180,7 +148,7 @@ export function BottomNav({ active }) {
     { id: 'profile', en: 'Profile', ur: 'پروفائل', icon: 'user', href: '/profile' },
   ];
   return (
-    <nav className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg z-40 bg-white/95 backdrop-blur-md border-t border-[#EDE3CF] ${isPWA ? 'block' : 'md:hidden'} mobile-bottom-nav pb-safe shadow-[0_-6px_20px_rgba(38,33,28,0.06)]`}>
+    <nav suppressHydrationWarning className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg z-40 bg-white/95 backdrop-blur-md border-t border-[#EDE3CF] ${isPWA ? 'block' : 'md:hidden'} mobile-bottom-nav pb-safe shadow-[0_-6px_20px_rgba(38,33,28,0.06)]`}>
       <div className="grid grid-cols-5 h-[68px]">
         {tabs.map((tab) => {
           const on = active === tab.id;

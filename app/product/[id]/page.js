@@ -86,20 +86,53 @@ function ProductInner() {
 
         {item.options?.length > 0 && (
           <div className="mt-5">
-            <h3 className={`text-xs font-bold text-ink mb-2 ${isUr ? 'urdu' : ''}`}>{t('سائز یا مقدار منتخب کریں', 'Select Option / Portion')}</h3>
-            <div className="space-y-2">
-              {item.options.map((o) => (
-                <label key={o.label} className={`card flex items-center justify-between px-4 py-3 cursor-pointer transition ${option?.label === o.label ? '!border-maroon ring-1 ring-maroon/30 bg-maroon/5 font-bold text-maroon' : 'hover:border-maroon/30'}`}>
-                  <span className="flex items-center gap-3 text-sm">
-                    <span className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${option?.label === o.label ? 'border-maroon' : 'border-[#C8BCA4]'}`}>
-                      {option?.label === o.label && <span className="w-2 h-2 rounded-full bg-maroon" />}
+            <div className="flex items-center justify-between mb-2">
+              <h3 className={`text-xs font-bold text-ink uppercase tracking-wider ${isUr ? 'urdu' : ''}`}>
+                {t('سائز منتخب کریں (نصف یا فل)', 'Choose Portion (Half or Full)')}
+              </h3>
+              <span className="text-[10px] text-maroon font-bold bg-[#FBEDED] px-2 py-0.5 rounded-full">
+                {t('لازمی انتخاب', 'Required')}
+              </span>
+            </div>
+            <div className="grid grid-cols-2 gap-2.5">
+              {item.options.map((o) => {
+                const isSelected = option?.label === o.label;
+                const isHalf = o.label.toLowerCase().includes('half') || o.label === 'Half';
+                const isFull = o.label.toLowerCase().includes('full') || o.label === 'Full';
+                return (
+                  <label
+                    key={o.label}
+                    onClick={() => setOption(o)}
+                    className={`rounded-2xl border-2 p-3 text-start cursor-pointer transition active:scale-[.98] relative flex flex-col justify-between shadow-xs ${
+                      isSelected
+                        ? 'border-maroon bg-maroon/[.07] text-maroon ring-2 ring-maroon/25'
+                        : 'border-[#E0D4BC] bg-white text-ink hover:border-maroon/40'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between w-full">
+                      <span className="text-[13.5px] font-extrabold flex items-center gap-1.5">
+                        <span>{o.label}</span>
+                        {isHalf && <span className="text-[11px] font-bold urdu text-muted px-1.5 py-0.5 rounded-full bg-[#EFE5D0]">نصف</span>}
+                        {isFull && <span className="text-[11px] font-bold urdu text-muted px-1.5 py-0.5 rounded-full bg-[#EFE5D0]">فل</span>}
+                      </span>
+                      <span
+                        className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                          isSelected ? 'border-maroon bg-maroon text-white' : 'border-[#C8BCA4]'
+                        }`}
+                      >
+                        {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-muted font-medium mt-1">
+                      {isHalf ? t('1 شخص کے لیے مناسب', '1 Person serving') : t('2-3 افراد کے لیے', '2-3 Persons')}
                     </span>
-                    {o.label}
-                  </span>
-                  <span className="text-sm font-semibold tabular-nums" dir="ltr">{fmt(o.price)}</span>
-                  <input type="radio" name="opt" className="hidden" checked={option?.label === o.label} onChange={() => setOption(o)} />
-                </label>
-              ))}
+                    <span className="text-[14px] font-black mt-1.5 tabular-nums text-maroon" dir="ltr">
+                      {fmt(o.price)}
+                    </span>
+                    <input type="radio" name="opt" className="hidden" checked={isSelected} onChange={() => setOption(o)} />
+                  </label>
+                );
+              })}
             </div>
           </div>
         )}

@@ -93,7 +93,7 @@ export default function Track() {
                 </div>
               </div>
 
-              <a href={`tel:${(settings?.phone || '03196526413').replace(/\s/g, '')}`} className={`btn btn-primary w-full text-sm ${isUr ? 'urdu' : 'tracking-widest'}`} dir="ltr">
+              <a href={`tel:${(settings?.phone || '03000310991').replace(/\s/g, '')}`} className={`btn btn-primary w-full text-sm ${isUr ? 'urdu' : 'tracking-widest'}`} dir="ltr">
                 {t('ریسٹورنٹ کو کال کریں', 'CALL RESTAURANT')}
               </a>
             </div>

@@ -218,13 +218,16 @@ export default function CategoriesView() {
     setDeleteConfirmId(null);
   };
 
-  const handleMove = (index, direction) => {
-    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+  const handleMove = (id, direction) => {
+    const currentIndex = categories.findIndex((c) => c.id === id);
+    if (currentIndex < 0) return;
+
+    const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
     if (targetIndex < 0 || targetIndex >= categories.length) return;
 
     const updated = [...categories];
-    const temp = updated[index];
-    updated[index] = updated[targetIndex];
+    const temp = updated[currentIndex];
+    updated[currentIndex] = updated[targetIndex];
     updated[targetIndex] = temp;
 
     // re-assign sortOrder
@@ -405,22 +408,29 @@ export default function CategoriesView() {
             {/* Card Actions Footer */}
             <div className="bg-stone-50/80 px-4 py-2.5 border-t border-stone-100 flex items-center justify-between text-xs">
               <div className="flex items-center gap-1">
-                <button
-                  onClick={() => handleMove(index, 'up')}
-                  disabled={index === 0}
-                  className="p-1 rounded text-stone-400 hover:text-stone-700 hover:bg-stone-200/70 disabled:opacity-30 disabled:pointer-events-none transition"
-                  title="Move Up"
-                >
-                  <MoveUp className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  onClick={() => handleMove(index, 'down')}
-                  disabled={index === categories.length - 1}
-                  className="p-1 rounded text-stone-400 hover:text-stone-700 hover:bg-stone-200/70 disabled:opacity-30 disabled:pointer-events-none transition"
-                  title="Move Down"
-                >
-                  <MoveDown className="w-3.5 h-3.5" />
-                </button>
+                {(() => {
+                  const globalIdx = categories.findIndex((c) => c.id === cat.id);
+                  return (
+                    <>
+                      <button
+                        onClick={() => handleMove(cat.id, 'up')}
+                        disabled={globalIdx <= 0}
+                        className="p-1 rounded text-stone-400 hover:text-stone-700 hover:bg-stone-200/70 disabled:opacity-30 disabled:pointer-events-none transition"
+                        title="Move Up"
+                      >
+                        <MoveUp className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => handleMove(cat.id, 'down')}
+                        disabled={globalIdx >= categories.length - 1 || globalIdx === -1}
+                        className="p-1 rounded text-stone-400 hover:text-stone-700 hover:bg-stone-200/70 disabled:opacity-30 disabled:pointer-events-none transition"
+                        title="Move Down"
+                      >
+                        <MoveDown className="w-3.5 h-3.5" />
+                      </button>
+                    </>
+                  );
+                })()}
                 <span className="text-[10px] text-stone-400 font-mono ml-1">#{cat.sortOrder}</span>
               </div>
 

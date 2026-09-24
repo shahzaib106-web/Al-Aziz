@@ -51,7 +51,7 @@ export default function Profile() {
 
   return (
     <CartProvider>
-      <div dir="ltr" className="mx-auto max-w-md md:max-w-none min-h-screen bg-cream pb-28 md:pb-10 shadow-xl md:shadow-none">
+      <div dir="ltr" className="mx-auto max-w-md md:max-w-none min-h-screen bg-cream pb-28 md:pb-10 shadow-xl md:shadow-none app-page-container">
         <PageHeader
           title="My Profile"
           titleUr="میری پروفائل"

@@ -16,6 +16,8 @@ export const metadata = {
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
   viewportFit: 'cover',
   themeColor: '#9E1B1E',
 };
@@ -24,6 +26,46 @@ export default function RootLayout({ children }) {
   return (
     <html lang="ur" suppressHydrationWarning>
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+(function() {
+  try {
+    var isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+                       window.matchMedia('(display-mode: fullscreen)').matches ||
+                       window.matchMedia('(display-mode: minimal-ui)').matches ||
+                       window.navigator.standalone === true ||
+                       (document.referrer && document.referrer.indexOf('android-app://') !== -1) ||
+                       (location.search && (location.search.indexOf('source=pwa') !== -1 || location.search.indexOf('pwa=1') !== -1)) ||
+                       sessionStorage.getItem('agh_pwa_standalone') === '1' ||
+                       localStorage.getItem('agh_pwa_installed') === '1';
+
+    var minScreen = Math.min(window.screen.width || 9999, window.screen.height || 9999);
+    var isPhone = minScreen < 650;
+    var innerW = window.innerWidth || (document.documentElement && document.documentElement.clientWidth) || 0;
+    var screenW = window.screen.width || 390;
+
+    var isDesktopSiteForced = innerW >= 768 && isPhone;
+
+    if (isStandalone || isDesktopSiteForced) {
+      sessionStorage.setItem('agh_pwa_standalone', '1');
+      document.documentElement.setAttribute('data-pwa', 'standalone');
+      document.documentElement.classList.add('pwa-standalone-mode', 'force-mobile-view');
+
+      // Normalize wide 980px viewport on mobile phones so mobile app fills screen with 1:1 scale
+      if (innerW > 600 && isPhone) {
+        var ratio = innerW / Math.min(screenW, 430);
+        if (ratio > 1.2 && ratio < 4.0) {
+          document.documentElement.classList.add('pwa-desktop-forced');
+          document.documentElement.style.zoom = String(ratio);
+        }
+      }
+    }
+  } catch(e) {}
+})();
+            `,
+          }}
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link

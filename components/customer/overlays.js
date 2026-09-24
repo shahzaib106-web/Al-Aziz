@@ -72,7 +72,13 @@ export function InstallPrompt() {
       setDeferred(e);
       setVisible(true);
     };
-    const installed = () => setVisible(false);
+    const installed = () => {
+      try {
+        localStorage.setItem('agh_pwa_installed', '1');
+        sessionStorage.setItem('agh_pwa_standalone', '1');
+      } catch (e) {}
+      setVisible(false);
+    };
     window.addEventListener('beforeinstallprompt', bip);
     window.addEventListener('appinstalled', installed);
     // Always show our own banner on mobile after a short delay,

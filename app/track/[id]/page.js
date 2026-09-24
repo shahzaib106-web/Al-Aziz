@@ -23,7 +23,7 @@ export default function Track() {
   const cancelled = order?.status === 'cancelled';
 
   return (
-    <div dir="ltr" className="mx-auto max-w-md md:max-w-none min-h-screen bg-cream pb-10 shadow-xl md:shadow-none">
+    <div dir="ltr" className="mx-auto max-w-md md:max-w-none min-h-screen bg-cream pb-10 shadow-xl md:shadow-none app-page-container">
       <PageHeader title="Track Order" titleUr="آرڈر ٹریک کریں" />
 
       {!order ? (

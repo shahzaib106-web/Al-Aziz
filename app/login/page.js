@@ -24,7 +24,7 @@ export default function Login() {
   const u = (cls) => `${isUr ? 'urdu' : ''} ${cls}`;
 
   return (
-    <div dir="ltr" className="mx-auto max-w-md min-h-screen bg-cream shadow-xl flex flex-col">
+    <div dir="ltr" className="mx-auto max-w-md min-h-screen bg-cream shadow-xl flex flex-col app-page-container">
       <div className="flex justify-end p-3">
         <LangToggle />
       </div>

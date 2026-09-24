@@ -215,3 +215,74 @@ select:focus-visible {
     display: none !important;
   }
 }
+
+/* ========================================================
+   PWA & MOBILE-LOCK ENFORCEMENT
+   Guarantees the PWA stays strictly in mobile view on phones,
+   even if "Request Desktop Site" is toggled in Chrome mobile.
+   ======================================================== */
+
+html[data-pwa="standalone"],
+html.pwa-standalone-mode,
+html.force-mobile-view,
+body.pwa-standalone-mode,
+@media (display-mode: standalone), (display-mode: fullscreen), (display-mode: minimal-ui) {
+
+  /* 1. Strictly suppress desktop top navigation in PWA */
+  .desktop-top-nav,
+  header.desktop-top-nav,
+  header.hidden.md\:block {
+    display: none !important;
+  }
+
+  /* 2. Strictly show mobile header and subpage headers */
+  .mobile-home-header,
+  header.mobile-home-header,
+  .mobile-page-header,
+  header.mobile-page-header {
+    display: block !important;
+  }
+
+  /* 3. Strictly show mobile bottom navigation bar */
+  .mobile-bottom-nav,
+  nav.mobile-bottom-nav {
+    display: block !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 100% !important;
+    max-width: 32rem !important;
+    z-index: 40 !important;
+  }
+
+  /* 4. Enforce mobile container layout and bottom clearance */
+  .app-page-container {
+    max-width: 28rem !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-bottom: calc(90px + env(safe-area-inset-bottom)) !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08) !important;
+  }
+}
+
+/* When Chrome Mobile forced desktop site on a phone screen, zoom normalization is applied */
+html.pwa-desktop-forced,
+html.pwa-desktop-forced body {
+  overflow-x: hidden !important;
+  width: 100% !important;
+}
+
+html.pwa-desktop-forced .app-page-container {
+  max-width: 100% !important;
+  width: 100% !important;
+  box-shadow: none !important;
+}
+
+html.pwa-desktop-forced .mobile-bottom-nav {
+  max-width: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+  transform: none !important;
+}
+

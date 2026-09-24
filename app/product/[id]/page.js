@@ -37,7 +37,7 @@ function ProductInner() {
   };
 
   return (
-    <div dir={isUr ? 'rtl' : 'ltr'} className="mx-auto max-w-md md:max-w-none min-h-screen bg-cream pb-10 shadow-xl md:shadow-none">
+    <div dir={isUr ? 'rtl' : 'ltr'} className="mx-auto max-w-md md:max-w-none min-h-screen bg-cream pb-10 shadow-xl md:shadow-none app-page-container">
       <div className="md:grid md:grid-cols-2 md:gap-8 md:p-6 md:max-w-6xl md:mx-auto md:w-full">
       <div className="relative">
         <img

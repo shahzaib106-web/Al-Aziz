@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Icon, LogoMark } from '../icons';
 import { useCart, useLang } from '../store';
+import { useIsPWA } from '../pwa';
 
 /* ---------- Language toggle button ---------- */
 export function LangToggle({ light = false, dark = false }) {
@@ -31,8 +32,9 @@ export function LangToggle({ light = false, dark = false }) {
 /* ---------- Home header (mobile) — clean white: brand + language only ---------- */
 export function HomeHeader({ settings }) {
   const { isUr, t } = useLang();
+  const isPWA = useIsPWA();
   return (
-    <header className="bg-white/95 backdrop-blur text-ink pt-safe md:hidden sticky top-0 z-40 border-b border-[#EFE5D0] shadow-[0_1px_10px_rgba(38,33,28,0.04)]">
+    <header className={`bg-white/95 backdrop-blur text-ink pt-safe ${isPWA ? 'block' : 'md:hidden'} mobile-home-header sticky top-0 z-40 border-b border-[#EFE5D0] shadow-[0_1px_10px_rgba(38,33,28,0.04)]`}>
       <div className="flex items-center gap-2.5 px-4 py-2.5">
         <Link href="/" className="flex-1 flex items-center gap-2.5 min-w-0" aria-label={t('العزيز ریسٹورنٹ', 'Al Aziz Restaurant')}>
           <span className="w-9 h-9 rounded-xl bg-maroon flex items-center justify-center shrink-0 shadow-sm">
@@ -50,11 +52,15 @@ export function HomeHeader({ settings }) {
 
 /* ---------- Desktop top nav ---------- */
 export function TopNav({ active }) {
+  const isPWA = useIsPWA();
   const router = useRouter();
   const cart = useCart();
   const count = cart ? cart.count : 0;
   const { isUr, t } = useLang();
   const [deskQ, setDeskQ] = useState('');
+
+  // If in PWA standalone / mobile enforcement, never render desktop top navigation
+  if (isPWA) return null;
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -73,7 +79,7 @@ export function TopNav({ active }) {
     { id: 'profile', en: 'Profile', ur: 'پروفائل', href: '/profile' },
   ];
   return (
-    <header className="hidden md:block bg-maroon text-white sticky top-0 z-40 shadow-md">
+    <header className="hidden md:block bg-maroon text-white sticky top-0 z-40 shadow-md desktop-top-nav">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center gap-6">
         <Link href="/" className="flex items-center gap-3 shrink-0 focus-visible:ring-2 focus-visible:ring-white/80 rounded-lg">
           <LogoMark className="w-9 h-9" />
@@ -132,10 +138,11 @@ export function TopNav({ active }) {
 export function PageHeader({ title, titleUr, right }) {
   const router = useRouter();
   const { isUr, t } = useLang();
+  const isPWA = useIsPWA();
   return (
     <>
-      <TopNav />
-      <header className="md:hidden bg-maroon text-white pt-safe sticky top-0 z-30 shadow-[0_2px_8px_rgba(38,33,28,0.12)]">
+      {!isPWA && <TopNav />}
+      <header className={`${isPWA ? 'block' : 'md:hidden'} mobile-page-header bg-maroon text-white pt-safe sticky top-0 z-30 shadow-[0_2px_8px_rgba(38,33,28,0.12)]`}>
         <div className="flex items-center gap-1 px-3 py-2.5 min-h-[50px]">
           <button
             type="button"
@@ -161,6 +168,7 @@ export function PageHeader({ title, titleUr, right }) {
 
 /* ---------- Bottom nav (mobile): 5 refined tabs ---------- */
 export function BottomNav({ active }) {
+  const isPWA = useIsPWA();
   const cart = useCart();
   const count = cart ? cart.count : 0;
   const { isUr, t } = useLang();
@@ -172,7 +180,7 @@ export function BottomNav({ active }) {
     { id: 'profile', en: 'Profile', ur: 'پروفائل', icon: 'user', href: '/profile' },
   ];
   return (
-    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg z-40 bg-white/95 backdrop-blur-md border-t border-[#EDE3CF] md:hidden pb-safe shadow-[0_-6px_20px_rgba(38,33,28,0.06)]">
+    <nav className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg z-40 bg-white/95 backdrop-blur-md border-t border-[#EDE3CF] ${isPWA ? 'block' : 'md:hidden'} mobile-bottom-nav pb-safe shadow-[0_-6px_20px_rgba(38,33,28,0.06)]`}>
       <div className="grid grid-cols-5 h-[68px]">
         {tabs.map((tab) => {
           const on = active === tab.id;

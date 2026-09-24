@@ -12,7 +12,7 @@ function CartInner() {
   const progress = Math.min(100, Math.round((subtotal / freeAbove) * 100));
 
   return (
-    <div dir={isUr ? 'rtl' : 'ltr'} className="mx-auto max-w-md md:max-w-none min-h-screen bg-cream pb-28 md:pb-10 shadow-xl md:shadow-none flex flex-col">
+    <div dir={isUr ? 'rtl' : 'ltr'} className="mx-auto max-w-md md:max-w-none min-h-screen bg-cream pb-28 md:pb-10 shadow-xl md:shadow-none flex flex-col app-page-container">
       <PageHeader
         title="Your Cart"
         titleUr="آپ کا کارٹ"

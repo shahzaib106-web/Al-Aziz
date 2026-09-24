@@ -96,7 +96,7 @@ function Home() {
 
   return (
     <CartProvider>
-      <div dir={isUr ? 'rtl' : 'ltr'} className="mx-auto max-w-md md:max-w-none min-h-screen bg-cream pb-[calc(90px+env(safe-area-inset-bottom))] md:pb-10 shadow-xl md:shadow-none relative flex flex-col">
+      <div dir={isUr ? 'rtl' : 'ltr'} className="mx-auto max-w-md md:max-w-none min-h-screen bg-cream pb-[calc(90px+env(safe-area-inset-bottom))] md:pb-10 shadow-xl md:shadow-none relative flex flex-col app-page-container">
         <TopNav active="home" />
         <HomeHeader settings={settings} />
 

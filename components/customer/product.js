@@ -18,45 +18,129 @@ const SPICES = ['Mild', 'Medium', 'Hot'];
 const SPICE_UR = { Mild: 'ہلکی', Medium: 'درمیان', Hot: 'تیز' };
 
 /* ---------- Qty stepper (44px-class tap targets) ---------- */
-export function Qty({ value, onChange, max = 99, light = false }) {
+export function Qty({ value, onChange, max = 99, light = false, size = 'default' }) {
+  const isSm = size === 'sm';
   return (
-    <div className={`inline-flex items-center rounded-xl border select-none ${light ? 'border-white/30 bg-white/10 text-white' : 'border-[#D8CCB4] bg-white text-ink'}`}>
-      <button type="button" suppressHydrationWarning onClick={() => onChange(Math.max(1, value - 1))} className="w-10 h-10 flex items-center justify-center active:bg-black/5 rounded-l-xl" aria-label="decrease">
-        <Icon name="minus" className="w-4 h-4" strokeWidth={2.2} />
+    <div className={`inline-flex items-center rounded-xl border select-none ${light ? 'border-white/30 bg-white/10 text-white' : 'border-[#D8CCB4] bg-white text-ink'} ${isSm ? 'h-7.5' : 'h-9 sm:h-10'}`}>
+      <button
+        type="button"
+        suppressHydrationWarning
+        onClick={() => onChange(Math.max(1, value - 1))}
+        className={`${isSm ? 'w-7 h-7' : 'w-9 sm:w-10 h-full'} flex items-center justify-center active:bg-black/5 rounded-l-xl`}
+        aria-label="decrease"
+      >
+        <Icon name="minus" className={isSm ? 'w-3 h-3' : 'w-4 h-4'} strokeWidth={2.2} />
       </button>
-      <span className="text-sm font-bold w-7 text-center tabular-nums" dir="ltr">{value}</span>
-      <button type="button" suppressHydrationWarning onClick={() => onChange(Math.min(value + 1, max))} className="w-10 h-10 flex items-center justify-center active:bg-black/5 rounded-r-xl" aria-label="increase">
-        <Icon name="plus" className="w-4 h-4" strokeWidth={2.2} />
+      <span className={`${isSm ? 'text-xs w-6' : 'text-sm w-7'} font-bold text-center tabular-nums`} dir="ltr">{value}</span>
+      <button
+        type="button"
+        suppressHydrationWarning
+        onClick={() => onChange(Math.min(value + 1, max))}
+        className={`${isSm ? 'w-7 h-7' : 'w-9 sm:w-10 h-full'} flex items-center justify-center active:bg-black/5 rounded-r-xl`}
+        aria-label="increase"
+      >
+        <Icon name="plus" className={isSm ? 'w-3 h-3' : 'w-4 h-4'} strokeWidth={2.2} />
       </button>
     </div>
   );
 }
 
-/* ---------- Inline add-to-cart: [+ Add] → [− n +] ---------- */
-function TileAdd({ item, disabled, onOpen }) {
+/* ---------- Inline add-to-cart: [+ Add] → opens next screen with Half/Full / [− n +] ---------- */
+export function TileAdd({ item, disabled, onOpen }) {
   const cart = useCart();
   const { isUr, t } = useLang();
   if (!cart) return null;
-  const hasOptions = item.options && item.options.length > 0;
-  const key = item.id + '|';
-  const line = cart.items.find((i) => i.menuId === item.id || i.key === key);
+  const hasOptions = Array.isArray(item.options) && item.options.length > 0;
 
-  if (hasOptions && !line) {
+  // Lines in cart for this dish
+  const cartLines = cart.items.filter((i) => i.menuId === item.id);
+  const totalQty = cartLines.reduce((s, i) => s + i.qty, 0);
+
+  // If item has Half/Full options
+  if (hasOptions) {
+    if (totalQty === 0) {
+      // Single clean + Add button. Clicking opens the next screen where Half and Full show!
+      return (
+        <button
+          type="button"
+          suppressHydrationWarning
+          disabled={disabled}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (onOpen) onOpen();
+          }}
+          className="h-8 px-3.5 rounded-full bg-maroon text-white text-[11px] font-extrabold flex items-center gap-1.5 shadow-[0_2px_8px_rgba(158,27,30,0.25)] hover:bg-maroon-dark active:scale-95 transition disabled:opacity-40"
+        >
+          <Icon name="plus" className="w-3.5 h-3.5" strokeWidth={2.8} />
+          <span>{t('اضافہ', 'Add')}</span>
+        </button>
+      );
+    }
+
+    // If options are already in cart:
+    if (cartLines.length === 1) {
+      const line = cartLines[0];
+      return (
+        <div
+          className="pop flex items-center rounded-full bg-maroon text-white h-8 overflow-hidden shadow-[0_2px_8px_rgba(158,27,30,0.25)]"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button
+            type="button"
+            suppressHydrationWarning
+            onClick={() => cart.setQty(line.key, line.qty - 1)}
+            className="w-7 h-full flex items-center justify-center active:bg-black/15"
+            aria-label="decrease"
+          >
+            <Icon name="minus" className="w-3 h-3" strokeWidth={2.4} />
+          </button>
+          <button
+            type="button"
+            suppressHydrationWarning
+            onClick={(e) => {
+              e.stopPropagation();
+              if (onOpen) onOpen();
+            }}
+            className="px-2 text-center text-[11px] font-extrabold tabular-nums flex items-center gap-1 hover:underline"
+            title={t('سائز تبدیل کریں', 'Change portion')}
+          >
+            <span>{line.qty}</span>
+          </button>
+          <button
+            type="button"
+            suppressHydrationWarning
+            onClick={() => cart.setQty(line.key, line.qty + 1)}
+            className="w-7 h-full flex items-center justify-center active:bg-black/15"
+            aria-label="increase"
+          >
+            <Icon name="plus" className="w-3 h-3" strokeWidth={2.4} />
+          </button>
+        </div>
+      );
+    }
+
+    // Multiple different options (e.g. 1 Half AND 1 Full) in cart:
     return (
       <button
         type="button"
         suppressHydrationWarning
-        disabled={disabled}
         onClick={(e) => {
           e.stopPropagation();
           if (onOpen) onOpen();
         }}
-        className="h-8 px-3 rounded-full bg-maroon text-white text-[11px] font-extrabold flex items-center gap-1 shadow-[0_3px_8px_rgba(158,27,30,0.28)] hover:bg-maroon-dark active:scale-95 transition disabled:opacity-40"
+        className="h-8 px-3 rounded-full bg-maroon text-white text-[11px] font-extrabold flex items-center gap-1.5 shadow-[0_2px_8px_rgba(158,27,30,0.25)] hover:bg-maroon-dark active:scale-95 transition"
       >
-        <Icon name="plus" className="w-3.5 h-3.5" strokeWidth={2.8} /> {t('نصف / فل', 'Half / Full')}
+        <span className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px]">
+          {totalQty}
+        </span>
+        <span>{t('کارٹ میں', 'In Cart')}</span>
       </button>
     );
   }
+
+  // Dishes WITHOUT options (single size, like naan, cold drink, etc.)
+  const key = item.id + '|';
+  const line = cartLines[0] || cart.items.find((i) => i.key === key);
 
   if (!line) {
     return (
@@ -69,40 +153,69 @@ function TileAdd({ item, disabled, onOpen }) {
           cart.add(item, null, 1);
           toast(t('کارٹ میں شامل ہو گیا', 'Added to cart'));
         }}
-        className="h-8 px-3.5 rounded-full bg-maroon text-white text-[11px] font-extrabold flex items-center gap-1 shadow-[0_3px_8px_rgba(158,27,30,0.28)] hover:bg-maroon-dark active:scale-95 transition disabled:opacity-40"
+        className="h-8 px-3.5 rounded-full bg-maroon text-white text-[11px] font-extrabold flex items-center gap-1.5 shadow-[0_2px_8px_rgba(158,27,30,0.25)] hover:bg-maroon-dark active:scale-95 transition disabled:opacity-40"
       >
-        <Icon name="plus" className="w-3.5 h-3.5" strokeWidth={2.8} /> {t('اضافہ', 'Add')}
+        <Icon name="plus" className="w-3.5 h-3.5" strokeWidth={2.8} />
+        <span>{t('اضافہ', 'Add')}</span>
       </button>
     );
   }
+
   return (
-    <div key={line.key} className="pop flex items-center rounded-full bg-maroon text-white h-8 overflow-hidden shadow-[0_3px_8px_rgba(158,27,30,0.28)]" onClick={(e) => e.stopPropagation()}>
-      <button type="button" suppressHydrationWarning onClick={() => cart.setQty(line.key, line.qty - 1)} className="w-8 h-full flex items-center justify-center active:bg-black/15" aria-label="decrease">
+    <div
+      key={line.key}
+      className="pop flex items-center rounded-full bg-maroon text-white h-8 overflow-hidden shadow-[0_2px_8px_rgba(158,27,30,0.25)]"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <button
+        type="button"
+        suppressHydrationWarning
+        onClick={() => cart.setQty(line.key, line.qty - 1)}
+        className="w-7 sm:w-8 h-full flex items-center justify-center active:bg-black/15"
+        aria-label="decrease"
+      >
         <Icon name="minus" className="w-3.5 h-3.5" strokeWidth={2.4} />
       </button>
-      <span className="w-5 text-center text-[12px] font-extrabold tabular-nums" dir="ltr">{line.qty}</span>
-      <button type="button" suppressHydrationWarning onClick={() => cart.setQty(line.key, line.qty + 1)} className="w-8 h-full flex items-center justify-center active:bg-black/15" aria-label="increase">
+      <span className="w-5 text-center text-[12px] font-extrabold tabular-nums" dir="ltr">
+        {line.qty}
+      </span>
+      <button
+        type="button"
+        suppressHydrationWarning
+        onClick={() => cart.setQty(line.key, line.qty + 1)}
+        className="w-7 sm:w-8 h-full flex items-center justify-center active:bg-black/15"
+        aria-label="increase"
+      >
         <Icon name="plus" className="w-3.5 h-3.5" strokeWidth={2.4} />
       </button>
     </div>
   );
 }
 
-/* ---------- Menu item tile card (compact, scannable) ---------- */
+/* ---------- Menu item tile card (compact, scannable, mobile-responsive) ---------- */
 export function MenuItemTile({ item, onOpen, badge, className = '' }) {
   const { isUr, t } = useLang();
+  const cart = useCart();
+
   const out = !item.available || item.stock <= 0;
-  const hasOptions = item.options && item.options.length > 0;
-  const half = item.options?.find((o) => o.label === 'Half')?.price;
-  const full = item.options?.find((o) => o.label === 'Full')?.price || item.price;
-  const base = half || item.price;
+  const hasOptions = Array.isArray(item.options) && item.options.length > 0;
+  const halfOpt = item.options?.find((o) => o.label?.toLowerCase().includes('half'));
+  const fullOpt = item.options?.find((o) => o.label?.toLowerCase().includes('full')) || item.options?.[1];
+  const halfPrice = halfOpt?.price;
+  const fullPrice = fullOpt?.price || item.price;
+  const basePrice = halfPrice || item.price;
+
+  // Items in cart
+  const cartLines = cart?.items?.filter((i) => i.menuId === item.id) || [];
+  const totalQty = cartLines.reduce((s, i) => s + i.qty, 0);
 
   return (
     <div
       onClick={onOpen}
-      className={`card overflow-hidden cursor-pointer select-none transition-all duration-200 hover:border-maroon/40 hover:shadow-md hover:-translate-y-0.5 active:scale-[.98] flex flex-col rounded-xl group ${className}`}
+      className={`card overflow-hidden cursor-pointer select-none transition-all duration-200 hover:border-maroon/40 hover:shadow-md hover:-translate-y-0.5 active:scale-[.99] flex flex-col rounded-2xl group border border-[#E8DFC9] bg-white ${className}`}
     >
-      <div className="relative overflow-hidden">
+      {/* Card Image Area */}
+      <div className="relative overflow-hidden aspect-[4/3] bg-[#EFE5D0]">
         <img
           src={item.image}
           alt={item.nameEn}
@@ -110,52 +223,88 @@ export function MenuItemTile({ item, onOpen, badge, className = '' }) {
             e.currentTarget.onerror = null;
             e.currentTarget.src = '/img/spread.jpg';
           }}
-          className={`w-full h-32 md:h-36 object-cover transition-transform duration-300 group-hover:scale-105 ${out ? 'grayscale opacity-70' : ''}`}
+          className={`w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 ${
+            out ? 'grayscale opacity-70' : ''
+          }`}
         />
+
+        {/* Sold out overlay */}
         {out && (
-          <span className="absolute inset-0 bg-black/55 backdrop-blur-[1px] flex items-center justify-center">
-            <span className="bg-white/95 text-maroon text-[10px] font-extrabold px-3 py-1 rounded-full shadow-md tracking-wider">
+          <span className="absolute inset-0 bg-black/60 backdrop-blur-[1px] flex items-center justify-center p-2">
+            <span className="bg-white/95 text-maroon text-[10px] sm:text-[11px] font-extrabold px-3 py-1 rounded-full shadow-md tracking-wider">
               {t('ختم ہو گیا', 'SOLD OUT')}
             </span>
           </span>
         )}
+
+        {/* In-cart indicator */}
+        {!out && totalQty > 0 && (
+          <span
+            className="absolute bottom-2 start-2 bg-leaf text-white text-[9px] sm:text-[10px] font-extrabold px-2 py-0.5 rounded-full shadow-md flex items-center gap-1 z-10"
+            dir="ltr"
+          >
+            <Icon name="check" className="w-2.5 h-2.5 stroke-[3]" />
+            <span>{totalQty}</span>
+          </span>
+        )}
+
+        {/* Promotional Badge (Bestseller, Chef's Pick) */}
         {badge && (
-          <span className={`absolute top-2 start-2 text-white text-[8px] font-extrabold tracking-wider px-2 py-1 rounded-md shadow-sm ${badge.tone === 'red' ? 'bg-maroon' : badge.tone === 'gold' ? 'bg-gold text-[#3E2C05]' : 'bg-leaf'}`}>
+          <span
+            className={`absolute top-2 start-2 text-white text-[8px] sm:text-[9px] font-extrabold tracking-wider px-2 py-0.5 sm:py-1 rounded-md shadow-xs ${
+              badge.tone === 'red'
+                ? 'bg-maroon'
+                : badge.tone === 'gold'
+                ? 'bg-gold text-[#3E2C05]'
+                : 'bg-leaf'
+            }`}
+          >
             {badge.label}
           </span>
         )}
-        <span className="absolute top-2 end-2 bg-white/95 backdrop-blur-sm rounded-md px-1.5 py-0.5 flex items-center gap-1 text-[10px] font-bold text-ink shadow-sm" dir="ltr">
+
+        {/* Rating */}
+        <span
+          className="absolute top-2 end-2 bg-white/95 backdrop-blur-xs rounded-md px-1.5 py-0.5 flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-ink shadow-xs"
+          dir="ltr"
+        >
           <Star className="w-3 h-3 text-gold" />
           <span className="tabular-nums">{item.rating}</span>
         </span>
       </div>
-      <div className="p-3.5 pt-3 flex flex-col gap-1 flex-1">
-        <div className={`${isUr ? 'urdu text-[14px]' : 'text-[13px]'} font-extrabold text-ink ${isUr ? 'leading-relaxed' : 'leading-snug'} line-clamp-1`}>
+
+      {/* Card Content Area */}
+      <div className="p-3 sm:p-3.5 flex flex-col gap-1 flex-1">
+        {/* Title */}
+        <div
+          className={`${
+            isUr ? 'urdu text-[14px] sm:text-[15px]' : 'text-[13px] sm:text-[14px]'
+          } font-extrabold text-ink ${isUr ? 'leading-relaxed' : 'leading-snug'} line-clamp-1`}
+        >
           {t(item.nameUr, item.nameEn)}
         </div>
-        <div className={`${isUr ? 'urdu leading-relaxed' : 'leading-snug'} text-[11px] text-muted line-clamp-2`}>
+
+        {/* Description */}
+        <div
+          className={`${
+            isUr ? 'urdu leading-relaxed' : 'leading-snug'
+          } text-[11px] text-muted line-clamp-2`}
+        >
           {t(item.desc, item.descEn || item.desc)}
         </div>
 
-        {hasOptions && (
-          <div className="mt-1 flex items-center gap-1.5 flex-wrap">
-            <span className="text-[10px] font-bold text-maroon bg-[#FBEDED] border border-[#F2D2D4] px-2 py-0.5 rounded-md">
-              {t('نصف / فل دستیاب', 'Half / Full available')}
-            </span>
-            {half && (
-              <span className="text-[10px] text-stone-500 font-semibold" dir="ltr">
-                Rs. {half} - {full}
-              </span>
-            )}
-          </div>
-        )}
-
+        {/* Bottom Price & Add Action */}
         <div className="flex items-center justify-between gap-2 mt-auto pt-2.5 border-t border-[#F2EAE0]">
-          <span className="text-maroon font-extrabold text-[15px] tabular-nums truncate" dir="ltr">
-            {fmt(base)}
-            {half && <span className="text-[10px] font-bold text-muted ml-0.5">+</span>}
+          <span className="text-maroon font-black text-[14px] sm:text-[15px] tabular-nums truncate" dir="ltr">
+            {fmt(basePrice)}
+            {hasOptions && <span className="text-[10px] font-bold text-muted ml-0.5">+</span>}
           </span>
-          {!out ? <TileAdd item={item} onOpen={onOpen} /> : null}
+          {!out ? (
+            <TileAdd
+              item={item}
+              onOpen={onOpen}
+            />
+          ) : null}
         </div>
       </div>
     </div>
@@ -191,7 +340,7 @@ export function ProductModal({ item, onClose }) {
 
   useEffect(() => {
     if (item) {
-      setOption(item.options?.find((o) => o.price === item.price) || item.options?.[item.options.length - 1] || null);
+      setOption(item.options?.[0] || null);
       setQty(1);
       setSpice('Medium');
       setAddons([]);

@@ -621,7 +621,7 @@ export default function MenuView() {
             <div className="bg-stone-50 rounded-[22px] overflow-hidden text-stone-900 text-xs shadow-inner">
               {/* App Header */}
               <div className="bg-[#911116] text-white p-3 flex items-center justify-between">
-                <span className="font-bold text-xs tracking-tight">Al Arab Restaurant</span>
+                <span className="font-bold text-xs tracking-tight">Al Aziz Restaurant</span>
                 <div className="relative">
                   <ShoppingBag className="w-4 h-4 text-white" />
                   <span className="absolute -top-1 -right-1 bg-amber-400 text-stone-900 text-[8px] font-bold rounded-full w-3.5 h-3.5 flex items-center justify-center">

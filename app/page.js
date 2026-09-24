@@ -220,11 +220,11 @@ function Home() {
                 <div key={slide} className="relative h-[196px] md:h-64 hero-in">
                   <img src={s.img} alt="" className="absolute inset-0 w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/55 to-black/5" />
-                  <div className="relative h-full flex flex-col justify-center p-5 pe-[35%] md:pe-[45%]">
+                  <div className="relative h-full flex flex-col justify-center p-4 sm:p-5 pe-3 sm:pe-[32%] md:pe-[45%] max-w-xl">
                     <span className="text-gold text-[10px] font-extrabold uppercase tracking-[0.14em] drop-shadow">{s.accent}</span>
-                    <h2 className={`${isUr ? 'urdu text-lg leading-loose' : 'text-[22px] font-extrabold leading-[1.15]'} mt-1.5 text-white drop-shadow-md`}>{s.title}</h2>
-                    <p className={`text-[11px] text-white/85 mt-1.5 drop-shadow ${isUr ? 'urdu leading-relaxed' : 'leading-snug'}`}>{s.sub}</p>
-                    <Link href={s.href} className={`btn btn-sm !h-9 w-max mt-3.5 bg-gold text-[#3E2C05] hover:brightness-110 rounded-full px-5 shadow-lg ${isUr ? 'urdu' : '!tracking-wide'}`}>
+                    <h2 className={`${isUr ? 'urdu text-lg leading-loose' : 'text-[20px] sm:text-[22px] font-extrabold leading-[1.15]'} mt-1 text-white drop-shadow-md`}>{s.title}</h2>
+                    <p className={`text-[11px] text-white/90 mt-1 drop-shadow ${isUr ? 'urdu leading-relaxed' : 'leading-snug'} line-clamp-2`}>{s.sub}</p>
+                    <Link href={s.href} className={`btn btn-sm !h-8.5 sm:!h-9 w-max mt-2.5 sm:mt-3 bg-gold text-[#3E2C05] hover:brightness-110 rounded-full px-4 sm:px-5 shadow-lg ${isUr ? 'urdu' : '!tracking-wide'}`}>
                       {t('ابھی آرڈر کریں', 'ORDER NOW')} <Icon name="chevR" className={`w-3.5 h-3.5 ${isUr ? 'rotate-180' : ''}`} strokeWidth={2.6} />
                     </Link>
                   </div>

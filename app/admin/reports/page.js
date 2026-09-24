@@ -1,19 +1,19 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import AdminLayout from '../../../components/admin/AdminLayout';
-import SettingsView from '../../../components/admin/SettingsView';
+import ReportsView from '../../../components/admin/ReportsView';
 
-export default function AdminSettingsPage() {
+export default function AdminReportsPage() {
   const router = useRouter();
 
   const handleSelectTab = (tab) => {
-    if (tab === 'settings') return;
+    if (tab === 'reports') return;
     router.push(`/admin?tab=${tab}`);
   };
 
   return (
-    <AdminLayout activeTab="settings" onSelectTab={handleSelectTab}>
-      <SettingsView />
+    <AdminLayout activeTab="reports" onSelectTab={handleSelectTab}>
+      <ReportsView />
     </AdminLayout>
   );
 }

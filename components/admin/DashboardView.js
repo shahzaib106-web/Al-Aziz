@@ -45,7 +45,7 @@ export default function DashboardView() {
               Good Morning, Ahmed!
             </h1>
             <p className="text-[13px] text-stone-500">
-              Here's what's happening at Al Arab Restaurant today.
+              Here's what's happening at Al Aziz Restaurant today.
             </p>
           </div>
         </div>
@@ -697,7 +697,7 @@ export default function DashboardView() {
           {/* Left: Preview banner card (5 cols) */}
           <div className="md:col-span-5 rounded-xl overflow-hidden border border-stone-200 shadow-xs bg-[#911116] text-white p-3.5 relative flex flex-col justify-between h-40">
             <div className="flex items-center justify-between text-xs">
-              <span className="font-bold tracking-tight">Al Arab Restaurant</span>
+              <span className="font-bold tracking-tight">Al Aziz Restaurant</span>
               <div className="flex items-center gap-2 text-[10px] text-stone-200">
                 <span>Home</span>
                 <span>Menu</span>
@@ -730,7 +730,7 @@ export default function DashboardView() {
                 target="_blank"
                 className="font-bold text-sm text-stone-900 hover:text-red-700 flex items-center gap-1"
               >
-                al-arab-restaurant.com <ExternalLink className="w-3.5 h-3.5 text-stone-400" />
+                al-aziz-restaurant.com <ExternalLink className="w-3.5 h-3.5 text-stone-400" />
               </a>
             </div>
             <p className="text-[11px] text-stone-400">Last updated: 10 Feb 2025, 09:30 AM</p>

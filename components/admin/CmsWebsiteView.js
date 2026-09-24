@@ -42,8 +42,8 @@ export default function CmsWebsiteView() {
     },
     {
       id: 3,
-      title: 'Authentic Arabian Cuisine',
-      sub: 'Try our famous Mandi & Shawarma dishes',
+      title: 'Authentic Desi Karahi & BBQ',
+      sub: 'Try our famous Special Chicken & Desi Murgh Karahi',
       img: '/img/karahi.jpg',
       active: false,
     },
@@ -357,11 +357,11 @@ export default function CmsWebsiteView() {
                 <div className="space-y-2 text-xs">
                   <div>
                     <span className="text-[10px] font-bold text-stone-400 uppercase">Meta Title</span>
-                    <p className="font-semibold text-stone-800">Al Arab Restaurant | Authentic Arabian & Desi</p>
+                    <p className="font-semibold text-stone-800">Al Aziz Restaurant | Authentic Biryani, Karahi & BBQ</p>
                   </div>
                   <div>
                     <span className="text-[10px] font-bold text-stone-400 uppercase">Meta Description</span>
-                    <p className="text-stone-600 line-clamp-2">Order authentic Biryani, Karahi, and Arabic specialties online with fast delivery across Karachi.</p>
+                    <p className="text-stone-600 line-clamp-2">Order authentic Biryani, Karahi, and Pakistani specialties online with fast delivery.</p>
                   </div>
                 </div>
               </div>
@@ -424,7 +424,7 @@ export default function CmsWebsiteView() {
               <div className="w-16 h-3 bg-stone-800 rounded-full mx-auto mb-2" />
               <div className="bg-[#FAF7F2] rounded-[24px] overflow-hidden text-stone-900 text-xs shadow-inner h-[460px] flex flex-col">
                 <div className="bg-[#911116] text-white p-3 flex items-center justify-between">
-                  <span className="font-bold text-xs tracking-tight">Al Arab Restaurant</span>
+                  <span className="font-bold text-xs tracking-tight">Al Aziz Restaurant</span>
                   <ShoppingBag className="w-4 h-4 text-white" />
                 </div>
 
@@ -435,7 +435,7 @@ export default function CmsWebsiteView() {
                       LIMITED TIME
                     </span>
                     <h5 className="font-black text-sm mt-1">10% OFF on all orders</h5>
-                    <p className="text-[9px] text-stone-200">Authentic Arabic & Desi flavors</p>
+                    <p className="text-[9px] text-stone-200">Authentic Pakistani & Desi flavors</p>
                     <button className="mt-2 px-2.5 py-1 bg-amber-400 text-stone-900 font-bold rounded text-[9px]">
                       Order Now
                     </button>

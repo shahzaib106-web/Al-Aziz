@@ -141,7 +141,7 @@ function MenuInner() {
         ))}
       </div>
 
-      <div className="p-4 md:p-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4 md:max-w-7xl md:mx-auto md:w-full flex-1">
+      <div className="p-3 sm:p-4 md:p-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5 sm:gap-3 md:gap-4 md:max-w-7xl md:mx-auto md:w-full flex-1">
         {!loaded ? (
           <TileSkeleton count={8} />
         ) : (

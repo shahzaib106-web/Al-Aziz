@@ -1,17 +1,18 @@
 export const ADMIN_NAV_ITEMS = [
   { id: 'dashboard', label: 'Dashboard', icon: 'LayoutDashboard', href: '/admin' },
-  { id: 'orders', label: 'Orders', icon: 'ClipboardList', href: '/admin/orders', badge: '12' },
-  { id: 'menu', label: 'Menu', icon: 'Utensils', href: '/admin/menu' },
+  { id: 'orders', label: 'Live Orders', icon: 'ClipboardList', href: '/admin/orders', badge: '12' },
+  { id: 'kitchen', label: 'Kitchen (KDS)', icon: 'ChefHat', href: '/admin/kds', badge: '5' },
+  { id: 'menu', label: 'Menu Items', icon: 'Utensils', href: '/admin/menu' },
   { id: 'categories', label: 'Categories', icon: 'LayoutGrid', href: '/admin/categories' },
-  { id: 'inventory', label: 'Inventory', icon: 'Package', href: '/admin/inventory' },
-  { id: 'staff', label: 'Staff', icon: 'Users', href: '/admin/staff' },
-  { id: 'customers', label: 'Customers', icon: 'Users2', href: '/admin/customers' },
+  { id: 'tables', label: 'Dine-In Tables', icon: 'Armchair', href: '/admin/tables' },
+  { id: 'delivery', label: 'Delivery & Fleet', icon: 'Bike', href: '/admin/delivery', badge: '3' },
+  { id: 'inventory', label: 'Inventory & Stock', icon: 'Package', href: '/admin/inventory' },
+  { id: 'staff', label: 'Staff Management', icon: 'Users', href: '/admin/staff' },
+  { id: 'customers', label: 'Customers CRM', icon: 'Users2', href: '/admin/customers' },
   { id: 'revenue', label: 'Cash & Accounts', icon: 'Wallet', href: '/admin/revenue' },
-  { id: 'promotions', label: 'Promotions', icon: 'Tag', href: '/admin/promotions' },
+  { id: 'promotions', label: 'Promotions & Deals', icon: 'Tag', href: '/admin/promotions' },
+  { id: 'reports', label: 'Reports & Analytics', icon: 'BarChart2', href: '/admin/reports' },
   { id: 'cms', label: 'CMS & Website', icon: 'Monitor', href: '/admin/cms' },
-  { id: 'delivery', label: 'Delivery', icon: 'Bike', href: '/admin/delivery' },
-  { id: 'tables', label: 'Tables', icon: 'Armchair', href: '/admin/tables' },
-  { id: 'reports', label: 'Reports', icon: 'BarChart2', href: '/admin/reports' },
   { id: 'settings', label: 'Settings', icon: 'Settings', href: '/admin/settings' },
 ];
 
@@ -332,16 +333,16 @@ export const MOCK_RAW_MATERIALS = [
 ];
 
 export const MOCK_STAFF = [
-  { id: '#101', name: 'Ali Raza', role: 'Head Chef', section: 'Main Branch Kitchen', phone: '0300 1234567', email: 'ali.raza@alarabrestaurant.com', status: 'On Duty', shift: '9:00 AM - 5:00 PM', rating: 4.8, experience: '2 years', attendance: '98%', ordersHandled: 126, punctuality: '98%', feedback: 5, access: 'Kitchen Management', permissions: ['Manage Menu Items', 'Kitchen Orders', 'Inventory Access', 'View Reports'], branch: 'Main Branch' },
-  { id: '#102', name: 'Sara Khan', role: 'Sous Chef', section: 'Main Branch Kitchen', phone: '0301 2345678', email: 'sara.k@alarabrestaurant.com', status: 'On Duty', shift: '9:00 AM - 5:00 PM', rating: 4.6 },
-  { id: '#103', name: 'Ahmed Malik', role: 'Waiter', section: 'Main Branch Restaurant Floor', phone: '0302 3456789', email: 'ahmed.m@alarabrestaurant.com', status: 'On Duty', shift: '2:00 PM - 10:00 PM', rating: 4.5 },
-  { id: '#104', name: 'Fatima Noor', role: 'Cashier', section: 'Main Branch Front Desk', phone: '0303 4567890', email: 'fatima.n@alarabrestaurant.com', status: 'On Duty', shift: '2:00 PM - 10:00 PM', rating: 4.7 },
-  { id: '#105', name: 'Imran Sheikh', role: 'Kitchen Staff', section: 'Main Branch Kitchen', phone: '0304 5678901', email: 'imran.s@alarabrestaurant.com', status: 'Off Duty', shift: '--', rating: 4.2 },
-  { id: '#106', name: 'Bilal Hussain', role: 'Waiter', section: 'Branch 2 Restaurant Floor', phone: '0305 6789012', email: 'bilal.h@alarabrestaurant.com', status: 'On Leave', shift: '--', rating: 4.3 },
-  { id: '#107', name: 'Ayesha Malik', role: 'Host/Hostess', section: 'Main Branch Reception', phone: '0306 7890123', email: 'ayesha.m@alarabrestaurant.com', status: 'On Duty', shift: '10:00 AM - 6:00 PM', rating: 4.6 },
-  { id: '#108', name: 'Usman Ali', role: 'Cleaner', section: 'Main Branch Maintenance', phone: '0307 8901234', email: 'usman.a@alarabrestaurant.com', status: 'On Duty', shift: '6:00 AM - 2:00 PM', rating: 4.1 },
-  { id: '#109', name: 'Zain Abbas', role: 'Delivery Rider', section: 'Branch 2 Delivery', phone: '0308 9012345', email: 'zain.a@alarabrestaurant.com', status: 'Off Duty', shift: '--', rating: 4.4 },
-  { id: '#110', name: 'Nimra Ahmed', role: 'Manager', section: 'Main Branch Management', phone: '0309 0123456', email: 'nimra.a@alarabrestaurant.com', status: 'On Duty', shift: '9:00 AM - 5:00 PM', rating: 4.9 },
+  { id: '#101', name: 'Ali Raza', role: 'Head Chef', section: 'Main Branch Kitchen', phone: '0300 1234567', email: 'ali.raza@alazizrestaurant.com', status: 'On Duty', shift: '9:00 AM - 5:00 PM', rating: 4.8, experience: '2 years', attendance: '98%', ordersHandled: 126, punctuality: '98%', feedback: 5, access: 'Kitchen Management', permissions: ['Manage Menu Items', 'Kitchen Orders', 'Inventory Access', 'View Reports'], branch: 'Main Branch' },
+  { id: '#102', name: 'Sara Khan', role: 'Sous Chef', section: 'Main Branch Kitchen', phone: '0301 2345678', email: 'sara.k@alazizrestaurant.com', status: 'On Duty', shift: '9:00 AM - 5:00 PM', rating: 4.6 },
+  { id: '#103', name: 'Ahmed Malik', role: 'Waiter', section: 'Main Branch Restaurant Floor', phone: '0302 3456789', email: 'ahmed.m@alazizrestaurant.com', status: 'On Duty', shift: '2:00 PM - 10:00 PM', rating: 4.5 },
+  { id: '#104', name: 'Fatima Noor', role: 'Cashier', section: 'Main Branch Front Desk', phone: '0303 4567890', email: 'fatima.n@alazizrestaurant.com', status: 'On Duty', shift: '2:00 PM - 10:00 PM', rating: 4.7 },
+  { id: '#105', name: 'Imran Sheikh', role: 'Kitchen Staff', section: 'Main Branch Kitchen', phone: '0304 5678901', email: 'imran.s@alazizrestaurant.com', status: 'Off Duty', shift: '--', rating: 4.2 },
+  { id: '#106', name: 'Bilal Hussain', role: 'Waiter', section: 'Branch 2 Restaurant Floor', phone: '0305 6789012', email: 'bilal.h@alazizrestaurant.com', status: 'On Leave', shift: '--', rating: 4.3 },
+  { id: '#107', name: 'Ayesha Malik', role: 'Host/Hostess', section: 'Main Branch Reception', phone: '0306 7890123', email: 'ayesha.m@alazizrestaurant.com', status: 'On Duty', shift: '10:00 AM - 6:00 PM', rating: 4.6 },
+  { id: '#108', name: 'Usman Ali', role: 'Cleaner', section: 'Main Branch Maintenance', phone: '0307 8901234', email: 'usman.a@alazizrestaurant.com', status: 'On Duty', shift: '6:00 AM - 2:00 PM', rating: 4.1 },
+  { id: '#109', name: 'Zain Abbas', role: 'Delivery Rider', section: 'Branch 2 Delivery', phone: '0308 9012345', email: 'zain.a@alazizrestaurant.com', status: 'Off Duty', shift: '--', rating: 4.4 },
+  { id: '#110', name: 'Nimra Ahmed', role: 'Manager', section: 'Main Branch Management', phone: '0309 0123456', email: 'nimra.a@alazizrestaurant.com', status: 'On Duty', shift: '9:00 AM - 5:00 PM', rating: 4.9 },
 ];
 
 export const MOCK_CUSTOMERS = [

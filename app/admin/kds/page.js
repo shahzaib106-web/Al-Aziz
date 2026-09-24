@@ -1,19 +1,19 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import AdminLayout from '../../../components/admin/AdminLayout';
-import MenuView from '../../../components/admin/MenuView';
+import KitchenDisplayView from '../../../components/admin/KitchenDisplayView';
 
-export default function AdminMenuPage() {
+export default function AdminKdsPage() {
   const router = useRouter();
 
   const handleSelectTab = (tab) => {
-    if (tab === 'menu') return;
+    if (tab === 'kitchen') return;
     router.push(`/admin?tab=${tab}`);
   };
 
   return (
-    <AdminLayout activeTab="menu" onSelectTab={handleSelectTab}>
-      <MenuView />
+    <AdminLayout activeTab="kitchen" onSelectTab={handleSelectTab}>
+      <KitchenDisplayView />
     </AdminLayout>
   );
 }

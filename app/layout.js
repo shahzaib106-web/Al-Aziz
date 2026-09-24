@@ -1,12 +1,16 @@
 import './globals.css';
 import { Toaster, LangProvider } from '../components/store';
 import { PWA } from '../components/pwa';
-import { InstallPrompt } from '../components/customer';
+import { InstallPrompt } from '../components/customer/overlays';
 import { ChunkErrorRecovery } from '../components/error-recovery';
 
 export const metadata = {
-  title: 'العزيز ریسٹورنٹ — Al Aziz Restaurant',
-  description: 'اصلی ذائقہ، ہماری پہچان — Order biryani, karahi, BBQ and more online.',
+  title: 'Al Aziz Restaurant',
+  description: 'اصلی ذائقہ، ہماری پہچان — Order biryani, karahi, BBQ, and authentic Pakistani food online.',
+  openGraph: {
+    title: 'Al Aziz Restaurant',
+    description: 'اصلی ذائقہ، ہماری پہچان — Order biryani, karahi, BBQ, and authentic Pakistani food online.',
+  },
 };
 
 export const viewport = {
@@ -18,7 +22,7 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="ur">
+    <html lang="ur" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -36,7 +40,7 @@ export default function RootLayout({ children }) {
         <link rel="apple-touch-icon" href="/icons/icon-180.png" />
         <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png" />
       </head>
-      <body className="bg-cream text-ink font-sans antialiased">
+      <body className="bg-cream text-ink font-sans antialiased" suppressHydrationWarning>
         <LangProvider>
           {children}
           <InstallPrompt />

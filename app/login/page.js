@@ -47,16 +47,16 @@ export default function Login() {
 
         <div className="mt-6 space-y-3">
           {tab === 'signup' && (
-            <input className={`field text-sm ${u('')}`} placeholder={t('نام درج کریں', 'Enter your name')} value={name} onChange={(e) => setName(e.target.value)} />
+            <input suppressHydrationWarning className={`field text-sm ${u('')}`} placeholder={t('نام درج کریں', 'Enter your name')} value={name} onChange={(e) => setName(e.target.value)} />
           )}
           <div className="relative">
-            <input className={`field text-sm pl-11 ${u('')}`} placeholder={t('موبائل نمبر درج کریں', 'Enter mobile number')} value={phone} onChange={(e) => setPhone(e.target.value)} />
+            <input suppressHydrationWarning className={`field text-sm pl-11 ${u('')}`} placeholder={t('موبائل نمبر درج کریں', 'Enter mobile number')} value={phone} onChange={(e) => setPhone(e.target.value)} />
             <Icon name="phone" className="w-4 h-4 text-muted absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
           <div className="relative">
-            <input type={showPass ? 'text' : 'password'} className={`field text-sm pl-11 pr-11 ${u('')}`} placeholder={t('پاس ورڈ درج کریں', 'Enter password')} value={pass} onChange={(e) => setPass(e.target.value)} />
+            <input suppressHydrationWarning type={showPass ? 'text' : 'password'} className={`field text-sm pl-11 pr-11 ${u('')}`} placeholder={t('پاس ورڈ درج کریں', 'Enter password')} value={pass} onChange={(e) => setPass(e.target.value)} />
             <Icon name="eye" className="w-4 h-4 text-muted absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-            <button type="button" onClick={() => setShowPass((v) => !v)} className={`absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-lg ${showPass ? 'text-maroon' : 'text-muted hover:text-ink'}`} aria-label="toggle password visibility">
+            <button type="button" suppressHydrationWarning onClick={() => setShowPass((v) => !v)} className={`absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-lg ${showPass ? 'text-maroon' : 'text-muted hover:text-ink'}`} aria-label="toggle password visibility">
               <Icon name="eye" className="w-4 h-4" />
             </button>
           </div>

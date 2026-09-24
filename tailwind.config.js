@@ -8,7 +8,7 @@ module.exports = {
         leaf: { DEFAULT: '#17703C', dark: '#0E5A2E' },
         gold: '#D9A92F',
         ink: '#26211C',
-        muted: '#8B8272',
+        muted: '#645A4B',
       },
       fontFamily: {
         sans: ['Poppins', 'ui-sans-serif', 'system-ui', 'sans-serif'],

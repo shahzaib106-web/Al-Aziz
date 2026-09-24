@@ -37,16 +37,32 @@ function ProductInner() {
   };
 
   return (
-    <div dir="ltr" className="mx-auto max-w-md md:max-w-none min-h-screen bg-cream pb-10 shadow-xl md:shadow-none">
+    <div dir={isUr ? 'rtl' : 'ltr'} className="mx-auto max-w-md md:max-w-none min-h-screen bg-cream pb-10 shadow-xl md:shadow-none">
       <div className="md:grid md:grid-cols-2 md:gap-8 md:p-6 md:max-w-6xl md:mx-auto md:w-full">
       <div className="relative">
-        <img src={item.image} alt={item.nameEn} className="w-full h-72 md:h-[480px] md:rounded-2xl object-cover" />
-        <button onClick={() => router.back()} className="absolute top-4 left-4 bg-black/40 text-white rounded-full p-2 backdrop-blur" aria-label="back">
-          <Icon name="back" className="w-5 h-5" />
+        <img
+          src={item.image}
+          alt={item.nameEn}
+          onError={(e) => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = '/img/spread.jpg';
+          }}
+          className="w-full h-72 md:h-[480px] md:rounded-2xl object-cover"
+        />
+        <button
+          type="button"
+          suppressHydrationWarning
+          onClick={() => router.back()}
+          className="absolute top-4 start-4 bg-black/50 hover:bg-black/70 text-white rounded-full p-2.5 backdrop-blur transition active:scale-95"
+          aria-label="back"
+        >
+          <Icon name="back" className={`w-5 h-5 ${isUr ? 'scale-x-[-1]' : ''}`} />
         </button>
         <button
+          type="button"
+          suppressHydrationWarning
           onClick={() => setFav(toggleFav(item.id))}
-          className={`absolute top-4 right-4 rounded-full p-2 backdrop-blur ${fav ? 'bg-maroon text-white' : 'bg-black/40 text-white'}`}
+          className={`absolute top-4 end-4 rounded-full p-2.5 backdrop-blur transition active:scale-95 ${fav ? 'bg-maroon text-white shadow-md' : 'bg-black/50 hover:bg-black/70 text-white'}`}
           aria-label="favorite"
         >
           <Icon name="heart" className="w-5 h-5" fill={fav ? 'currentColor' : 'none'} />
@@ -56,31 +72,31 @@ function ProductInner() {
       <div className="bg-cream -mt-4 rounded-t-3xl relative p-5 md:mt-0 md:rounded-2xl md:border md:border-[#E8DCC3] md:shadow-card md:self-center">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h1 className={`${isUr ? 'urdu' : ''} text-xl font-bold text-ink ${isUr ? 'leading-loose' : 'leading-snug'}`}>{t(item.nameUr, item.nameEn)}</h1>
-            <div className="flex items-center gap-1.5 text-xs text-muted mt-1" dir="ltr">
+            <h1 className={`${isUr ? 'urdu text-xl' : 'text-xl'} font-extrabold text-ink ${isUr ? 'leading-loose' : 'leading-snug'}`}>{t(item.nameUr, item.nameEn)}</h1>
+            <div className="flex items-center gap-1.5 text-xs text-muted mt-1">
               <Star className="w-4 h-4 text-gold" />
-              <span className="font-semibold text-ink">{item.rating}</span>
-              <span>({item.reviews} {t('ریویوز', 'Reviews')})</span>
+              <span className="font-bold text-ink tabular-nums" dir="ltr">{item.rating}</span>
+              <span className="tabular-nums">({item.reviews} {t('ریویوز', 'Reviews')})</span>
             </div>
           </div>
-          <div className="text-maroon font-extrabold text-lg" dir="ltr">{fmt(price)}</div>
+          <div className="text-maroon font-extrabold text-lg tabular-nums" dir="ltr">{fmt(price)}</div>
         </div>
 
-        <p className={`${isUr ? 'urdu' : ''} text-xs text-muted mt-3 ${isUr ? 'leading-loose' : 'leading-relaxed'}`}>{t(item.desc, item.descEn || item.desc)}</p>
+        <p className={`${isUr ? 'urdu leading-relaxed' : 'leading-relaxed'} text-xs text-muted mt-3`}>{t(item.desc, item.descEn || item.desc)}</p>
 
         {item.options?.length > 0 && (
           <div className="mt-5">
-            <h3 className="text-xs font-bold text-ink mb-2" dir="ltr">Options</h3>
+            <h3 className={`text-xs font-bold text-ink mb-2 ${isUr ? 'urdu' : ''}`}>{t('سائز یا مقدار منتخب کریں', 'Select Option / Portion')}</h3>
             <div className="space-y-2">
               {item.options.map((o) => (
-                <label key={o.label} className={`card flex items-center justify-between px-4 py-3 cursor-pointer ${option?.label === o.label ? '!border-maroon ring-1 ring-maroon/30' : ''}`}>
-                  <span className="flex items-center gap-3 text-sm" dir="ltr">
-                    <span className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${option?.label === o.label ? 'border-maroon' : 'border-[#C8BCA4]'}`}>
+                <label key={o.label} className={`card flex items-center justify-between px-4 py-3 cursor-pointer transition ${option?.label === o.label ? '!border-maroon ring-1 ring-maroon/30 bg-maroon/5 font-bold text-maroon' : 'hover:border-maroon/30'}`}>
+                  <span className="flex items-center gap-3 text-sm">
+                    <span className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${option?.label === o.label ? 'border-maroon' : 'border-[#C8BCA4]'}`}>
                       {option?.label === o.label && <span className="w-2 h-2 rounded-full bg-maroon" />}
                     </span>
                     {o.label}
                   </span>
-                  <span className="text-sm font-semibold" dir="ltr">{fmt(o.price)}</span>
+                  <span className="text-sm font-semibold tabular-nums" dir="ltr">{fmt(o.price)}</span>
                   <input type="radio" name="opt" className="hidden" checked={option?.label === o.label} onChange={() => setOption(o)} />
                 </label>
               ))}
@@ -90,10 +106,20 @@ function ProductInner() {
 
         {out && <p className={`${isUr ? 'urdu' : ''} text-xs text-maroon font-bold mt-4`}>{t('آج کے لیے اسٹاک ختم ہو گیا', 'Out of stock for today')}</p>}
 
-        <div className="flex items-center gap-3 mt-6 pb-safe" dir="ltr">
-          <Qty value={qty} onChange={setQty} max={Math.max(1, item.stock)} />
-          <button disabled={out} onClick={addToCart} className="btn-maroon flex-1 min-w-0 h-11 text-[13px] md:text-sm tracking-wide disabled:opacity-50">
-            ADD TO CART · {fmt(price * qty)}
+        <div className="flex items-center gap-3 mt-6 pb-safe">
+          <div dir="ltr">
+            <Qty value={qty} onChange={setQty} max={Math.max(1, item.stock)} />
+          </div>
+          <button
+            type="button"
+            suppressHydrationWarning
+            disabled={out}
+            onClick={addToCart}
+            className={`btn-maroon flex-1 min-w-0 h-11 text-[13px] md:text-sm tracking-wide disabled:opacity-50 flex items-center justify-center gap-2 ${isUr ? 'urdu' : ''}`}
+          >
+            <span>{t('کارٹ میں شامل کریں', 'ADD TO CART')}</span>
+            <span>·</span>
+            <span dir="ltr" className="tabular-nums font-extrabold">{fmt(price * qty)}</span>
           </button>
         </div>
       </div>

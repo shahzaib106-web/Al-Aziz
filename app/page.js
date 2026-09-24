@@ -48,12 +48,26 @@ function Home() {
 
   const activeFilters = (cat ? 1 : 0) + (stockOnly ? 1 : 0);
   const inStock = (m) => m.available && m.stock > 0;
-  const base = q.trim()
-    ? menu.filter((m) => (m.nameUr + m.nameEn).toLowerCase().includes(q.trim().toLowerCase()))
+  const isSearching = Boolean(q.trim());
+  const query = q.trim().toLowerCase();
+
+  const base = isSearching
+    ? menu.filter((m) =>
+        ((m.nameUr || '') + ' ' + (m.nameEn || '') + ' ' + (m.desc || '') + ' ' + (m.descEn || '')).toLowerCase().includes(query)
+      )
     : menu;
   const filtered = base.filter((m) => (!cat || m.catId === cat) && (!stockOnly || inStock(m)));
-  const list = q.trim() ? filtered : [...filtered].sort((a, b) => b.reviews - a.reviews).slice(0, 6);
+  const list = isSearching ? filtered : [...filtered].sort((a, b) => b.reviews - a.reviews).slice(0, 6);
   const catName = cats.find((c) => c.id === cat);
+
+  const quickTags = [
+    { en: 'Biryani', ur: 'بریانی' },
+    { en: 'Karahi', ur: 'کڑاہی' },
+    { en: 'BBQ', ur: 'بار بی کیو' },
+    { en: 'Naan', ur: 'نان' },
+    { en: 'Kheer', ur: 'کھیر' },
+    { en: 'Chai', ur: 'چائے' },
+  ];
 
   const slides = [
     {
@@ -82,22 +96,41 @@ function Home() {
 
   return (
     <CartProvider>
-      <div dir="ltr" className="mx-auto max-w-md md:max-w-none min-h-screen bg-cream pb-[calc(90px+env(safe-area-inset-bottom))] md:pb-10 shadow-xl md:shadow-none relative flex flex-col">
+      <div dir={isUr ? 'rtl' : 'ltr'} className="mx-auto max-w-md md:max-w-none min-h-screen bg-cream pb-[calc(90px+env(safe-area-inset-bottom))] md:pb-10 shadow-xl md:shadow-none relative flex flex-col">
         <TopNav active="home" />
         <HomeHeader settings={settings} />
 
         {/* ---------- Search ---------- */}
         <div className="px-4 mt-3.5 md:mt-8 md:max-w-3xl md:mx-auto md:w-full flex items-center gap-2.5">
-          <div className="relative flex-1">
-            <Icon name="search" className="w-[18px] h-[18px] text-[#A79E8C] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <div className="relative flex-1" role="search">
+            <Icon name="search" className="w-[18px] h-[18px] text-[#A79E8C] absolute start-4 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
+              type="text"
+              suppressHydrationWarning
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder={t('بریانی، کڑاہی، نان تلاش کریں…', 'Search biryani, karahi, naan…')}
-              className={`w-full h-12 rounded-full border border-[#E4D9C2] bg-white pl-11 pr-4 text-[13px] outline-none focus:border-maroon focus:ring-[3px] focus:ring-maroon/10 transition-shadow placeholder:text-[#A79E8C] ${isUr ? 'urdu' : ''}`}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') setQ('');
+              }}
+              placeholder={t('بریانی، کڑاہی، کباب، نان تلاش کریں…', 'Search biryani, karahi, BBQ, naan…')}
+              aria-label={t('کھانا تلاش کریں', 'Search food')}
+              className={`w-full h-12 rounded-full border border-[#E4D9C2] bg-white ps-11 pe-11 text-[13px] outline-none focus:border-maroon focus:ring-[3px] focus:ring-maroon/10 transition-shadow placeholder:text-[#A79E8C] ${isUr ? 'urdu' : ''}`}
             />
+            {q && (
+              <button
+                type="button"
+                suppressHydrationWarning
+                onClick={() => setQ('')}
+                className="absolute end-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-[#EFE5D0] hover:bg-[#DDD2BC] text-ink flex items-center justify-center transition active:scale-90"
+                aria-label="Clear search input"
+              >
+                <Icon name="x" className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
           <button
+            type="button"
+            suppressHydrationWarning
             onClick={() => setFOpen(true)}
             className="relative w-12 h-12 shrink-0 rounded-full bg-maroon text-white flex items-center justify-center shadow-[0_4px_12px_rgba(158,27,30,0.3)] hover:bg-maroon-dark transition active:scale-95"
             aria-label="filters"
@@ -113,63 +146,147 @@ function Home() {
           </button>
         </div>
 
-        {/* ---------- Hero ---------- */}
-        <div className="px-4 mt-3.5 md:mt-6 md:px-6 md:max-w-7xl md:mx-auto md:w-full">
-          <div className="relative overflow-hidden rounded-2xl shadow-card">
-            <div key={slide} className="relative h-[196px] md:h-64 hero-in">
-              <img src={s.img} alt="" className="absolute inset-0 w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/55 to-black/5" />
-              <div className="relative h-full flex flex-col justify-center p-5 pr-[40%] md:pr-[46%]">
-                <span className="text-gold text-[10px] font-extrabold uppercase tracking-[0.14em] drop-shadow">{s.accent}</span>
-                <h2 className={`${isUr ? 'urdu text-lg leading-loose' : 'text-[22px] font-extrabold leading-[1.15]'} mt-1.5 text-white drop-shadow-md`}>{s.title}</h2>
-                <p className={`text-[11px] text-white/85 mt-1.5 drop-shadow ${isUr ? 'urdu leading-relaxed' : 'leading-snug'}`}>{s.sub}</p>
-                <Link href={s.href} className={`btn btn-sm !h-9 w-max mt-3.5 bg-gold text-[#3E2C05] hover:brightness-110 rounded-full px-5 shadow-lg ${isUr ? 'urdu' : '!tracking-wide'}`}>
-                  {t('ابھی آرڈر کریں', 'ORDER NOW')} <Icon name="chevR" className="w-3.5 h-3.5" strokeWidth={2.6} />
-                </Link>
+        {/* ---------- Search Mode vs Browse Mode ---------- */}
+        {isSearching ? (
+          <div className="px-4 mt-4 md:px-6 md:max-w-7xl md:mx-auto md:w-full">
+            <div className="bg-white border border-[#E8DFC9] rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-maroon/10 text-maroon flex items-center justify-center shrink-0">
+                  <Icon name="search" className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs font-semibold text-muted">
+                      {t('تلاش برائے:', 'Search for:')}
+                    </span>
+                    <span className="text-sm font-extrabold text-ink">
+                      &ldquo;{q.trim()}&rdquo;
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-muted mt-0.5">
+                    {t(
+                      `${list.length} ڈشز دستیاب ہیں`,
+                      `${list.length} ${list.length === 1 ? 'dish' : 'dishes'} found`
+                    )}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                {cat && (
+                  <button
+                    type="button"
+                    suppressHydrationWarning
+                    onClick={() => setCat('')}
+                    className="text-xs font-semibold text-muted hover:text-maroon px-2.5 py-1 rounded-lg border border-[#E0D4BC] bg-cream/50"
+                  >
+                    {t('تمام کیٹیگریز', 'All categories')}
+                  </button>
+                )}
+                <button
+                  type="button"
+                  suppressHydrationWarning
+                  onClick={() => { setQ(''); setCat(''); }}
+                  className="btn btn-sm btn-outline !h-8 text-xs text-maroon hover:bg-maroon/5 flex items-center gap-1.5"
+                >
+                  <Icon name="x" className="w-3.5 h-3.5" />
+                  {t('تلاش ختم کریں', 'Clear search')}
+                </button>
               </div>
             </div>
-            <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex gap-1.5">
-              {slides.map((_, i) => (
-                <button key={i} onClick={() => setSlide(i)} aria-label={'slide ' + (i + 1)} className={`h-1.5 rounded-full transition-all ${i === slide ? 'w-5 bg-gold' : 'w-1.5 bg-white/60'}`} />
+          </div>
+        ) : (
+          <>
+            {/* Quick search suggestion tags */}
+            <div className="px-4 mt-2.5 md:mt-3 md:max-w-3xl md:mx-auto md:w-full flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+              <span className="text-[11px] font-bold text-muted shrink-0 me-1">
+                {t('مقبول:', 'Popular:')}
+              </span>
+              {quickTags.map((tag) => (
+                <button
+                  key={tag.en}
+                  type="button"
+                  suppressHydrationWarning
+                  onClick={() => setQ(t(tag.ur, tag.en))}
+                  className="px-3 py-1 rounded-full text-[11px] font-semibold bg-white border border-[#E4D9C2] text-ink/80 hover:border-maroon hover:text-maroon hover:bg-maroon/5 transition shrink-0 active:scale-95"
+                >
+                  {t(tag.ur, tag.en)}
+                </button>
               ))}
             </div>
-          </div>
-        </div>
 
-        {/* ---------- Category carousel ---------- */}
-        <div className="mt-5 px-4 md:mt-8 md:px-6 md:max-w-7xl md:mx-auto md:w-full">
-          <div className="flex items-center justify-between mb-2.5">
-            <h3 className={`section-title ${isUr ? 'urdu !tracking-normal' : ''}`}>{t('اقسام', 'Categories')}</h3>
-            <Link href="/categories" className={`flex items-center gap-0.5 text-[11px] font-bold text-maroon hover:underline ${isUr ? 'urdu' : ''}`}>
-              {t('سب دیکھیں', 'View All')} <Icon name="chevR" className="w-3.5 h-3.5" strokeWidth={2.4} />
-            </Link>
-          </div>
-          <div className="-mx-4 px-4">
-            <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-              {!loaded &&
-                Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="w-[84px] shrink-0 flex flex-col items-center gap-2 animate-pulse" aria-hidden="true">
-                    <div className="w-[72px] h-[72px] rounded-full bg-[#EFE5D0]" />
-                    <div className="h-2.5 w-12 bg-[#EFE5D0] rounded" />
+            {/* ---------- Hero ---------- */}
+            <div className="px-4 mt-3.5 md:mt-6 md:px-6 md:max-w-7xl md:mx-auto md:w-full">
+              <div className="relative overflow-hidden rounded-2xl shadow-card">
+                <div key={slide} className="relative h-[196px] md:h-64 hero-in">
+                  <img src={s.img} alt="" className="absolute inset-0 w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/55 to-black/5" />
+                  <div className="relative h-full flex flex-col justify-center p-5 pe-[35%] md:pe-[45%]">
+                    <span className="text-gold text-[10px] font-extrabold uppercase tracking-[0.14em] drop-shadow">{s.accent}</span>
+                    <h2 className={`${isUr ? 'urdu text-lg leading-loose' : 'text-[22px] font-extrabold leading-[1.15]'} mt-1.5 text-white drop-shadow-md`}>{s.title}</h2>
+                    <p className={`text-[11px] text-white/85 mt-1.5 drop-shadow ${isUr ? 'urdu leading-relaxed' : 'leading-snug'}`}>{s.sub}</p>
+                    <Link href={s.href} className={`btn btn-sm !h-9 w-max mt-3.5 bg-gold text-[#3E2C05] hover:brightness-110 rounded-full px-5 shadow-lg ${isUr ? 'urdu' : '!tracking-wide'}`}>
+                      {t('ابھی آرڈر کریں', 'ORDER NOW')} <Icon name="chevR" className={`w-3.5 h-3.5 ${isUr ? 'rotate-180' : ''}`} strokeWidth={2.6} />
+                    </Link>
                   </div>
-                ))}
-              {loaded &&
-                cats.map((c) => {
-                  const on = cat === c.id;
-                  return (
-                    <button key={c.id} onClick={() => setCat(on ? '' : c.id)} className="w-[84px] shrink-0 flex flex-col items-center gap-2 group" aria-pressed={on}>
-                      <span className={`w-[72px] h-[72px] rounded-full overflow-hidden transition-all duration-200 group-active:scale-95 ${on ? 'ring-[3px] ring-maroon ring-offset-2 ring-offset-cream shadow-md' : 'ring-1 ring-[#E4D9C2]'}`}>
-                        <img src={c.image} alt={c.en} className="w-full h-full object-cover" />
-                      </span>
-                      <span className={`text-center leading-tight line-clamp-2 ${on ? 'text-maroon font-extrabold' : 'text-ink/80 font-semibold'} ${isUr ? 'urdu text-[11px] leading-relaxed' : 'text-[11px]'}`}>
-                        {t(c.ur, c.en)}
-                      </span>
-                    </button>
-                  );
-                })}
+                </div>
+                <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex gap-1.5">
+                  {slides.map((_, i) => (
+                    <button
+                      type="button"
+                      suppressHydrationWarning
+                      key={i}
+                      onClick={() => setSlide(i)}
+                      aria-label={'slide ' + (i + 1)}
+                      className={`h-1.5 rounded-full transition-all ${i === slide ? 'w-5 bg-gold' : 'w-1.5 bg-white/60'}`}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+
+            {/* ---------- Category carousel ---------- */}
+            <div className="mt-5 px-4 md:mt-8 md:px-6 md:max-w-7xl md:mx-auto md:w-full">
+              <div className="flex items-center justify-between mb-2.5">
+                <h3 className={`section-title ${isUr ? 'urdu !tracking-normal' : ''}`}>{t('اقسام', 'Categories')}</h3>
+                <Link href="/categories" className={`flex items-center gap-0.5 text-[11px] font-bold text-maroon hover:underline ${isUr ? 'urdu' : ''}`}>
+                  {t('سب دیکھیں', 'View All')} <Icon name="chevR" className={`w-3.5 h-3.5 ${isUr ? 'rotate-180' : ''}`} strokeWidth={2.4} />
+                </Link>
+              </div>
+              <div className="-mx-4 px-4">
+                <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+                  {!loaded &&
+                    Array.from({ length: 6 }).map((_, i) => (
+                      <div key={i} className="w-[84px] shrink-0 flex flex-col items-center gap-2 animate-pulse" aria-hidden="true">
+                        <div className="w-[72px] h-[72px] rounded-full bg-[#EFE5D0]" />
+                        <div className="h-2.5 w-12 bg-[#EFE5D0] rounded" />
+                      </div>
+                    ))}
+                  {loaded &&
+                    cats.map((c) => {
+                      const on = cat === c.id;
+                      return (
+                        <button
+                          type="button"
+                          suppressHydrationWarning
+                          key={c.id}
+                          onClick={() => setCat(on ? '' : c.id)}
+                          className="w-[84px] shrink-0 flex flex-col items-center gap-2 group"
+                          aria-pressed={on}
+                        >
+                          <span className={`w-[72px] h-[72px] rounded-full overflow-hidden transition-all duration-200 group-active:scale-95 ${on ? 'ring-[3px] ring-maroon ring-offset-2 ring-offset-cream shadow-md' : 'ring-1 ring-[#E4D9C2]'}`}>
+                            <img src={c.image} alt={c.en} className="w-full h-full object-cover" />
+                          </span>
+                          <span className={`text-center leading-tight line-clamp-2 ${on ? 'text-maroon font-extrabold' : 'text-ink/80 font-semibold'} ${isUr ? 'urdu text-[11px] leading-relaxed' : 'text-[11px]'}`}>
+                            {t(c.ur, c.en)}
+                          </span>
+                        </button>
+                      );
+                    })}
+                </div>
+              </div>
+            </div>
+          </>
+        )}
 
         {/* ---------- Product grid ---------- */}
         <div className="mt-5 px-4 md:mt-8 md:px-6 md:max-w-7xl md:mx-auto md:w-full">
@@ -197,7 +314,32 @@ function Home() {
               ))
             )}
             {loaded && list.length === 0 && (
-              <p className={`${isUr ? 'urdu' : ''} col-span-2 text-center text-sm text-muted py-10`}>{t('کوئی ڈش نہیں ملی', 'No dishes found')}</p>
+              <div className="col-span-2 md:col-span-3 lg:col-span-4 card p-8 text-center flex flex-col items-center justify-center gap-3">
+                <div className="w-14 h-14 rounded-full bg-[#EFE3C8] text-maroon flex items-center justify-center">
+                  <Icon name="search" className="w-6 h-6" />
+                </div>
+                <h4 className={`text-sm md:text-base font-extrabold text-ink ${isUr ? 'urdu' : ''}`}>
+                  {t('کوئی ڈش نہیں ملی', 'No matching dishes found')}
+                </h4>
+                <p className={`text-xs text-muted max-w-sm ${isUr ? 'urdu leading-relaxed' : 'leading-relaxed'}`}>
+                  {isSearching
+                    ? t(
+                        `"${q.trim()}" سے ملتا جلتا کوئی کھانا نہیں ملا۔ براہ کرم املا چیک کریں یا بریانی، کڑاہی یا کباب لکھ کر تلاش کریں۔`,
+                        `We couldn't find anything matching "${q.trim()}". Try searching for biryani, karahi, or kebab.`
+                      )
+                    : t('اس سیکشن میں فی الحال کوئی کھانا موجود نہیں ہے۔', 'No dishes available in this section right now.')}
+                </p>
+                <div className="flex items-center gap-2 mt-2">
+                  <button
+                    type="button"
+                    suppressHydrationWarning
+                    onClick={() => { setQ(''); setCat(''); setStockOnly(false); }}
+                    className="btn btn-sm btn-primary"
+                  >
+                    {t('تمام مینیو دیکھیں', 'View All Dishes')}
+                  </button>
+                </div>
+              </div>
             )}
           </div>
         </div>
@@ -227,23 +369,23 @@ function Home() {
               <div className="px-5 pt-2 pb-4">
                 <div className="flex items-center justify-between">
                   <h3 className={`text-sm font-extrabold text-ink ${isUr ? 'urdu' : ''}`}>{t('فلٹرز', 'Filters')}</h3>
-                  <button onClick={() => { setCat(''); setStockOnly(false); }} className="text-[11px] font-bold text-maroon hover:underline">{t('صاف کریں', 'Clear all')}</button>
+                  <button type="button" suppressHydrationWarning onClick={() => { setCat(''); setStockOnly(false); }} className="text-[11px] font-bold text-maroon hover:underline">{t('صاف کریں', 'Clear all')}</button>
                 </div>
                 <h4 className="text-[11px] font-bold text-muted uppercase tracking-wider mt-4 mb-2">{t('قسم', 'Category')}</h4>
                 <div className="flex flex-wrap gap-2">
                   {cats.map((c) => (
-                    <button key={c.id} onClick={() => setCat(cat === c.id ? '' : c.id)} className={`chip !py-2 !px-3.5 text-[12px] font-semibold transition ${cat === c.id ? '!bg-maroon !text-white !border-maroon' : ''} ${isUr ? 'urdu' : ''}`}>
+                    <button type="button" suppressHydrationWarning key={c.id} onClick={() => setCat(cat === c.id ? '' : c.id)} className={`chip !py-2 !px-3.5 text-[12px] font-semibold transition ${cat === c.id ? '!bg-maroon !text-white !border-maroon' : ''} ${isUr ? 'urdu' : ''}`}>
                       {t(c.ur, c.en)}
                     </button>
                   ))}
                 </div>
-                <button onClick={() => setStockOnly((v) => !v)} className="w-full flex items-center justify-between mt-5 rounded-xl border border-[#E0D4BC] bg-white px-4 py-3">
+                <button type="button" suppressHydrationWarning onClick={() => setStockOnly((v) => !v)} className="w-full flex items-center justify-between mt-5 rounded-xl border border-[#E0D4BC] bg-white px-4 py-3">
                   <span className={`text-[13px] font-bold text-ink ${isUr ? 'urdu' : ''}`}>{t('صرف دستیاب آئٹمز', 'In-stock items only')}</span>
                   <span className={`w-11 h-6 rounded-full p-0.5 transition-colors ${stockOnly ? 'bg-leaf' : 'bg-[#D8CCB4]'}`}>
                     <span className={`block w-5 h-5 bg-white rounded-full shadow transition-transform ${stockOnly ? 'translate-x-5' : ''}`} />
                   </span>
                 </button>
-                <button onClick={() => setFOpen(false)} className="btn btn-primary w-full h-11 mt-5">{t('لاگو کریں', 'Apply Filters')}</button>
+                <button type="button" suppressHydrationWarning onClick={() => setFOpen(false)} className="btn btn-primary w-full h-11 mt-5">{t('لاگو کریں', 'Apply Filters')}</button>
               </div>
             </div>
           </div>

@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
   reactStrictMode: false,
+  output: 'standalone',
   allowedDevOrigins: ['*.e2b.app', '*.vercel.app'],
   experimental: {
     // Disable the client-side router cache so navigations always resolve

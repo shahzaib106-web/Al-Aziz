@@ -38,15 +38,15 @@ export function Onboarding({ onDone }) {
         <p className={`${isUr ? 'urdu' : ''} text-sm text-muted mt-2`}>{t(slides[slide].us, slides[slide].es)}</p>
         <div className="flex gap-2 mt-8">
           {slides.map((_, i) => (
-            <button key={i} onClick={() => setSlide(i)} className={`h-2 rounded-full transition-all ${i === slide ? 'w-6 bg-maroon' : 'w-2 bg-[#D8CCB4]'}`} />
+            <button key={i} type="button" suppressHydrationWarning onClick={() => setSlide(i)} className={`h-2 rounded-full transition-all ${i === slide ? 'w-6 bg-maroon' : 'w-2 bg-[#D8CCB4]'}`} />
           ))}
         </div>
       </div>
       <div className="max-w-md mx-auto w-full px-8 pb-10">
-        <button onClick={() => (last ? onDone() : setSlide(slide + 1))} className={`btn-maroon w-full py-3 text-sm ${isUr ? 'urdu' : 'tracking-wide font-semibold'}`}>
+        <button type="button" suppressHydrationWarning onClick={() => (last ? onDone() : setSlide(slide + 1))} className={`btn-maroon w-full py-3 text-sm ${isUr ? 'urdu' : 'tracking-wide font-semibold'}`}>
           {last ? t('شروع کریں', "Let's Start") : t('آگے بڑھیں', 'Next')}
         </button>
-        <button onClick={onDone} className="w-full text-center text-xs tracking-widest text-muted mt-4 py-1">SKIP</button>
+        <button type="button" suppressHydrationWarning onClick={onDone} className="w-full text-center text-xs tracking-widest text-muted mt-4 py-1">SKIP</button>
       </div>
     </div>
   );
@@ -112,10 +112,10 @@ export function InstallPrompt() {
               <div className="text-[13px] font-bold">{t('ایپ انسٹال کریں', 'Install the app')}</div>
               <div className="text-[11px] text-white/70">{t('فل اسکرین، تیز رفتار، ہوم اسکرین پر', 'Full-screen & fast, right on your home screen')}</div>
             </div>
-            <button onClick={install} className="bg-gold text-[#24090B] text-[12px] font-extrabold rounded-lg px-3.5 py-2 shrink-0 hover:brightness-110">
+            <button type="button" suppressHydrationWarning onClick={install} className="bg-gold text-[#24090B] text-[12px] font-extrabold rounded-lg px-3.5 py-2 shrink-0 hover:brightness-110">
               {t('انسٹال', 'Install')}
             </button>
-            <button onClick={dismiss} className="p-1 text-white/50 hover:text-white shrink-0" aria-label="dismiss">
+            <button type="button" suppressHydrationWarning onClick={dismiss} className="p-1 text-white/50 hover:text-white shrink-0" aria-label="dismiss">
               <Icon name="x" className="w-4 h-4" />
             </button>
           </div>
@@ -145,7 +145,7 @@ export function InstallPrompt() {
                 </ol>
               </>
             )}
-            <button onClick={() => setHelp(false)} className="btn-maroon w-full py-2.5 text-xs mt-5 tracking-wide">GOT IT</button>
+            <button type="button" suppressHydrationWarning onClick={() => setHelp(false)} className="btn-maroon w-full py-2.5 text-xs mt-5 tracking-wide">GOT IT</button>
           </div>
         </div>
       )}

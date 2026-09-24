@@ -1,0 +1,8 @@
+{
+  "name": "Al Aziz Restaurant",
+  "description": "اصلی ذائقہ، ہماری پہچان — Order biryani, karahi, BBQ, and authentic Pakistani food online.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

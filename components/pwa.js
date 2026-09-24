@@ -100,21 +100,17 @@ export function PWA() {
     window.addEventListener('resize', normalizeMobilePWAViewport);
     window.addEventListener('orientationchange', normalizeMobilePWAViewport);
 
-    // 3. Register service worker and clear legacy JS chunk caches
+    // 3. Clear all caches and unregister legacy service workers
     if (typeof window !== 'undefined' && 'caches' in window) {
       caches.keys().then((keys) => {
-        keys.forEach((k) => {
-          if (k !== 'agh-cache-v4') caches.delete(k);
-        });
+        keys.forEach((k) => caches.delete(k));
       }).catch(() => {});
     }
 
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js?v=4').then((reg) => {
-          if (reg && reg.update) reg.update();
-        }).catch(() => {});
-      });
+    if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        registrations.forEach((reg) => reg.unregister());
+      }).catch(() => {});
     }
 
     return () => {

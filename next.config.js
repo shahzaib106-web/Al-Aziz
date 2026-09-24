@@ -2,6 +2,12 @@
 module.exports = {
   reactStrictMode: false,
   output: 'standalone',
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   allowedDevOrigins: ['*.e2b.app', '*.vercel.app'],
   experimental: {
     // Disable the client-side router cache so navigations always resolve

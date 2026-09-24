@@ -180,3 +180,38 @@ select:focus-visible {
 .admin .atd { @apply px-4 py-3 text-[13px] border-t border-[#F0EBE0] align-middle; }
 .admin .apill { @apply inline-flex items-center gap-1.5 rounded-full border px-2.5 py-[3px] text-[11px] font-semibold whitespace-nowrap; }
 .admin .arow:hover { background: #FBF9F4; }
+
+/* Thermal Receipt & KOT Printing Rules */
+@media print {
+  /* Hide whole screen content */
+  body * {
+    visibility: hidden !important;
+  }
+
+  /* Make only the designated thermal receipt visible */
+  #printable-thermal-slip,
+  #printable-thermal-slip * {
+    visibility: visible !important;
+  }
+
+  #printable-thermal-slip {
+    position: fixed !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 78mm !important;
+    max-width: 78mm !important;
+    margin: 0 auto !important;
+    padding: 3mm 4mm !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+    border: none !important;
+    font-size: 11px !important;
+    line-height: 1.35 !important;
+    z-index: 999999 !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}

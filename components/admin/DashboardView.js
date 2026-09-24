@@ -26,11 +26,40 @@ import {
   FileText,
   Eye,
   Check,
+  Printer,
 } from 'lucide-react';
-import { MOCK_BEST_SELLERS, MOCK_STOCK_ALERTS } from './data';
+import { MOCK_BEST_SELLERS, MOCK_STOCK_ALERTS, MOCK_ORDERS } from './data';
+import PrintReceiptModal from './PrintReceiptModal';
 
 export default function DashboardView() {
   const [timeRange, setTimeRange] = useState('Last 7 Days');
+  const [printOrder, setPrintOrder] = useState(null);
+  const [printModalOpen, setPrintModalOpen] = useState(false);
+  const [printModalMode, setPrintModalMode] = useState('bill');
+
+  const handlePrintOrder = (orderId, mode = 'bill') => {
+    const found = MOCK_ORDERS.find((o) => o.id === orderId) || {
+      id: orderId,
+      customer: { name: 'Customer', phone: '+92 300 1234567' },
+      type: 'Dine In',
+      table: 'Table 2',
+      amount: 'Rs. 1,250',
+      amountNum: 1250,
+      payment: 'Paid',
+      paymentMethod: 'Cash',
+      status: 'Completed',
+      time: 'Just now',
+      notes: 'Standard service',
+      items: [
+        { name: 'Special Chicken Biryani', variant: 'Full', qty: 2, price: 850 },
+        { name: 'Special Naan', variant: 'Garlic', qty: 2, price: 200 },
+        { name: 'Raita & Salad', variant: 'Fresh', qty: 1, price: 200 },
+      ],
+    };
+    setPrintOrder(found);
+    setPrintModalMode(mode);
+    setPrintModalOpen(true);
+  };
 
   return (
     <div className="space-y-5">
@@ -415,116 +444,49 @@ export default function DashboardView() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-100">
-                <tr className="hover:bg-stone-50/70">
-                  <td className="py-2.5 font-bold text-stone-900">#1042</td>
-                  <td className="py-2.5 font-medium text-stone-800">Ali Raza</td>
-                  <td className="py-2.5 text-stone-500">3 items</td>
-                  <td className="py-2.5">
-                    <span className="bg-red-50 text-red-700 font-semibold px-2 py-0.5 rounded-md text-[10px]">
-                      Dine In
-                    </span>
-                  </td>
-                  <td className="py-2.5 font-bold text-stone-900">Rs. 1,250</td>
-                  <td className="py-2.5">
-                    <span className="bg-emerald-50 text-emerald-700 font-semibold px-2 py-0.5 rounded-md text-[10px]">
-                      Completed
-                    </span>
-                  </td>
-                  <td className="py-2.5 text-stone-400">10:22 AM</td>
-                  <td className="py-2.5 text-right">
-                    <button className="p-1 text-stone-400 hover:text-stone-600">
-                      <MoreHorizontal className="w-4 h-4" />
-                    </button>
-                  </td>
-                </tr>
-                <tr className="hover:bg-stone-50/70">
-                  <td className="py-2.5 font-bold text-stone-900">#1041</td>
-                  <td className="py-2.5 font-medium text-stone-800">Sarah Khan</td>
-                  <td className="py-2.5 text-stone-500">2 items</td>
-                  <td className="py-2.5">
-                    <span className="bg-blue-50 text-blue-700 font-semibold px-2 py-0.5 rounded-md text-[10px]">
-                      Delivery
-                    </span>
-                  </td>
-                  <td className="py-2.5 font-bold text-stone-900">Rs. 980</td>
-                  <td className="py-2.5">
-                    <span className="bg-amber-50 text-amber-700 font-semibold px-2 py-0.5 rounded-md text-[10px]">
-                      Preparing
-                    </span>
-                  </td>
-                  <td className="py-2.5 text-stone-400">10:15 AM</td>
-                  <td className="py-2.5 text-right">
-                    <button className="p-1 text-stone-400 hover:text-stone-600">
-                      <MoreHorizontal className="w-4 h-4" />
-                    </button>
-                  </td>
-                </tr>
-                <tr className="hover:bg-stone-50/70">
-                  <td className="py-2.5 font-bold text-stone-900">#1040</td>
-                  <td className="py-2.5 font-medium text-stone-800">Ahmed Malik</td>
-                  <td className="py-2.5 text-stone-500">4 items</td>
-                  <td className="py-2.5">
-                    <span className="bg-purple-50 text-purple-700 font-semibold px-2 py-0.5 rounded-md text-[10px]">
-                      Takeaway
-                    </span>
-                  </td>
-                  <td className="py-2.5 font-bold text-stone-900">Rs. 1,680</td>
-                  <td className="py-2.5">
-                    <span className="bg-emerald-50 text-emerald-700 font-semibold px-2 py-0.5 rounded-md text-[10px]">
-                      Completed
-                    </span>
-                  </td>
-                  <td className="py-2.5 text-stone-400">10:02 AM</td>
-                  <td className="py-2.5 text-right">
-                    <button className="p-1 text-stone-400 hover:text-stone-600">
-                      <MoreHorizontal className="w-4 h-4" />
-                    </button>
-                  </td>
-                </tr>
-                <tr className="hover:bg-stone-50/70">
-                  <td className="py-2.5 font-bold text-stone-900">#1039</td>
-                  <td className="py-2.5 font-medium text-stone-800">Fatima Noor</td>
-                  <td className="py-2.5 text-stone-500">3 items</td>
-                  <td className="py-2.5">
-                    <span className="bg-blue-50 text-blue-700 font-semibold px-2 py-0.5 rounded-md text-[10px]">
-                      Delivery
-                    </span>
-                  </td>
-                  <td className="py-2.5 font-bold text-stone-900">Rs. 1,150</td>
-                  <td className="py-2.5">
-                    <span className="bg-sky-50 text-sky-700 font-semibold px-2 py-0.5 rounded-md text-[10px]">
-                      Out for Delivery
-                    </span>
-                  </td>
-                  <td className="py-2.5 text-stone-400">09:48 AM</td>
-                  <td className="py-2.5 text-right">
-                    <button className="p-1 text-stone-400 hover:text-stone-600">
-                      <MoreHorizontal className="w-4 h-4" />
-                    </button>
-                  </td>
-                </tr>
-                <tr className="hover:bg-stone-50/70">
-                  <td className="py-2.5 font-bold text-stone-900">#1038</td>
-                  <td className="py-2.5 font-medium text-stone-800">Imran Sheikh</td>
-                  <td className="py-2.5 text-stone-500">2 items</td>
-                  <td className="py-2.5">
-                    <span className="bg-red-50 text-red-700 font-semibold px-2 py-0.5 rounded-md text-[10px]">
-                      Dine In
-                    </span>
-                  </td>
-                  <td className="py-2.5 font-bold text-stone-900">Rs. 920</td>
-                  <td className="py-2.5">
-                    <span className="bg-emerald-50 text-emerald-700 font-semibold px-2 py-0.5 rounded-md text-[10px]">
-                      Completed
-                    </span>
-                  </td>
-                  <td className="py-2.5 text-stone-400">09:35 AM</td>
-                  <td className="py-2.5 text-right">
-                    <button className="p-1 text-stone-400 hover:text-stone-600">
-                      <MoreHorizontal className="w-4 h-4" />
-                    </button>
-                  </td>
-                </tr>
+                {[
+                  { id: '#1042', name: 'Ali Raza', items: '3 items', type: 'Dine In', typeColor: 'bg-red-50 text-red-700', amount: 'Rs. 1,250', status: 'Completed', statusColor: 'bg-emerald-50 text-emerald-700', time: '10:22 AM' },
+                  { id: '#1041', name: 'Sarah Khan', items: '2 items', type: 'Delivery', typeColor: 'bg-blue-50 text-blue-700', amount: 'Rs. 980', status: 'Preparing', statusColor: 'bg-amber-50 text-amber-700', time: '10:15 AM' },
+                  { id: '#1040', name: 'Ahmed Malik', items: '4 items', type: 'Takeaway', typeColor: 'bg-purple-50 text-purple-700', amount: 'Rs. 1,680', status: 'Completed', statusColor: 'bg-emerald-50 text-emerald-700', time: '10:02 AM' },
+                  { id: '#1039', name: 'Fatima Noor', items: '3 items', type: 'Delivery', typeColor: 'bg-blue-50 text-blue-700', amount: 'Rs. 1,150', status: 'Out for Delivery', statusColor: 'bg-sky-50 text-sky-700', time: '09:48 AM' },
+                  { id: '#1038', name: 'Imran Sheikh', items: '2 items', type: 'Dine In', typeColor: 'bg-red-50 text-red-700', amount: 'Rs. 920', status: 'Completed', statusColor: 'bg-emerald-50 text-emerald-700', time: '09:35 AM' },
+                ].map((row) => (
+                  <tr key={row.id} className="hover:bg-stone-50/70">
+                    <td className="py-2.5 font-bold text-stone-900">{row.id}</td>
+                    <td className="py-2.5 font-medium text-stone-800">{row.name}</td>
+                    <td className="py-2.5 text-stone-500">{row.items}</td>
+                    <td className="py-2.5">
+                      <span className={`${row.typeColor} font-semibold px-2 py-0.5 rounded-md text-[10px]`}>
+                        {row.type}
+                      </span>
+                    </td>
+                    <td className="py-2.5 font-bold text-stone-900">{row.amount}</td>
+                    <td className="py-2.5">
+                      <span className={`${row.statusColor} font-semibold px-2 py-0.5 rounded-md text-[10px]`}>
+                        {row.status}
+                      </span>
+                    </td>
+                    <td className="py-2.5 text-stone-400">{row.time}</td>
+                    <td className="py-2.5 text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        <button
+                          onClick={() => handlePrintOrder(row.id, 'bill')}
+                          className="p-1 rounded text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition"
+                          title="Print Customer Bill"
+                        >
+                          <Printer className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => handlePrintOrder(row.id, 'kot')}
+                          className="p-1 rounded text-stone-400 hover:text-[#911116] hover:bg-red-50 transition"
+                          title="Print Kitchen Ticket (KOT)"
+                        >
+                          <FileText className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
@@ -800,6 +762,14 @@ export default function DashboardView() {
           </div>
         </div>
       </div>
+
+      {/* Print Bill & KOT Modal */}
+      <PrintReceiptModal
+        isOpen={printModalOpen}
+        onClose={() => setPrintModalOpen(false)}
+        order={printOrder}
+        initialMode={printModalMode}
+      />
     </div>
   );
 }

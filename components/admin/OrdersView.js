@@ -24,6 +24,7 @@ import {
   X,
 } from 'lucide-react';
 import { MOCK_ORDERS } from './data';
+import PrintReceiptModal from './PrintReceiptModal';
 
 export default function OrdersView() {
   const [orders, setOrders] = useState(MOCK_ORDERS);
@@ -32,8 +33,12 @@ export default function OrdersView() {
   const [typeFilter, setTypeFilter] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [newOrderModal, setNewOrderModal] = useState(false);
+  const [printModalOpen, setPrintModalOpen] = useState(false);
+  const [printModalMode, setPrintModalMode] = useState('bill'); // 'bill' | 'kot'
+  const [orderToPrint, setOrderToPrint] = useState(null);
 
   const selectedOrder = orders.find((o) => o.id === selectedOrderId) || orders[0];
+  const pendingKitchenOrders = orders.filter((o) => ['Pending', 'Preparing'].includes(o.status));
 
   const filteredOrders = orders.filter((o) => {
     if (statusFilter !== 'All' && o.status.toLowerCase() !== statusFilter.toLowerCase()) return false;
@@ -72,13 +77,21 @@ export default function OrdersView() {
         </div>
 
         <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white border border-stone-200 text-stone-700 hover:bg-stone-50 text-xs font-semibold shadow-xs transition">
-            <Printer className="w-3.5 h-3.5 text-stone-500" />
-            <span>Print KOT (3)</span>
+          <button
+            onClick={() => {
+              setOrderToPrint(pendingKitchenOrders[0] || selectedOrder);
+              setPrintModalMode('kot');
+              setPrintModalOpen(true);
+            }}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white border border-stone-200 text-stone-700 hover:bg-stone-50 text-xs font-semibold shadow-xs transition active:scale-95 cursor-pointer"
+            title="Print Kitchen Order Tickets"
+          >
+            <Printer className="w-3.5 h-3.5 text-[#911116]" />
+            <span>Print KOT ({pendingKitchenOrders.length || 3})</span>
           </button>
           <button
             onClick={() => setNewOrderModal(true)}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#911116] hover:bg-[#7D0E12] text-white text-xs font-semibold shadow-xs transition"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#911116] hover:bg-[#7D0E12] text-white text-xs font-semibold shadow-xs transition active:scale-95 cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>New Order</span>
@@ -337,9 +350,32 @@ export default function OrdersView() {
                         </span>
                       </td>
                       <td className="py-3 px-3 text-right">
-                        <button className="p-1 text-stone-400 hover:text-stone-600">
-                          <MoreHorizontal className="w-4 h-4" />
-                        </button>
+                        <div className="flex items-center justify-end gap-1">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setOrderToPrint(order);
+                              setPrintModalMode('bill');
+                              setPrintModalOpen(true);
+                            }}
+                            className="p-1.5 rounded-md text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition"
+                            title="Print Customer Bill Receipt"
+                          >
+                            <Printer className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setOrderToPrint(order);
+                              setPrintModalMode('kot');
+                              setPrintModalOpen(true);
+                            }}
+                            className="p-1.5 rounded-md text-stone-400 hover:text-[#911116] hover:bg-red-50 transition"
+                            title="Print Kitchen Ticket (KOT)"
+                          >
+                            <ChefHat className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -488,29 +524,50 @@ export default function OrdersView() {
           {/* Action Buttons */}
           <div className="space-y-2 pt-2 border-t border-stone-100">
             <div className="grid grid-cols-2 gap-2">
-              <button className="py-2 px-3 rounded-lg border border-stone-200 text-stone-700 hover:bg-stone-50 text-xs font-semibold flex items-center justify-center gap-1.5 shadow-xs">
-                <Printer className="w-3.5 h-3.5" /> Print Bill
+              <button
+                onClick={() => {
+                  setOrderToPrint(selectedOrder);
+                  setPrintModalMode('bill');
+                  setPrintModalOpen(true);
+                }}
+                className="py-2 px-3 rounded-lg border border-stone-200 bg-white text-stone-700 hover:bg-stone-50 text-xs font-semibold flex items-center justify-center gap-1.5 shadow-xs transition active:scale-95 cursor-pointer"
+                title="Print Customer Bill Receipt"
+              >
+                <Printer className="w-3.5 h-3.5 text-stone-600" />
+                <span>Print Bill</span>
               </button>
               <button
-                onClick={() => updateOrderStatus(selectedOrder.id, 'Cancelled')}
-                className="py-2 px-3 rounded-lg border border-red-200 text-red-600 hover:bg-red-50 text-xs font-semibold flex items-center justify-center gap-1.5 shadow-xs"
+                onClick={() => {
+                  setOrderToPrint(selectedOrder);
+                  setPrintModalMode('kot');
+                  setPrintModalOpen(true);
+                }}
+                className="py-2 px-3 rounded-lg border border-red-200 bg-red-50/60 text-[#911116] hover:bg-red-50 text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs transition active:scale-95 cursor-pointer"
+                title="Print Kitchen Order Ticket"
               >
-                <XCircle className="w-3.5 h-3.5" /> Cancel Order
+                <ChefHat className="w-3.5 h-3.5 text-[#911116]" />
+                <span>Print KOT</span>
               </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                onClick={() => updateOrderStatus(selectedOrder.id, 'Cancelled')}
+                className="py-2 px-2 rounded-lg border border-red-200 text-red-600 hover:bg-red-50 text-xs font-semibold flex items-center justify-center gap-1 shadow-xs transition"
+              >
+                <XCircle className="w-3.5 h-3.5" /> Cancel
+              </button>
               <button
                 onClick={() => updateOrderStatus(selectedOrder.id, 'Preparing')}
-                className="py-2 px-3 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs transition"
+                className="py-2 px-2 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold flex items-center justify-center gap-1 shadow-xs transition"
               >
-                <ChefHat className="w-3.5 h-3.5" /> Mark Preparing
+                <ChefHat className="w-3.5 h-3.5" /> Prep
               </button>
               <button
                 onClick={() => updateOrderStatus(selectedOrder.id, 'Ready')}
-                className="py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs transition"
+                className="py-2 px-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center justify-center gap-1 shadow-xs transition"
               >
-                <CheckCircle2 className="w-3.5 h-3.5" /> Mark Ready
+                <CheckCircle2 className="w-3.5 h-3.5" /> Ready
               </button>
             </div>
           </div>
@@ -537,9 +594,23 @@ export default function OrdersView() {
               <div>
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-bold text-stone-900">#1041</span>
-                  <span className="text-[10px] font-semibold text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded">
-                    5 min
-                  </span>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => {
+                        const o = orders.find(x => x.id === '#1041') || selectedOrder;
+                        setOrderToPrint(o);
+                        setPrintModalMode('kot');
+                        setPrintModalOpen(true);
+                      }}
+                      className="p-1 rounded text-stone-400 hover:text-stone-700 hover:bg-stone-200/70 transition"
+                      title="Print KOT"
+                    >
+                      <Printer className="w-3 h-3" />
+                    </button>
+                    <span className="text-[10px] font-semibold text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded">
+                      5 min
+                    </span>
+                  </div>
                 </div>
                 <p className="text-[11px] text-stone-600 mt-2 font-medium">Chicken Biryani x2</p>
                 <p className="text-[11px] text-stone-600 font-medium">Dal Makhani x1</p>
@@ -554,9 +625,23 @@ export default function OrdersView() {
               <div>
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-bold text-stone-900">#1039</span>
-                  <span className="text-[10px] font-semibold text-red-600 bg-red-50 px-1.5 py-0.5 rounded">
-                    8 min
-                  </span>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => {
+                        const o = orders.find(x => x.id === '#1039') || selectedOrder;
+                        setOrderToPrint(o);
+                        setPrintModalMode('kot');
+                        setPrintModalOpen(true);
+                      }}
+                      className="p-1 rounded text-stone-400 hover:text-stone-700 hover:bg-stone-200/70 transition"
+                      title="Print KOT"
+                    >
+                      <Printer className="w-3 h-3" />
+                    </button>
+                    <span className="text-[10px] font-semibold text-red-600 bg-red-50 px-1.5 py-0.5 rounded">
+                      8 min
+                    </span>
+                  </div>
                 </div>
                 <p className="text-[11px] text-stone-600 mt-2 font-medium">Beef Seekh Kebab x1</p>
                 <p className="text-[11px] text-stone-600 font-medium">Naan x2</p>
@@ -571,9 +656,23 @@ export default function OrdersView() {
               <div>
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-bold text-stone-900">#1042</span>
-                  <span className="text-[10px] font-semibold text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded">
-                    2 min
-                  </span>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => {
+                        const o = orders.find(x => x.id === '#1042') || selectedOrder;
+                        setOrderToPrint(o);
+                        setPrintModalMode('kot');
+                        setPrintModalOpen(true);
+                      }}
+                      className="p-1 rounded text-stone-400 hover:text-stone-700 hover:bg-stone-200/70 transition"
+                      title="Print KOT"
+                    >
+                      <Printer className="w-3 h-3" />
+                    </button>
+                    <span className="text-[10px] font-semibold text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded">
+                      2 min
+                    </span>
+                  </div>
                 </div>
                 <p className="text-[11px] text-stone-600 mt-2 font-medium">Chicken Karahi x1</p>
                 <p className="text-[11px] text-stone-600 font-medium">Special Naan x1</p>
@@ -650,6 +749,166 @@ export default function OrdersView() {
           </div>
         </div>
       </div>
+
+      {/* Print Bill & KOT Modal */}
+      <PrintReceiptModal
+        isOpen={printModalOpen}
+        onClose={() => setPrintModalOpen(false)}
+        order={orderToPrint || selectedOrder}
+        initialMode={printModalMode}
+        allPendingOrders={pendingKitchenOrders}
+      />
+
+      {/* Simple New Order Modal */}
+      {newOrderModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-5 shadow-2xl border border-stone-200 space-y-4 animate-sheet-in">
+            <div className="flex items-center justify-between pb-3 border-b border-stone-100">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-[#911116] text-white flex items-center justify-center">
+                  <Plus className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-stone-900 text-sm">Quick New POS Order</h3>
+                  <p className="text-[11px] text-stone-500">Create new walk-in or phone order</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setNewOrderModal(false)}
+                className="p-1 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const form = e.target;
+                const newId = `#10${orders.length + 43}`;
+                const newOrd = {
+                  id: newId,
+                  customer: {
+                    name: form.custName.value || 'Walk-in Guest',
+                    phone: form.custPhone.value || '+92 300 1234567',
+                    avatar: (form.custName.value || 'WG').slice(0, 2).toUpperCase(),
+                  },
+                  itemsCount: 2,
+                  type: form.orderType.value,
+                  table: form.tableNum.value ? `Table ${form.tableNum.value}` : '',
+                  amount: 'Rs. 1,450',
+                  amountNum: 1450,
+                  payment: form.paymentStatus.value,
+                  paymentMethod: 'Cash',
+                  status: 'Pending',
+                  time: 'Just now',
+                  notes: form.notes.value || 'Hot & Fresh',
+                  items: [
+                    { name: 'Special Chicken Biryani', variant: 'Spicy', qty: 1, price: 850 },
+                    { name: 'Special Naan', variant: 'Garlic', qty: 2, price: 300 },
+                    { name: 'Mint Raita', variant: 'Fresh', qty: 1, price: 150 },
+                  ],
+                  subtotal: 1300,
+                  tax: 150,
+                };
+                setOrders([newOrd, ...orders]);
+                setSelectedOrderId(newId);
+                setNewOrderModal(false);
+                // Prompt print KOT immediately
+                setOrderToPrint(newOrd);
+                setPrintModalMode('kot');
+                setPrintModalOpen(true);
+              }}
+              className="space-y-3 text-xs"
+            >
+              <div>
+                <label className="block font-semibold text-stone-700 mb-1">Customer Name</label>
+                <input
+                  name="custName"
+                  placeholder="e.g. Tariq Mahmood"
+                  defaultValue="Tariq Mahmood"
+                  required
+                  className="w-full px-3 py-2 rounded-lg border border-stone-300 focus:outline-none focus:border-red-600"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block font-semibold text-stone-700 mb-1">Phone Number</label>
+                  <input
+                    name="custPhone"
+                    placeholder="+92 300 1234567"
+                    defaultValue="+92 300 7654321"
+                    className="w-full px-3 py-2 rounded-lg border border-stone-300 focus:outline-none focus:border-red-600"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-stone-700 mb-1">Order Type</label>
+                  <select
+                    name="orderType"
+                    defaultValue="Dine In"
+                    className="w-full px-3 py-2 rounded-lg border border-stone-300 focus:outline-none focus:border-red-600 bg-white"
+                  >
+                    <option value="Dine In">Dine In</option>
+                    <option value="Takeaway">Takeaway</option>
+                    <option value="Delivery">Delivery</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block font-semibold text-stone-700 mb-1">Table Number (If Dine-In)</label>
+                  <input
+                    name="tableNum"
+                    placeholder="e.g. 5"
+                    defaultValue="5"
+                    className="w-full px-3 py-2 rounded-lg border border-stone-300 focus:outline-none focus:border-red-600"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-stone-700 mb-1">Payment Status</label>
+                  <select
+                    name="paymentStatus"
+                    defaultValue="Paid"
+                    className="w-full px-3 py-2 rounded-lg border border-stone-300 focus:outline-none focus:border-red-600 bg-white"
+                  >
+                    <option value="Paid">Paid</option>
+                    <option value="Pending">Pending</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-semibold text-stone-700 mb-1">Kitchen / Chef Notes</label>
+                <input
+                  name="notes"
+                  placeholder="e.g. Extra spicy, serve hot"
+                  defaultValue="Extra spicy, serve hot"
+                  className="w-full px-3 py-2 rounded-lg border border-stone-300 focus:outline-none focus:border-red-600"
+                />
+              </div>
+
+              <div className="pt-2 flex items-center justify-end gap-2 border-t border-stone-100">
+                <button
+                  type="button"
+                  onClick={() => setNewOrderModal(false)}
+                  className="px-4 py-2 rounded-lg border border-stone-300 text-stone-700 hover:bg-stone-50 font-semibold"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 rounded-lg bg-[#911116] hover:bg-[#7D0E12] text-white font-bold shadow-xs flex items-center gap-1.5"
+                >
+                  <Check className="w-3.5 h-3.5" />
+                  <span>Create & Print KOT</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

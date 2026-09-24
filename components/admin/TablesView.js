@@ -6,6 +6,7 @@ import {
   Users,
   Clock,
   Receipt,
+  Printer,
   CheckCircle2,
   AlertCircle,
   Sparkles,
@@ -16,6 +17,7 @@ import {
   X,
   RefreshCw,
 } from 'lucide-react';
+import PrintReceiptModal from './PrintReceiptModal';
 
 const INITIAL_TABLES = [
   {
@@ -156,6 +158,9 @@ export default function TablesView() {
   const [activeBillModal, setActiveBillModal] = useState(null);
   const [seatGuestModal, setSeatGuestModal] = useState(null);
   const [addTableModal, setAddTableModal] = useState(false);
+  const [printOrder, setPrintOrder] = useState(null);
+  const [printModalOpen, setPrintModalOpen] = useState(false);
+  const [printModalMode, setPrintModalMode] = useState('bill');
 
   // New Table Form
   const [newTable, setNewTable] = useState({
@@ -584,10 +589,63 @@ export default function TablesView() {
 
             <div className="flex items-center justify-between gap-2 pt-3 border-t border-stone-100">
               <button
-                onClick={() => alert(`Printing KOT & Bill for ${activeBillModal.number}...`)}
-                className="px-3.5 py-2 rounded-xl text-xs font-semibold border border-stone-300 text-stone-700 hover:bg-stone-50"
+                onClick={() => {
+                  const rawItems = (activeBillModal.currentOrder.items || '').split(',').map((str) => {
+                    const trimmed = str.trim();
+                    const match = trimmed.match(/^(\d+)x\s*(.*)$/);
+                    if (match) {
+                      return {
+                        qty: parseInt(match[1], 10),
+                        name: match[2].trim(),
+                        variant: 'Standard',
+                        price: 650,
+                      };
+                    }
+                    return {
+                      qty: 1,
+                      name: trimmed,
+                      variant: 'Standard',
+                      price: 550,
+                    };
+                  });
+
+                  const totalNum = parseInt(
+                    (activeBillModal.currentOrder.total || '0').replace(/[^0-9]/g, ''),
+                    10
+                  ) || 2000;
+
+                  const tableOrder = {
+                    id: activeBillModal.currentOrder.orderId || `#TBL-${activeBillModal.id}`,
+                    type: 'Dine In',
+                    table: activeBillModal.number,
+                    amount: activeBillModal.currentOrder.total,
+                    amountNum: totalNum,
+                    subtotal: Math.round(totalNum / 1.08),
+                    tax: Math.round(totalNum - totalNum / 1.08),
+                    time: activeBillModal.seatedTime || 'Just now',
+                    customer: {
+                      name: `Guest (${activeBillModal.number})`,
+                      phone: 'Dine-In Table Guest',
+                    },
+                    payment: 'Paid',
+                    paymentMethod: 'Cash',
+                    status: 'Ready',
+                    notes: `Server: ${activeBillModal.currentOrder.waiter || 'Staff'} · Section: ${activeBillModal.section}`,
+                    items: rawItems.length > 0 ? rawItems : [
+                      { name: 'Special Chicken Biryani', variant: 'Full', qty: 2, price: 850 },
+                      { name: 'Special Roghni Naan', variant: 'Butter', qty: 4, price: 120 },
+                    ],
+                  };
+
+                  setPrintOrder(tableOrder);
+                  setPrintModalMode('bill');
+                  setPrintModalOpen(true);
+                }}
+                className="px-3.5 py-2 rounded-xl text-xs font-semibold border border-stone-300 text-stone-700 hover:bg-stone-50 flex items-center gap-1.5 shadow-xs transition active:scale-95 cursor-pointer"
+                title="Print Guest Bill / KOT"
               >
-                Print Receipt
+                <Printer className="w-3.5 h-3.5 text-stone-600" />
+                <span>Print Receipt & KOT</span>
               </button>
               <button
                 onClick={() => handleClearTable(activeBillModal.id)}
@@ -734,6 +792,14 @@ export default function TablesView() {
           </div>
         </div>
       )}
+
+      {/* Print Receipt / KOT Modal */}
+      <PrintReceiptModal
+        isOpen={printModalOpen}
+        onClose={() => setPrintModalOpen(false)}
+        order={printOrder}
+        initialMode={printModalMode}
+      />
     </div>
   );
 }

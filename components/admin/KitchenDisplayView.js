@@ -14,11 +14,15 @@ import {
   RotateCcw,
   Bell,
   UtensilsCrossed,
+  Printer,
 } from 'lucide-react';
+import PrintReceiptModal from './PrintReceiptModal';
 
 export default function KitchenDisplayView() {
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [stationFilter, setStationFilter] = useState('All');
+  const [printModalOpen, setPrintModalOpen] = useState(false);
+  const [kotOrder, setKotOrder] = useState(null);
 
   const [tickets, setTickets] = useState([
     {
@@ -385,6 +389,31 @@ export default function KitchenDisplayView() {
                       Mark All Ready
                     </button>
                     <button
+                      onClick={() => {
+                        setKotOrder({
+                          id: t.id,
+                          type: t.type,
+                          table: t.table,
+                          time: t.orderTime,
+                          customer: { name: 'Kitchen Order', phone: t.server },
+                          status: t.status || 'Preparing',
+                          notes: `Prep Station: ${t.station} · Server: ${t.server}`,
+                          items: t.items.map((i) => ({
+                            name: i.name,
+                            variant: i.portion || 'Standard',
+                            qty: i.qty,
+                            notes: i.notes || '',
+                            price: 500,
+                          })),
+                        });
+                        setPrintModalOpen(true);
+                      }}
+                      className="px-2.5 py-2 bg-white border border-stone-200 hover:bg-stone-100 text-stone-700 rounded-lg text-xs font-semibold transition flex items-center gap-1 shadow-xs"
+                      title="Print KOT Slip"
+                    >
+                      <Printer className="w-3.5 h-3.5 text-[#911116]" />
+                    </button>
+                    <button
                       onClick={() => bumpTicket(t.id)}
                       className="px-2.5 py-2 bg-white border border-stone-200 hover:bg-stone-100 text-stone-600 rounded-lg text-xs font-semibold transition"
                       title="Bump ticket"
@@ -398,6 +427,14 @@ export default function KitchenDisplayView() {
           );
         })}
       </div>
+
+      {/* KOT Print Modal */}
+      <PrintReceiptModal
+        isOpen={printModalOpen}
+        onClose={() => setPrintModalOpen(false)}
+        order={kotOrder}
+        initialMode="kot"
+      />
     </div>
   );
 }

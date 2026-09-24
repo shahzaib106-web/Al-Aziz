@@ -73,6 +73,37 @@
   ],
   "menu": [
     {
+      "id": "m00",
+      "catId": "c1",
+      "nameUr": "چکن کڑاہی اسپیشل",
+      "nameEn": "Special Chicken Karahi",
+      "desc": "تازہ ٹماٹر، ادرک اور روایتی دیسی مسالوں میں تیار شدہ لذیذ چکن کڑاہی۔",
+      "price": 1200,
+      "options": [
+        {
+          "label": "Half",
+          "labelUr": "نصف کڑاہی",
+          "price": 650
+        },
+        {
+          "label": "Full",
+          "labelUr": "فل کڑاہی",
+          "price": 1200
+        }
+      ],
+      "rating": 4.9,
+      "reviews": 280,
+      "image": "/img/karahi.jpg",
+      "stock": 30,
+      "available": true,
+      "recipe": {
+        "chicken": 1.0,
+        "tomato": 0.4,
+        "oil": 0.15
+      },
+      "descEn": "Traditional chicken karahi cooked with fresh tomatoes, ginger, and desi spices."
+    },
+    {
       "id": "m01",
       "catId": "c1",
       "nameUr": "چکن ڈھاکا",
@@ -279,7 +310,18 @@
       "nameEn": "Chicken Biryani",
       "desc": "خاص مصالحوں اور اصلی چاولوں سے تیار ہماری اسپیشل چکن بریانی۔",
       "price": 600,
-      "options": [],
+      "options": [
+        {
+          "label": "Half",
+          "labelUr": "نصف پلیٹ",
+          "price": 350
+        },
+        {
+          "label": "Full",
+          "labelUr": "فل پلیٹ",
+          "price": 600
+        }
+      ],
       "rating": 4.8,
       "reviews": 230,
       "image": "/img/biryani.jpg",

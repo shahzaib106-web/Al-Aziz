@@ -306,34 +306,69 @@ export default function MenuView() {
                   </p>
                 </div>
 
-                <div className="mt-3 pt-3 border-t border-stone-100 flex items-center justify-between">
-                  <span className="text-base font-black text-red-700">Rs. {item.price}</span>
-                  <div className="flex items-center gap-2">
-                    <span className={`text-[10px] font-semibold ${item.available ? 'text-emerald-600' : 'text-stone-400'}`}>
-                      {item.available ? 'Available' : 'Unavailable'}
-                    </span>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleAvailability(item.id);
-                      }}
-                      className={`w-8 h-4 rounded-full transition-colors relative ${
-                        item.available ? 'bg-emerald-500' : 'bg-stone-300'
-                      }`}
-                    >
-                      <span
-                        className={`absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white transition-transform ${
-                          item.available ? 'translate-x-4' : ''
-                        }`}
-                      />
-                    </button>
+                {item.hasPortions ? (
+                  <div className="mt-2.5 pt-2.5 border-t border-stone-100">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-[10px] font-bold bg-red-50 text-red-700 px-1.5 py-0.5 rounded border border-red-200">
+                          Half: Rs. {item.halfPrice}
+                        </span>
+                        <span className="text-[10px] font-bold bg-amber-50 text-amber-800 px-1.5 py-0.5 rounded border border-amber-200">
+                          Full: Rs. {item.fullPrice}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className={`text-[10px] font-semibold ${item.available ? 'text-emerald-600' : 'text-stone-400'}`}>
+                          {item.available ? 'Available' : 'Unavailable'}
+                        </span>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleAvailability(item.id);
+                          }}
+                          className={`w-8 h-4 rounded-full transition-colors relative ${
+                            item.available ? 'bg-emerald-500' : 'bg-stone-300'
+                          }`}
+                        >
+                          <span
+                            className={`absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white transition-transform ${
+                              item.available ? 'translate-x-4' : ''
+                            }`}
+                          />
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="mt-3 pt-3 border-t border-stone-100 flex items-center justify-between">
+                    <span className="text-base font-black text-red-700">Rs. {item.price}</span>
+                    <div className="flex items-center gap-2">
+                      <span className={`text-[10px] font-semibold ${item.available ? 'text-emerald-600' : 'text-stone-400'}`}>
+                        {item.available ? 'Available' : 'Unavailable'}
+                      </span>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleAvailability(item.id);
+                        }}
+                        className={`w-8 h-4 rounded-full transition-colors relative ${
+                          item.available ? 'bg-emerald-500' : 'bg-stone-300'
+                        }`}
+                      >
+                        <span
+                          className={`absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white transition-transform ${
+                            item.available ? 'translate-x-4' : ''
+                          }`}
+                        />
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 {/* Add-ons & Sizes metadata */}
                 <div className="flex items-center gap-3 mt-2 text-[10px] text-stone-400">
                   <span>Add-ons ({item.addons})</span>
-                  <span>Sizes ({item.sizes})</span>
+                  <span>{item.hasPortions ? 'Portions (Half/Full)' : `Sizes (${item.sizes})`}</span>
                 </div>
               </div>
             </div>
@@ -353,10 +388,9 @@ export default function MenuView() {
             {/* Sub-tabs */}
             <div className="flex items-center gap-4 text-xs font-semibold text-stone-500 border-b border-stone-100 pb-2">
               <span className="text-red-700 border-b-2 border-red-700 pb-2 -mb-2">Basic Info</span>
-              <span>Pricing</span>
+              <span>Pricing & Portions</span>
               <span>Add-ons</span>
               <span>Inventory</span>
-              <span>Gallery</span>
             </div>
 
             {/* Item Name */}
@@ -396,12 +430,78 @@ export default function MenuView() {
                 Description <span className="text-red-600">*</span>
               </label>
               <textarea
-                rows={3}
+                rows={2}
                 value={editingItem?.desc || ''}
                 onChange={(e) => setEditingItem({ ...editingItem, desc: e.target.value })}
                 className="w-full text-xs p-2 bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:border-red-600 resize-none"
               />
-              <span className="text-[10px] text-stone-400 block text-right">68/200</span>
+            </div>
+
+            {/* Portion Pricing: Half & Full Options */}
+            <div className="bg-stone-50 p-3 rounded-xl border border-stone-200 space-y-2.5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-xs font-bold text-stone-800">Half / Full Portions</span>
+                  <p className="text-[10px] text-stone-400">Portions for Biryani, Karahi, Desi Handi</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setEditingItem({ ...editingItem, hasPortions: !editingItem?.hasPortions })}
+                  className={`w-9 h-5 rounded-full relative transition-colors ${
+                    editingItem?.hasPortions ? 'bg-[#911116]' : 'bg-stone-300'
+                  }`}
+                >
+                  <span
+                    className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform ${
+                      editingItem?.hasPortions ? 'translate-x-4' : ''
+                    }`}
+                  />
+                </button>
+              </div>
+
+              {editingItem?.hasPortions ? (
+                <div className="grid grid-cols-2 gap-2 pt-1">
+                  <div>
+                    <label className="block text-[11px] font-bold text-stone-700 mb-1">
+                      Half Portion (Rs.)
+                    </label>
+                    <input
+                      type="number"
+                      value={editingItem?.halfPrice || ''}
+                      onChange={(e) => setEditingItem({ ...editingItem, halfPrice: Number(e.target.value) })}
+                      placeholder="e.g. 350"
+                      className="w-full text-xs p-2 bg-white border border-stone-200 rounded-lg font-bold text-stone-900"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-stone-700 mb-1">
+                      Full Portion (Rs.)
+                    </label>
+                    <input
+                      type="number"
+                      value={editingItem?.fullPrice || editingItem?.price || ''}
+                      onChange={(e) => {
+                        const val = Number(e.target.value);
+                        setEditingItem({ ...editingItem, fullPrice: val, price: val });
+                      }}
+                      placeholder="e.g. 600"
+                      className="w-full text-xs p-2 bg-white border border-stone-200 rounded-lg font-bold text-stone-900"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <label className="block text-[11px] font-bold text-stone-700 mb-1">
+                    Standard Price (Rs.)
+                  </label>
+                  <input
+                    type="number"
+                    value={editingItem?.price || ''}
+                    onChange={(e) => setEditingItem({ ...editingItem, price: Number(e.target.value) })}
+                    className="w-full text-xs p-2 bg-white border border-stone-200 rounded-lg font-bold text-stone-900"
+                  />
+                </div>
+              )}
             </div>
 
             {/* Item Images (3/5) */}
@@ -564,10 +664,21 @@ export default function MenuView() {
                   <div className="p-2">
                     <p className="font-bold text-[11px] leading-tight">Chicken Biryani</p>
                     <p className="text-[9px] text-stone-400 line-clamp-1">Aromatic basmati rice cooked with chicken.</p>
-                    <div className="flex items-center justify-between mt-1.5">
-                      <span className="font-black text-red-700 text-xs">Rs. 600</span>
+                    
+                    {/* Portion pills */}
+                    <div className="flex items-center gap-1 my-1.5">
+                      <span className="text-[8px] font-bold px-1.5 py-0.5 rounded bg-red-100 text-red-800 border border-red-200">
+                        Half: Rs. 350
+                      </span>
+                      <span className="text-[8px] font-bold px-1.5 py-0.5 rounded bg-stone-100 text-stone-700 border border-stone-200">
+                        Full: Rs. 600
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between mt-1">
+                      <span className="font-black text-red-700 text-xs">Rs. 350 - 600</span>
                       <button className="px-2 py-0.5 bg-red-700 text-white rounded font-bold text-[9px]">
-                        + Add
+                        + Select Portion
                       </button>
                     </div>
                   </div>

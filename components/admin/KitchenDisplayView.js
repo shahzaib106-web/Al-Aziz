@@ -31,9 +31,9 @@ export default function KitchenDisplayView() {
       server: 'Ali Khan',
       status: 'In Prep',
       items: [
-        { name: 'Chicken Biryani', qty: 1, notes: 'Less spicy, extra raita', done: false },
-        { name: 'Special Naan', qty: 2, notes: 'Hot & crispy', done: true },
-        { name: 'Chicken Karahi (Full)', qty: 1, notes: 'Boneless, butter on top', done: false },
+        { name: 'Chicken Biryani', portion: 'Half', qty: 1, notes: 'Less spicy, extra raita', done: false },
+        { name: 'Special Naan', portion: 'Plain', qty: 2, notes: 'Hot & crispy', done: true },
+        { name: 'Chicken Karahi', portion: 'Full', qty: 1, notes: 'Boneless, butter on top', done: false },
       ],
     },
     {
@@ -346,9 +346,14 @@ export default function KitchenDisplayView() {
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-baseline justify-between gap-1">
-                        <span className="font-bold">
+                      <div className="flex items-baseline justify-between gap-1 flex-wrap">
+                        <span className="font-bold flex items-center gap-1.5">
                           {item.qty}x {item.name}
+                          {item.portion && (
+                            <span className="text-[9px] font-black uppercase px-1.5 py-0.2 rounded bg-amber-100 text-amber-900 border border-amber-300">
+                              {item.portion}
+                            </span>
+                          )}
                         </span>
                       </div>
                       {item.notes && (
